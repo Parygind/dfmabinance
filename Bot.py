@@ -86,7 +86,7 @@ URL = os.environ.get('URL')
 PORT = int(os.environ.get('PORT', '5000'))
 TOKEN = os.environ['TEL_TOKEN']
 
-updater = Updater(TOKEN)
+updater = Updater(TOKEN, use_context=True)
 
 updater.dispatcher.add_handler(CommandHandler('hello', hello))
 updater.dispatcher.add_handler(CommandHandler('he', hello))
