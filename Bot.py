@@ -82,15 +82,20 @@ def hello(bot, update):
         'Hello {}'.format(update.message.from_user.first_name))
 
 
-updater = Updater(os.environ['TEL_TOKEN'])
+URL = os.environ.get('URL')
+PORT = int(os.environ.get('PORT', '5000'))
+
+TOKEN = os.environ['TEL_TOKEN']
+updater = Updater(TOKEN)
 
 updater.dispatcher.add_handler(CommandHandler('hello', hello))
 
 dp = updater.dispatcher
-
 dp.add_handler(CommandHandler("start", set_timer))
 dp.add_handler(CommandHandler("get", get_vol))
 dp.add_handler(CommandHandler("unset", unset, pass_chat_data=True))
 
-updater.start_polling()
+updater.start_webhook(listen='0.0.0.0', port=PORT, url_path=TOKEN)
+updater.bot.set_webhook(URL + TOKEN)
+#updater.start_polling()
 updater.idle()
