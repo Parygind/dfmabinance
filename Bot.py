@@ -4,7 +4,7 @@ from telegram.ext import Updater, CommandHandler
 from binance_api import Binance
 import os
 
-bot = None
+bin_bot = None
 dict_prev = dict()
 dict_curr = dict()
 
@@ -18,7 +18,7 @@ def alarm(context):
     global dict_prev, dict_curr
     dict_prev = dict_curr
     dict_curr = dict()
-    for pr in bot.ticker24hr():
+    for pr in bin_bot.ticker24hr():
         if pr['symbol'][-3:] == 'BTC': #and float(pr['quoteVolume']) >= 300.0:
             vol = dict_prev.get(pr['symbol'])
             if vol != None:
@@ -37,9 +37,9 @@ def set_timer(bot, update, context):
             update.message.reply_text('Введите положительное время!')
             return
 
-        global bot
+        global bin_bot
 
-        bot = Binance(
+        bin_bot = Binance(
             API_KEY=os.environ['API_KEY'],
             API_SECRET=os.environ['API_SECRET']
         )
