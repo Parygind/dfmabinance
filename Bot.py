@@ -89,11 +89,9 @@ TOKEN = os.environ['TEL_TOKEN']
 updater = Updater(TOKEN)
 
 updater.dispatcher.add_handler(CommandHandler('hello', hello))
-
-dp = updater.dispatcher
-dp.add_handler(CommandHandler("start", set_timer))
-dp.add_handler(CommandHandler("get", get_vol))
-dp.add_handler(CommandHandler("unset", unset, pass_chat_data=True))
+updater.dispatcher.add_handler(CommandHandler("start", set_timer))
+updater.dispatcher.add_handler(CommandHandler("get", get_vol))
+updater.dispatcher.add_handler(CommandHandler("unset", unset, pass_chat_data=True))
 
 updater.start_webhook(listen='0.0.0.0', port=PORT, url_path=TOKEN)
 updater.bot.set_webhook(URL + TOKEN)
