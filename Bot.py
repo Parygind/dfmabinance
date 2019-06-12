@@ -8,7 +8,7 @@ bot = None
 dict_prev = dict()
 dict_curr = dict()
 
-def start(update, context):
+def start(bot, update, context):
     update.message.reply_text('Hi! Use /set <seconds> to set a timer')
 
 def alarm(context):
@@ -27,7 +27,7 @@ def alarm(context):
             dict_curr[pr['symbol']] = pr['quoteVolume']
     context.bot.send_message(job.context, text=mes)
 
-def set_timer(update, context):
+def set_timer(bot, update, context):
     """Add a job to the queue."""
     chat_id = update.message.chat_id
     try:
@@ -52,7 +52,7 @@ def set_timer(update, context):
     except (IndexError, ValueError):
         update.message.reply_text('Usage: /start <seconds>')
 
-def get_vol(update, context):
+def get_vol(bot, update, context):
     try:
         # args[0] should contain the time for the timer in seconds
         pair = context.args[0]
@@ -65,7 +65,7 @@ def get_vol(update, context):
     except (IndexError, ValueError):
         update.message.reply_text('Usage: /get <trade_pair>')
 
-def unset(update, context):
+def unset(bot, update, context):
     """Remove the job if the user changed their mind."""
     if 'job' not in context.chat_data:
         update.message.reply_text('У вас нет запущенного таймера')
@@ -90,7 +90,8 @@ updater = Updater(TOKEN)
 
 updater.dispatcher.add_handler(CommandHandler('hello', hello))
 updater.dispatcher.add_handler(CommandHandler('he', hello))
-updater.dispatcher.add_handler(CommandHandler('start', set_timer))
+updater.dispatcher.add_handler(CommandHandler('start', start))
+updater.dispatcher.add_handler(CommandHandler('set', set_timer))
 updater.dispatcher.add_handler(CommandHandler('get', get_vol))
 updater.dispatcher.add_handler(CommandHandler('unset', unset, pass_chat_data=True))
 
