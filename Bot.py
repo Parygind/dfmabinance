@@ -91,8 +91,10 @@ updater = Updater(TOKEN)
 updater.dispatcher.add_handler(CommandHandler('hello', hello))
 updater.dispatcher.add_handler(CommandHandler('he', hello))
 updater.dispatcher.add_handler(CommandHandler('start', start))
-updater.dispatcher.add_handler(CommandHandler('set', set_timer))
-updater.dispatcher.add_handler(CommandHandler('get', get_vol))
+updater.dispatcher.add_handler(CommandHandler('set', set_timer, pass_args=True,
+                                  pass_job_queue=True,
+                                  pass_chat_data=True))
+updater.dispatcher.add_handler(CommandHandler('get', get_vol, pass_args=True, pass_chat_data=True))
 updater.dispatcher.add_handler(CommandHandler('unset', unset, pass_chat_data=True))
 
 updater.start_webhook(listen='0.0.0.0', port=PORT, url_path=TOKEN)
