@@ -89,6 +89,7 @@ TOKEN = os.environ['TEL_TOKEN']
 updater = Updater(TOKEN)
 
 updater.dispatcher.add_handler(CommandHandler('hello', hello))
+updater.dispatcher.add_handler(CommandHandler('he', hello))
 updater.dispatcher.add_handler(CommandHandler("start", set_timer))
 updater.dispatcher.add_handler(CommandHandler("get", get_vol))
 updater.dispatcher.add_handler(CommandHandler("unset", unset, pass_chat_data=True))
