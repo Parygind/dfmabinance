@@ -84,13 +84,12 @@ def hello(update):
 
 URL = os.environ.get('URL')
 PORT = int(os.environ.get('PORT', '5000'))
-TOKEN = '678633136:AAFk4afeImLfhvd6cmU5HdmMLklblD02FwM'#os.environ['TEL_TOKEN']
+TOKEN = os.environ['TEL_TOKEN']
 
 updater = Updater(TOKEN, use_context=True)
 
-updater.dispatcher.add_handler(CommandHandler('hello', hello))
-updater.dispatcher.add_handler(CommandHandler('he', hello))
-updater.dispatcher.add_handler(CommandHandler('start', start))
+updater.dispatcher.add_handler(CommandHandler('hello', hello, pass_chat_data=True))
+updater.dispatcher.add_handler(CommandHandler('start', start, pass_chat_data=True))
 updater.dispatcher.add_handler(CommandHandler('set', set_timer, pass_args=True,
                                   pass_job_queue=True,
                                   pass_chat_data=True))
