@@ -84,8 +84,8 @@ def hello(bot, update):
 
 URL = os.environ.get('URL')
 PORT = int(os.environ.get('PORT', '5000'))
-
 TOKEN = os.environ['TEL_TOKEN']
+
 updater = Updater(TOKEN)
 
 updater.dispatcher.add_handler(CommandHandler('hello', hello))
