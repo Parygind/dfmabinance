@@ -8,7 +8,7 @@ bin_bot = None
 dict_prev = dict()
 dict_curr = dict()
 
-def start(bot, update):
+def start(update):
     update.message.reply_text('Hi! Use /set <seconds> to set a timer')
 
 def alarm(context):
@@ -27,7 +27,7 @@ def alarm(context):
             dict_curr[pr['symbol']] = pr['quoteVolume']
     context.bot.send_message(job.context, text=mes)
 
-def set_timer(bot, update, context):
+def set_timer(update, context):
     """Add a job to the queue."""
     chat_id = update.message.chat_id
     try:
@@ -52,7 +52,7 @@ def set_timer(bot, update, context):
     except (IndexError, ValueError):
         update.message.reply_text('Usage: /start <seconds>')
 
-def get_vol(bot, update, context):
+def get_vol(update, context):
     try:
         # args[0] should contain the time for the timer in seconds
         pair = context.args[0]
@@ -65,7 +65,7 @@ def get_vol(bot, update, context):
     except (IndexError, ValueError):
         update.message.reply_text('Usage: /get <trade_pair>')
 
-def unset(bot, update, context):
+def unset(update, context):
     """Remove the job if the user changed their mind."""
     if 'job' not in context.chat_data:
         update.message.reply_text('У вас нет запущенного таймера')
@@ -77,14 +77,14 @@ def unset(bot, update, context):
 
     update.message.reply_text('Таймер отключен!')
 
-def hello(bot, update):
+def hello(update):
     update.message.reply_text(
         'Hello {}'.format(update.message.from_user.first_name))
 
 
 URL = os.environ.get('URL')
 PORT = int(os.environ.get('PORT', '5000'))
-TOKEN = os.environ['TEL_TOKEN']
+TOKEN = '678633136:AAFk4afeImLfhvd6cmU5HdmMLklblD02FwM'#os.environ['TEL_TOKEN']
 
 updater = Updater(TOKEN, use_context=True)
 
