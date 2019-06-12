@@ -1,6 +1,6 @@
 import time
 import urllib
-import hmac, hashlib
+import hashlib
 import requests
 
 from urllib.parse import urlparse, urlencode
