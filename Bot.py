@@ -8,7 +8,7 @@ bin_bot = None
 dict_prev = dict()
 dict_curr = dict()
 
-def start(bot, update, context):
+def start(bot, update):
     update.message.reply_text('Hi! Use /set <seconds> to set a timer')
 
 def alarm(context):
