@@ -24,8 +24,10 @@ def alarm(context):
             if vol != None:
                 if float(pr['quoteVolume'])/vol >= 1.7:
                     mes += pr['symbol'] + ' '
-            dict_curr[pr['symbol']] = pr['quoteVolume']
-    context.bot.send_message(job.context, text=mes)
+            dict_curr[pr['symbol']] = float(pr['quoteVolume'])
+
+    if len(mes) > 0:
+        context.bot.send_message(job.context, text=mes)
 
 def set_timer(update, context):
     """Add a job to the queue."""
@@ -56,7 +58,8 @@ def get_vol(update, context):
     try:
         # args[0] should contain the time for the timer in seconds
         pair = context.args[0]
-        if dict_curr.get(pair) == None :
+        update.message.reply_text(pair)
+        if dict_curr.get(pair) == None or dict_prev.get(pair):
             update.message.reply_text('В базе данных нет такой торговой пары!')
             return
 
