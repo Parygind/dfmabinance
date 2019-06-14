@@ -8,7 +8,7 @@ bin_bot = None
 dict_prev = dict()
 dict_curr = dict()
 
-def start(update):
+def start(update, context):
     update.message.reply_text('Hi! Use /set <seconds> to set a timer')
 
 def alarm(context):
@@ -21,7 +21,7 @@ def alarm(context):
     for pr in bin_bot.ticker24hr():
         if pr['symbol'][-3:] == 'BTC': #and float(pr['quoteVolume']) >= 300.0:
             vol = dict_prev.get(pr['symbol'])
-            if vol != None:
+            if vol != None and vol != 0:
                 if float(pr['quoteVolume'])/vol >= 1.7:
                     mes += pr['symbol'] + ' '
             dict_curr[pr['symbol']] = float(pr['quoteVolume'])
@@ -85,6 +85,19 @@ def hello(update):
         'Hello {}'.format(update.message.from_user.first_name))
 
 
+def get_top(update, context):
+    try:
+        # args[0] should contain the time for the timer in seconds
+        if len(dict_prev) == 0:
+            update.message.reply_text('База данных пуста!')
+            return
+
+        update.message.reply_text(list(dict_prev.keys())[0])
+        update.message.reply_text(str(dict_prev[list(dict_prev.keys())[0]]))
+
+    except (IndexError, ValueError):
+        update.message.reply_text('COMMAND ERROR')
+
 URL = os.environ.get('URL')
 PORT = int(os.environ.get('PORT', '5000'))
 TOKEN = os.environ['TEL_TOKEN']
@@ -97,6 +110,7 @@ updater.dispatcher.add_handler(CommandHandler('set', set_timer, pass_args=True,
                                   pass_job_queue=True,
                                   pass_chat_data=True))
 updater.dispatcher.add_handler(CommandHandler('get', get_vol, pass_args=True, pass_chat_data=True))
+updater.dispatcher.add_handler(CommandHandler('gettop', get_top, pass_chat_data=True))
 updater.dispatcher.add_handler(CommandHandler('unset', unset, pass_chat_data=True))
 
 updater.start_webhook(listen='0.0.0.0', port=PORT, url_path=TOKEN)
