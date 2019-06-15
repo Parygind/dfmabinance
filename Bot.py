@@ -8,25 +8,47 @@ bin_bot = None
 dict_prev = dict()
 dict_curr = dict()
 
+dict_prev_pr = dict()
+dict_curr_pr = dict()
+
 def start(update, context):
     update.message.reply_text('Hi! Use /set <seconds> to set a timer')
 
 def alarm(context):
     """Send the alarm message."""
-    mes = ''
+    mesVol = ''
+    mesPrc = ''
     job = context.job
-    global dict_prev, dict_curr
+    global dict_prev, dict_curr, dict_prev_pr, dict_curr_pr
     dict_prev = dict_curr
     dict_curr = dict()
+
+    dict_prev_pr = dict_curr_pr
+    dict_curr_pr = dict()
+
     for pr in bin_bot.ticker24hr():
         if pr['symbol'][-3:] == 'BTC': #and float(pr['quoteVolume']) >= 300.0:
             vol = dict_prev.get(pr['symbol'])
+
+            price = dict_prev_pr.get(pr['symbol'])
+
             if vol != None and vol != 0:
                 if float(pr['quoteVolume'])/vol >= 1.7:
-                    mes += pr['symbol'] + ' '
-            dict_curr[pr['symbol']] = float(pr['quoteVolume'])
+                    mesVol += pr['symbol'] + '(+' + str(((float(pr['lastPrice'])/price)-1)*100) + '%) '
 
-    if len(mes) > 0:
+            if price != None and price != 0:
+                if float(pr['lastPrice'])/price <= 0.93:
+                    mesPrc += pr['symbol'] + '(-' + str((1-(float(pr['lastPrice'])/price))*100) + '%) '
+
+            dict_curr[pr['symbol']] = float(pr['quoteVolume'])
+            dict_curr_pr[pr['symbol']] = float(pr['lastPrice'])
+
+    if len(mesVol) > 0:
+        mes = 'Объемы выросли : ' + mesVol
+        context.bot.send_message(job.context, text=mes)
+
+    if len(mesPrc) > 0:
+        mes = 'Цены упали : ' + mesPrc
         context.bot.send_message(job.context, text=mes)
 
 def set_timer(update, context):
@@ -46,7 +68,7 @@ def set_timer(update, context):
             API_SECRET=os.environ['API_SECRET']
         )
 
-        job = context.job_queue.run_repeating(alarm, due, context=chat_id)
+        job = context.job_queue.run_repeating(alarm, due, first=0, context=chat_id)
         context.chat_data['job'] = job
 
         update.message.reply_text('Таймер запущен!')
@@ -59,7 +81,7 @@ def get_vol(update, context):
         # args[0] should contain the time for the timer in seconds
         pair = context.args[0]
         update.message.reply_text(pair)
-        if dict_curr.get(pair) == None or dict_prev.get(pair):
+        if dict_curr.get(pair) == None or dict_prev.get(pair) == None:
             update.message.reply_text('В базе данных нет такой торговой пары!')
             return
 
