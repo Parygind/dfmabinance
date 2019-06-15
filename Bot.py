@@ -37,7 +37,7 @@ def alarm(context):
                     mesVol += pr['symbol'] + '(+' + str(((float(pr['lastPrice'])/price)-1)*100) + '%) '
 
             if price != None and price != 0:
-                if float(pr['lastPrice'])/price <= 0.93:
+                if float(pr['lastPrice'])/price <= 0.95:
                     mesPrc += pr['symbol'] + '(-' + str((1-(float(pr['lastPrice'])/price))*100) + '%) '
 
             dict_curr[pr['symbol']] = float(pr['quoteVolume'])
