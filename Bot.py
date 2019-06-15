@@ -34,11 +34,11 @@ def alarm(context):
 
             if vol != None and vol != 0:
                 if float(pr['quoteVolume'])/vol >= 1.7:
-                    mesVol += pr['symbol'] + '(+' + str(((float(pr['lastPrice'])/price)-1)*100) + '%) '
+                    mesVol += pr['symbol'] + '(+' + str(round(((float(pr['lastPrice'])/price)-1)*100, 2)) + '%) '
 
             if price != None and price != 0:
                 if float(pr['lastPrice'])/price <= 0.95:
-                    mesPrc += pr['symbol'] + '(-' + str((1-(float(pr['lastPrice'])/price))*100) + '%) '
+                    mesPrc += pr['symbol'] + '(-' + str(round((1-(float(pr['lastPrice'])/price))*100,2)) + '%) '
 
             dict_curr[pr['symbol']] = float(pr['quoteVolume'])
             dict_curr_pr[pr['symbol']] = float(pr['lastPrice'])
@@ -80,12 +80,13 @@ def get_vol(update, context):
     try:
         # args[0] should contain the time for the timer in seconds
         pair = context.args[0]
-        update.message.reply_text(pair)
+        pair = pair.upper()
         if dict_curr.get(pair) == None or dict_prev.get(pair) == None:
             update.message.reply_text('В базе данных нет такой торговой пары!')
             return
 
-        update.message.reply_text(str(dict_curr.get(pair) / dict_prev.get(pair)))
+        update.message.reply_text(str(round(dict_prev.get(pair), 2)))
+        update.message.reply_text(str(round(dict_curr.get(pair) / dict_prev.get(pair), 2)))
 
     except (IndexError, ValueError):
         update.message.reply_text('Usage: /get <trade_pair>')
