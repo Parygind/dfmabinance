@@ -45,11 +45,11 @@ def alarm(context):
 
     if len(mesVol) > 0:
         mes = 'Объемы выросли : ' + mesVol
-        context.bot.send_message(chat_id='@dfmatrade', text=mes)
+        context.bot.send_message(chat_id='-1001242337520', text=mes)
 
     if len(mesPrc) > 0:
         mes = 'Цены упали : ' + mesPrc
-        context.bot.send_message(chat_id='@dfmatrade', text=mes)
+        context.bot.send_message(chat_id='-1001242337520', text=mes)
 
 def set_timer(update, context):
     """Add a job to the queue."""
@@ -104,7 +104,7 @@ def unset(update, context):
     update.message.reply_text('Таймер отключен!')
 
 def hello(update, context):
-    context.bot.send_message(chat_id='@dfmatrade', text='))')
+    context.bot.send_message(chat_id='-1001242337520', text='))')
 
 
 def get_top(update, context):
