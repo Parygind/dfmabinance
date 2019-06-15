@@ -33,8 +33,8 @@ def alarm(context):
             price = dict_prev_pr.get(pr['symbol'])
 
             if vol != None and vol != 0:
-                if float(pr['quoteVolume'])/vol >= 1.7:
-                    mesVol += pr['symbol'] + '(+' + str(round(((float(pr['lastPrice'])/price)-1)*100, 2)) + '%) '
+                if float(pr['quoteVolume'])/vol >= 1.3:
+                    mesVol += pr['symbol'] + '(+' + str(round(((float(pr['quoteVolume'])/vol)-1)*100, 2)) + '%) '
 
             if price != None and price != 0:
                 if float(pr['lastPrice'])/price <= 0.95:
@@ -45,11 +45,11 @@ def alarm(context):
 
     if len(mesVol) > 0:
         mes = 'Объемы выросли : ' + mesVol
-        context.bot.send_message(job.context, text=mes)
+        context.bot.send_message(chat_id='1242337520', text=mes)
 
     if len(mesPrc) > 0:
         mes = 'Цены упали : ' + mesPrc
-        context.bot.send_message(job.context, text=mes)
+        context.bot.send_message(chat_id='1242337520', text=mes)
 
 def set_timer(update, context):
     """Add a job to the queue."""
