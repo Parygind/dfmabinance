@@ -8,76 +8,40 @@ bin_bot = None
 dict_prev = dict()
 dict_curr = dict()
 
-dict_prev_1 = dict()
-dict_curr_1 = dict()
-
 dict_prev_pr = dict()
 dict_curr_pr = dict()
 
 def start(update, context):
     update.message.reply_text('Hi! Use /set <seconds> to set a timer')
 
+def update(context):
+    global dict_prev, dict_curr
+    dict_prev = dict_curr
+    dict_curr = dict()
+
+    for pr in bin_bot.ticker24hr():
+        if pr['symbol'][-3:] == 'BTC':
+            dict_curr[pr['symbol']] = float(pr['quoteVolume'])
+
 def alarm(context):
     """Send the alarm message."""
     mesVol = ''
     mesPrc = ''
     job = context.job
-    global dict_prev, dict_curr, dict_prev_pr, dict_curr_pr
-    dict_prev = dict_curr
-    dict_curr = dict()
-
-    dict_prev_pr = dict_curr_pr
-    dict_curr_pr = dict()
+    global dict_prev, dict_curr
 
     for pr in bin_bot.ticker24hr():
         if pr['symbol'][-3:] == 'BTC': #and float(pr['quoteVolume']) >= 300.0:
-            vol = dict_prev.get(pr['symbol'])
-
-            price = dict_prev_pr.get(pr['symbol'])
+            vol = dict_curr.get(pr['symbol'])
 
             if vol != None and vol != 0:
                 if float(pr['quoteVolume'])/vol >= 1.3:
                     mesVol += pr['symbol'] + '(+' + str(round(((float(pr['quoteVolume'])/vol)-1)*100, 2)) + '%) '
-
-            if price != None and price != 0:
-                if float(pr['lastPrice'])/price <= 0.95:
-                    mesPrc += pr['symbol'] + '(-' + str(round((1-(float(pr['lastPrice'])/price))*100,2)) + '%) '
-
-            dict_curr[pr['symbol']] = float(pr['quoteVolume'])
-            dict_curr_pr[pr['symbol']] = float(pr['lastPrice'])
+                    dict_curr[pr['symbol']] = float(pr['quoteVolume'])
 
     if len(mesVol) > 0:
         mes = 'Объемы выросли : ' + mesVol
         context.bot.send_message(chat_id='-1001242337520', text=mes)
-
-    if len(mesPrc) > 0:
-        mes = 'Цены упали : ' + mesPrc
-        context.bot.send_message(chat_id='-1001242337520', text=mes)
-
-def alarm1(context):
-    """Send the alarm message."""
-    mesVol = ''
-    job = context.job
-    global dict_prev_1, dict_curr_1
-    dict_prev_1 = dict_curr_1
-    dict_curr_1 = dict()
-
-
-    for pr in bin_bot.ticker24hr():
-        if pr['symbol'][-3:] == 'BTC': #and float(pr['quoteVolume']) >= 300.0:
-            vol = dict_prev_1.get(pr['symbol'])
-
-
-            if vol != None and vol != 0:
-                if float(pr['quoteVolume'])/vol >= 1.3:
-                    mesVol += pr['symbol'] + '(+' + str(round(((float(pr['quoteVolume'])/vol)-1)*100, 2)) + '%) '
-
-            dict_curr_1[pr['symbol']] = float(pr['quoteVolume'])
-
-    if len(mesVol) > 0:
-        mes = 'Объемы выросли(быстро) : ' + mesVol
-        context.bot.send_message(chat_id='-1001242337520', text=mes)
-
 
 def set_timer(update, context):
     """Add a job to the queue."""
@@ -96,9 +60,9 @@ def set_timer(update, context):
             API_SECRET=os.environ['API_SECRET']
         )
 
-        job = context.job_queue.run_repeating(alarm, due, first=0, context=chat_id)
+        job = context.job_queue.run_repeating(update, due, first=0, context=chat_id)
+        job = context.job_queue.run_repeating(alarm, 60, context=chat_id)
         context.chat_data['job'] = job
-        job = context.job_queue.run_repeating(alarm1, due/2, first=0, context=chat_id)
 
         update.message.reply_text('Таймер запущен!')
 
