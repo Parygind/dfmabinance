@@ -14,7 +14,7 @@ dict_curr_pr = dict()
 def start(update, context):
     update.message.reply_text('Hi! Use /set <seconds> to set a timer')
 
-def update(context):
+def updateData(context):
     global dict_prev, dict_curr
     dict_prev = dict_curr
     dict_curr = dict()
@@ -60,7 +60,7 @@ def set_timer(update, context):
             API_SECRET=os.environ['API_SECRET']
         )
 
-        job = context.job_queue.run_repeating(update, due, first=0, context=chat_id)
+        job = context.job_queue.run_repeating(updateData, due, first=0, context=chat_id)
         job = context.job_queue.run_repeating(alarm, 60, context=chat_id)
         context.chat_data['job'] = job
 
