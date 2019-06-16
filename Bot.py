@@ -26,7 +26,6 @@ def updateData(context):
 def alarm(context):
     """Send the alarm message."""
     mesVol = ''
-    mesPrc = ''
     job = context.job
     global dict_prev, dict_curr
 
@@ -35,7 +34,7 @@ def alarm(context):
             vol = dict_curr.get(pr['symbol'])
 
             if vol != None and vol != 0:
-                if float(pr['quoteVolume'])/vol >= 1.3:
+                if float(pr['quoteVolume'])/vol >= 1.15:
                     mesVol += pr['symbol'] + '(+' + str(round(((float(pr['quoteVolume'])/vol)-1)*100, 2)) + '%) '
                     dict_curr[pr['symbol']] = float(pr['quoteVolume'])
 
