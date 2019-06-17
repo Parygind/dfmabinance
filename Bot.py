@@ -5,6 +5,7 @@ from binance_api import Binance
 import os
 
 bin_bot = None
+symb_list = None
 dict_prev = dict()
 dict_curr = dict()
 
@@ -15,7 +16,7 @@ def start(update, context):
     update.message.reply_text('Hi! Use /set <seconds> to set a timer')
 
 def updateData(context):
-    global dict_prev, dict_curr
+    global dict_prev, dict_curr, symb_list
     dict_prev = dict_curr
     dict_curr = dict()
 
@@ -23,20 +24,35 @@ def updateData(context):
         if pr['symbol'][-3:] == 'BTC':
             dict_curr[pr['symbol']] = float(pr['quoteVolume'])
 
-def alarm(context):
+    symb_list = list(dict_curr.keys())
+
+def alarm1(context):
     """Send the alarm message."""
     mesVol = ''
     job = context.job
-    global dict_prev, dict_curr
+    global dict_prev, dict_curr, symb_list
 
-    for pr in bin_bot.ticker24hr():
-        if pr['symbol'][-3:] == 'BTC': #and float(pr['quoteVolume']) >= 300.0:
-            vol = dict_curr.get(pr['symbol'])
+    for i in range(0, int(len(symb_list)/2)):
+        inf = bin_bot.klines(symbol=symb_list[i], interval='1m', limit=1)
 
-            if vol != None and vol != 0:
-                if float(pr['quoteVolume'])/vol >= 1.15:
-                    mesVol += pr['symbol'] + '(+' + str(round(((float(pr['quoteVolume'])/vol)-1)*100, 2)) + '%) '
-                    dict_curr[pr['symbol']] = float(pr['quoteVolume'])
+        if inf[0][7] >= dict_curr[symb_list[i]]*0.02:
+            mesVol += symb_list[i] + '(+' + str(round(inf[0][7], 2)) + ') '
+
+    if len(mesVol) > 0:
+        mes = 'Объемы выросли : ' + mesVol
+        context.bot.send_message(chat_id='-1001242337520', text=mes)
+
+def alarm2(context):
+    """Send the alarm message."""
+    mesVol = ''
+    job = context.job
+    global dict_prev, dict_curr, symb_list
+
+    for i in range(int(len(symb_list)/2), len(symb_list)):
+        inf = bin_bot.klines(symbol=symb_list[i], interval='1m', limit=1)
+
+        if inf[0][7] >= dict_curr[symb_list[i]]*0.02:
+            mesVol += symb_list[i] + '(+' + str(round(inf[0][7], 2)) + ') '
 
     if len(mesVol) > 0:
         mes = 'Объемы выросли : ' + mesVol
@@ -60,7 +76,8 @@ def set_timer(update, context):
         )
 
         job = context.job_queue.run_repeating(updateData, due, first=0, context=chat_id)
-        job = context.job_queue.run_repeating(alarm, 60, context=chat_id)
+        job = context.job_queue.run_repeating(alarm1, 120, first=10, context=chat_id)
+        job = context.job_queue.run_repeating(alarm2, 120, first=70, context=chat_id)
         context.chat_data['job'] = job
 
         update.message.reply_text('Таймер запущен!')
