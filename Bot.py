@@ -37,7 +37,7 @@ def alarm1(context):
         vol = float(inf[0][7])
 
         if vol >= dict_curr[symb_list[i]]*0.02:
-            mesVol += symb_list[i] + '(+' + str(round(vol, 2)) + ') '
+            mesVol += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str((vol/dict_curr[symb_list[i]])*100) + ') '
 
     if len(mesVol) > 0:
         mes = 'Объемы выросли : ' + mesVol
@@ -54,7 +54,7 @@ def alarm2(context):
         vol = float(inf[0][7])
 
         if vol >= dict_curr[symb_list[i]]*0.02:
-            mesVol += symb_list[i] + '(+' + str(round(vol, 2)) + ') '
+            mesVol += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str((vol/dict_curr[symb_list[i]])*100) + ') '
 
     if len(mesVol) > 0:
         mes = 'Объемы выросли : ' + mesVol
@@ -148,5 +148,6 @@ updater.dispatcher.add_handler(CommandHandler('unset', unset, pass_chat_data=Tru
 
 updater.start_webhook(listen='0.0.0.0', port=PORT, url_path=TOKEN)
 updater.bot.set_webhook(URL + TOKEN)
+
 #updater.start_polling()
 updater.idle()
