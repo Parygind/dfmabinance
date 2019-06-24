@@ -34,7 +34,7 @@ def alarm1(context):
 
     for i in range(0, int(len(symb_list)/2)):
         inf = bin_bot.klines(symbol=symb_list[i], interval='1m', limit=1)
-        vol = float(inf[0][7])
+        vol = float(inf[0][10])
 
         if vol >= dict_curr[symb_list[i]]*0.02:
             mesVol += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%) '
@@ -51,7 +51,7 @@ def alarm2(context):
 
     for i in range(int(len(symb_list)/2), len(symb_list)):
         inf = bin_bot.klines(symbol=symb_list[i], interval='1m', limit=1)
-        vol = float(inf[0][7])
+        vol = float(inf[0][10])
 
         if vol >= dict_curr[symb_list[i]]*0.02:
             mesVol += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%) '
