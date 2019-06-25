@@ -32,7 +32,8 @@ def alarm1(context):
     job = context.job
     global dict_prev, dict_curr, symb_list
 
-    for i in range(0, int(len(symb_list)/2)):
+    #for i in range(0, int(len(symb_list)/2)):
+    for i in range(0, int(len(symb_list))):
         inf = bin_bot.klines(symbol=symb_list[i], interval='1m', limit=1)
         vol = float(inf[0][10])
 
@@ -78,8 +79,8 @@ def set_timer(update, context):
         )
 
         job = context.job_queue.run_repeating(updateData, due, first=0, context=chat_id)
-        job = context.job_queue.run_repeating(alarm1, 120, first=10, context=chat_id)
-        job = context.job_queue.run_repeating(alarm2, 120, first=70, context=chat_id)
+        job = context.job_queue.run_repeating(alarm1, 60, first=10, context=chat_id)
+        #job = context.job_queue.run_repeating(alarm2, 120, first=70, context=chat_id)
         context.chat_data['job'] = job
 
         update.message.reply_text('Таймер запущен!')
