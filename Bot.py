@@ -38,7 +38,6 @@ def alarm1(context):
     for i in range(0, int(len(symb_list))):
         inf = bin_bot.klines(symbol=symb_list[i], interval='5m', limit=1)
         vol = float(inf[0][10])
-
         if vol >= dict_curr[symb_list[i]]*0.02:
             passMes = False
             lim = limit.get(symb_list[i])
