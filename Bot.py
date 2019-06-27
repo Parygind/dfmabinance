@@ -12,6 +12,8 @@ dict_curr = dict()
 dict_prev_pr = dict()
 dict_curr_pr = dict()
 
+limit = dict()
+
 def start(update, context):
     update.message.reply_text('Hi! Use /set <seconds> to set a timer')
 
@@ -30,7 +32,7 @@ def alarm1(context):
     """Send the alarm message."""
     mesVol = ''
     job = context.job
-    global dict_prev, dict_curr, symb_list
+    global dict_prev, dict_curr, symb_list, limit
 
     #for i in range(0, int(len(symb_list)/2)):
     for i in range(0, int(len(symb_list))):
@@ -38,7 +40,26 @@ def alarm1(context):
         vol = float(inf[0][10])
 
         if vol >= dict_curr[symb_list[i]]*0.02:
-            mesVol += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%) '
+            passMes = False
+            lim = limit.get(symb_list[i])
+            if lim != None:
+                if vol >= dict_curr[symb_list[i]]*(pow(2,vol.second+1)/100):
+                    limit[symb_list[i]] = (30, (lim.second+1))
+                else:
+                    passMes = True
+                    if (vol.first-1)%5 == 0:
+                        l = lim.second - 1
+                        if l <= 1:
+                            limit[symb_list[i]] = None
+                        else:
+                            limit[symb_list[i]] = (vol.first-1, l)
+                    else:
+                        limit[symb_list[i]] = (vol.first - 1, lim.second)
+
+            else:
+                limit[symb_list[i]] = (30, 1)
+            if not passMes:
+                mesVol += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%) '
 
     if len(mesVol) > 0:
         mes = 'Объемы выросли : ' + mesVol
