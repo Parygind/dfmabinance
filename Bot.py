@@ -43,18 +43,18 @@ def alarm1(context):
             passMes = False
             lim = limit.get(symb_list[i])
             if lim != None:
-                if vol >= dict_curr[symb_list[i]]*(pow(2,vol.second+1)/100):
+                if vol >= dict_curr[symb_list[i]]*(pow(2,lim.second+1)/100):
                     limit[symb_list[i]] = (30, (lim.second+1))
                 else:
                     passMes = True
-                    if (vol.first-1)%5 == 0:
+                    if (lim.first-1)%5 == 0:
                         l = lim.second - 1
                         if l <= 1:
                             limit[symb_list[i]] = None
                         else:
-                            limit[symb_list[i]] = (vol.first-1, l)
+                            limit[symb_list[i]] = (lim.first-1, l)
                     else:
-                        limit[symb_list[i]] = (vol.first - 1, lim.second)
+                        limit[symb_list[i]] = (lim.first - 1, lim.second)
 
             else:
                 limit[symb_list[i]] = (30, 1)
