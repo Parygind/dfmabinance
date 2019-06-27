@@ -38,22 +38,23 @@ def alarm1(context):
     for i in range(0, int(len(symb_list))):
         inf = bin_bot.klines(symbol=symb_list[i], interval='5m', limit=1)
         vol = float(inf[0][10])
+
         if vol >= dict_curr[symb_list[i]]*0.02:
             passMes = False
             lim = limit.get(symb_list[i])
             if lim != None:
-                if vol >= dict_curr[symb_list[i]]*(pow(2,lim.second+1)/100):
-                    limit[symb_list[i]] = (30, (lim.second+1))
+                if vol >= dict_curr[symb_list[i]]*(pow(2,lim[0]+1)/100):
+                    limit[symb_list[i]] = (30, (lim[1]+1))
                 else:
                     passMes = True
-                    if (lim.first-1)%5 == 0:
-                        l = lim.second - 1
+                    if (lim[0]-1)%5 == 0:
+                        l = lim[1] - 1
                         if l <= 1:
                             limit[symb_list[i]] = None
                         else:
-                            limit[symb_list[i]] = (lim.first-1, l)
+                            limit[symb_list[i]] = (lim[0]-1, l)
                     else:
-                        limit[symb_list[i]] = (lim.first - 1, lim.second)
+                        limit[symb_list[i]] = (lim[0] - 1, lim[1])
 
             else:
                 limit[symb_list[i]] = (30, 1)
