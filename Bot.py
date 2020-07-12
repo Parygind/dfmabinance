@@ -3,6 +3,21 @@
 from telegram.ext import Updater, CommandHandler
 from binance_api import Binance
 import os
+import decimal
+
+# create a new context for this task
+ctx = decimal.Context()
+
+# 20 digits should be enough for everyone :D
+ctx.prec = 20
+
+def float_to_str(f):
+    """
+    Convert the given float to a string,
+    without resorting to scientific notation
+    """
+    d1 = ctx.create_decimal(repr(f))
+    return format(d1, 'f')
 
 bin_bot = None
 symb_list = None
@@ -62,7 +77,7 @@ def alarm1(context):
             else:
                 limit[symb_list[i]] = (30, 1)
             if not passMes:
-                mesVol += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%) Курс : ' + str(course)
+                mesVol += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%) Курс : ' + float_to_str(course)
 
     if len(mesVol) > 0:
         mes = 'Объемы выросли : ' + mesVol
