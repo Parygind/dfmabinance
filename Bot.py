@@ -41,6 +41,7 @@ def alarm1(context):
     for i in range(0, int(len(symb_list))):
         inf = bin_bot.klines(symbol=symb_list[i], interval='1m', limit=1)
         vol = float(inf[0][10])
+        course = float(inf[0][4])
         if vol >= dict_curr[symb_list[i]]*0.02:
             passMes = False
             lim = limit.get(symb_list[i])
@@ -61,7 +62,7 @@ def alarm1(context):
             else:
                 limit[symb_list[i]] = (30, 1)
             if not passMes:
-                mesVol += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%) '
+                mesVol += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%) Курс : ' + str(course)
 
     if len(mesVol) > 0:
         mes = 'Объемы выросли : ' + mesVol
