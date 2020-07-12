@@ -39,7 +39,7 @@ def alarm1(context):
 
     #for i in range(0, int(len(symb_list)/2)):
     for i in range(0, int(len(symb_list))):
-        inf = bin_bot.klines(symbol=symb_list[i], interval='5m', limit=1)
+        inf = bin_bot.klines(symbol=symb_list[i], interval='1m', limit=1)
         vol = float(inf[0][10])
         if vol >= dict_curr[symb_list[i]]*0.02:
             passMes = False
@@ -102,7 +102,7 @@ def set_timer(update, context):
         )
 
         job = context.job_queue.run_repeating(updateData, due, first=0, context=chat_id)
-        job = context.job_queue.run_repeating(alarm1, 60, first=10, context=chat_id)
+        job = context.job_queue.run_repeating(alarm1, 20, first=10, context=chat_id)
         #job = context.job_queue.run_repeating(alarm2, 120, first=70, context=chat_id)
         context.chat_data['job'] = job
 
