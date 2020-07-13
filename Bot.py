@@ -43,7 +43,7 @@ def count(update, context):
 def get_orders(update, context):
     mes = ''
     for k in dict_order.keys():
-        mes = mes + k + ' : ' + float_to_str(dict_order[k]) + ' ' + float_to_str(dict_last_price[k]) + '\n'
+        mes = mes + k + ' : ' + float_to_str(dict_order[k]) + ' ' + float_to_str(dict_last_price[k]) + ' ' + float_to_str(round(dict_last_price[k] / dict_order[k] - 1, 4)) + '\n'
     update.message.reply_text(mes)
 
 def updateData(context):
@@ -52,7 +52,7 @@ def updateData(context):
     dict_curr = dict()
 
     for pr in bin_bot.ticker24hr():
-        if pr['symbol'][-3:] == 'BTC' and float(pr['quoteVolume']) >= 0.00001 :#and float(pr['lastPrice']) >= 0.0001:
+        if pr['symbol'][-3:] == 'BTC' and float(pr['quoteVolume']) >= 0.00001 and float(pr['lastPrice']) >= 0.000001:
             dict_curr[pr['symbol']] = float(pr['quoteVolume'])
 
     symb_list = list(dict_curr.keys())
