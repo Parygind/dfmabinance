@@ -32,6 +32,7 @@ limit = dict()
 tk = 0
 sl = 0
 dict_order = dict()
+dict_last_price = dict()
 
 def start(update, context):
     update.message.reply_text('Hi! Use /set <seconds> to set a timer')
@@ -41,7 +42,7 @@ def count(update, context):
 
 def get_orders(update, context):
     for k in dict_order.keys():
-        update.message.reply_text(k + ' : ' + float_to_str(dict_order[k]))
+        update.message.reply_text(k + ' : ' + float_to_str(dict_order[k]) + ' ' + float_to_str(dict_last_price[k]))
 
 def updateData(context):
     global dict_prev, dict_curr, symb_list
@@ -68,6 +69,7 @@ def alarm1(context):
         course = float(inf[0][4])
 
         if symb_list[i] in dict_order:
+            dict_last_price[symb_list[i]] = course
             #if course - dict_order[symb_list[i]] >= 0.000003:
             if course >= dict_order[symb_list[i]] * 1.025:
                 tk = tk + 1
