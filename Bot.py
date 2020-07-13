@@ -104,6 +104,7 @@ def alarm1(context):
                 mesVol += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%) Курс : ' + float_to_str(course) + " "
                 if not symb_list[i] in dict_order:
                     dict_order[symb_list[i]] = course
+                    dict_last_price[symb_list[i]] = course
 
     if len(mesVol) > 0:
         mes = 'Объемы выросли : ' + mesVol
