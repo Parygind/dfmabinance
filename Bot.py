@@ -37,7 +37,8 @@ def start(update, context):
     update.message.reply_text('Hi! Use /set <seconds> to set a timer')
 
 def count(update, context):
-    update.message.reply_text('Кол-во пар : ' + str(len(symb_list)) + ', take profit : ' + str(tk) + ', stop loss' + str(sl))
+    pass
+    '''update.message.reply_text('Кол-во пар : ' + str(len(symb_list)) + ', take profit : ' + str(tk) + ', stop loss' + str(sl))'''
 
 def updateData(context):
     global dict_prev, dict_curr, symb_list
