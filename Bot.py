@@ -41,8 +41,10 @@ def count(update, context):
     update.message.reply_text('Кол-во пар : ' + str(len(symb_list)) + ', take profit : ' + str(tk) + ', stop loss : ' + str(sl))
 
 def get_orders(update, context):
+    mes = ''
     for k in dict_order.keys():
-        update.message.reply_text(k + ' : ' + float_to_str(dict_order[k]) + ' ' + float_to_str(dict_last_price[k]))
+        mes = mes + k + ' : ' + float_to_str(dict_order[k]) + ' ' + float_to_str(dict_last_price[k]) + '\\n'
+    update.message.reply_text(mes)
 
 def updateData(context):
     global dict_prev, dict_curr, symb_list
@@ -69,7 +71,7 @@ def alarm1(context):
         course = float(inf[0][4])
 
         if symb_list[i] in dict_order:
-            dict_last_price[symb_list[i]] = course
+            dict_last_price[symb_list[i]] = max(course, dict_last_price[symb_list[i]])
             #if course - dict_order[symb_list[i]] >= 0.000003:
             if course >= dict_order[symb_list[i]] * 1.025:
                 tk = tk + 1
