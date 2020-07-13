@@ -45,7 +45,7 @@ def updateData(context):
     dict_curr = dict()
 
     for pr in bin_bot.ticker24hr():
-        if pr['symbol'][-3:] == 'BTC' and float(pr['quoteVolume']) >= 0.00001 and float(pr['lastPrice']) >= 0.0001:
+        if pr['symbol'][-3:] == 'BTC' and float(pr['quoteVolume']) >= 0.00001 :#and float(pr['lastPrice']) >= 0.0001:
             dict_curr[pr['symbol']] = float(pr['quoteVolume'])
 
     symb_list = list(dict_curr.keys())
@@ -64,13 +64,15 @@ def alarm1(context):
         course = float(inf[0][4])
 
         if symb_list[i] in dict_order:
-            if course - dict_order[symb_list[i]] >= 0.000003:
+            #if course - dict_order[symb_list[i]] >= 0.000003:
+            if course >= dict_order[symb_list[i]] * 1.025:
                 tk = tk + 1
-                mesOrd = mesOrd + 'Профит ' + symb_list[i] + ' ' + float_to_str(course) + ' ' + dict_order[symb_list[i]] + ' '
+                mesOrd = mesOrd + 'Профит ' + symb_list[i] + ' ' + float_to_str(course) + ' ' + float_to_str(dict_order[symb_list[i]]) + ' '
                 del dict_order[symb_list[i]]
-            elif course - dict_order[symb_list[i]] <= -0.000003:
+            #elif course - dict_order[symb_list[i]] <= -0.000003:
+            if course <= dict_order[symb_list[i]] * 0.975:
                 sl = sl + 1
-                mesOrd = mesOrd + 'Убыток ' + symb_list[i] + ' ' + float_to_str(course) + ' ' + dict_order[symb_list[i]] + ' '
+                mesOrd = mesOrd + 'Убыток ' + symb_list[i] + ' ' + float_to_str(course) + ' ' + float_to_str(dict_order[symb_list[i]]) + ' '
                 del dict_order[symb_list[i]]
 
         if vol >= dict_curr[symb_list[i]]*0.02:
