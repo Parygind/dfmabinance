@@ -39,6 +39,10 @@ def start(update, context):
 def count(update, context):
     update.message.reply_text('Кол-во пар : ' + str(len(symb_list)) + ', take profit : ' + str(tk) + ', stop loss : ' + str(sl))
 
+def get_orders(update, context):
+    for k in dict_order.keys():
+        update.message.reply_text(k + ' : ' + float_to_str(dict_order[k]))
+
 def updateData(context):
     global dict_prev, dict_curr, symb_list
     dict_prev = dict_curr
@@ -209,6 +213,7 @@ updater.dispatcher.add_handler(CommandHandler('get', get_vol, pass_args=True, pa
 updater.dispatcher.add_handler(CommandHandler('gettop', get_top, pass_chat_data=True))
 updater.dispatcher.add_handler(CommandHandler('unset', unset, pass_chat_data=True))
 updater.dispatcher.add_handler(CommandHandler('count', count, pass_chat_data=True))
+updater.dispatcher.add_handler(CommandHandler('orders', get_orders, pass_chat_data=True))
 
 updater.start_webhook(listen='0.0.0.0', port=PORT, url_path=TOKEN)
 updater.bot.set_webhook(URL + TOKEN)
