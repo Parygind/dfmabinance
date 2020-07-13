@@ -29,11 +29,15 @@ dict_curr_pr = dict()
 
 limit = dict()
 
+tk = 0
+sl = 0
+dict_order = dict()
+
 def start(update, context):
     update.message.reply_text('Hi! Use /set <seconds> to set a timer')
 
 def count(update, context):
-    update.message.reply_text(len(symb_list))
+    update.message.reply_text('Кол-во пар : ' + len(symb_list) + ', take profit : ' + tk + ', stop loss' + sl)
 
 def updateData(context):
     global dict_prev, dict_curr, symb_list
@@ -49,6 +53,7 @@ def updateData(context):
 def alarm1(context):
     """Send the alarm message."""
     mesVol = ''
+    mesOrd = ''
     job = context.job
     global dict_prev, dict_curr, symb_list, limit
 
@@ -57,6 +62,17 @@ def alarm1(context):
         inf = bin_bot.klines(symbol=symb_list[i], interval='1m', limit=1)
         vol = float(inf[0][10])
         course = float(inf[0][4])
+
+        if symb_list[i] in dict_order:
+            if course > dict_order[symb_list[i]] * 1.1:
+                tk = tk + 1
+                mesOrd = mesOrd + 'Профит ' + symb_list[i] + ' ' + float_to_str(course) + ' ' + dict_order[symb_list[i]] + ' '
+                del dict_order[symb_list[i]]
+            elif course < dict_order[symb_list[i]] * 0.9:
+                sl = sl + 1
+                mesOrd = mesOrd + 'Убыток ' + symb_list[i] + ' ' + float_to_str(course) + ' ' + dict_order[symb_list[i]] + ' '
+                del dict_order[symb_list[i]]
+
         if vol >= dict_curr[symb_list[i]]*0.02:
             passMes = False
             lim = limit.get(symb_list[i])
@@ -77,10 +93,14 @@ def alarm1(context):
             else:
                 limit[symb_list[i]] = (30, 1)
             if not passMes:
-                mesVol += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%) Курс : ' + float_to_str(course)
+                mesVol += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%) Курс : ' + float_to_str(course) + " "
+                dict_order[symb_list[i]] = course
 
     if len(mesVol) > 0:
         mes = 'Объемы выросли : ' + mesVol
+        context.bot.send_message(chat_id='-1001242337520', text=mes)
+    if len(mesOrd) > 0:
+        mes = 'Сделки закрыты : ' + mesOrd
         context.bot.send_message(chat_id='-1001242337520', text=mes)
 
 def alarm2(context):
