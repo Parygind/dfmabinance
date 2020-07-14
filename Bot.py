@@ -150,7 +150,7 @@ def set_timer(update, context):
         )
 
         job = context.job_queue.run_repeating(updateData, due, first=0, context=chat_id)
-        job = context.job_queue.run_repeating(alarm1, 20, first=10, context=chat_id)
+        job = context.job_queue.run_repeating(alarm1, 5, first=10, context=chat_id)
         #job = context.job_queue.run_repeating(alarm2, 120, first=70, context=chat_id)
         context.chat_data['job'] = job
 
