@@ -78,7 +78,7 @@ def alarm1(context):
                 mesOrd = mesOrd + 'Профит ' + symb_list[i] + ' ' + float_to_str(course) + ' ' + float_to_str(dict_order[symb_list[i]]) + ' '
                 del dict_order[symb_list[i]]
             #elif course - dict_order[symb_list[i]] <= -0.000003:
-            if course <= dict_order[symb_list[i]] * 0.965:
+            elif course <= dict_order[symb_list[i]] * 0.965:
                 sl = sl + 1
                 mesOrd = mesOrd + 'Убыток ' + symb_list[i] + ' ' + float_to_str(course) + ' ' + float_to_str(dict_order[symb_list[i]]) + ' '
                 del dict_order[symb_list[i]]
