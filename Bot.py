@@ -107,6 +107,13 @@ def alarm1(context):
                 if not symb_list[i] in dict_order:
                     dict_order[symb_list[i]] = course
                     dict_last_price[symb_list[i]] = course
+                    bin_bot.testOrder(
+                                        symbol=symb_list[i],
+                                        side='BUY',
+                                        type='MARKET',
+                                        timeInForce='IOC',
+                                        quantity=0.1
+                                     )
 
     if len(mesVol) > 0:
         mes = 'Объемы выросли : ' + mesVol
