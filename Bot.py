@@ -52,7 +52,7 @@ def updateData(context):
     dict_curr = dict()
 
     for pr in bin_bot.ticker24hr():
-        if pr['symbol'][-3:] == 'BTC' and float(pr['quoteVolume']) >= 0.00001 and float(pr['lastPrice']) >= 0.000001:
+        if pr['symbol'][-3:] == 'BTC' and float(pr['quoteVolume']) >= 0.00001 and float(pr['lastPrice']) >= 0.0001:
             dict_curr[pr['symbol']] = float(pr['quoteVolume'])
 
     symb_list = list(dict_curr.keys())
@@ -62,7 +62,7 @@ def alarm1(context):
     mesVol = ''
     mesOrd = ''
     job = context.job
-    global dict_prev, dict_curr, symb_list, limit
+    global dict_prev, dict_curr, symb_list, limit, tk, sl, dict_last_price, dict_order
 
     #for i in range(0, int(len(symb_list)/2)):
     for i in range(0, int(len(symb_list))):
@@ -73,12 +73,12 @@ def alarm1(context):
         if symb_list[i] in dict_order:
             dict_last_price[symb_list[i]] = max(course, dict_last_price[symb_list[i]])
             #if course - dict_order[symb_list[i]] >= 0.000003:
-            if course >= dict_order[symb_list[i]] * 1.025:
+            if course >= dict_order[symb_list[i]] * 1.035:
                 tk = tk + 1
                 mesOrd = mesOrd + 'Профит ' + symb_list[i] + ' ' + float_to_str(course) + ' ' + float_to_str(dict_order[symb_list[i]]) + ' '
                 del dict_order[symb_list[i]]
             #elif course - dict_order[symb_list[i]] <= -0.000003:
-            if course <= dict_order[symb_list[i]] * 0.975:
+            if course <= dict_order[symb_list[i]] * 0.965:
                 sl = sl + 1
                 mesOrd = mesOrd + 'Убыток ' + symb_list[i] + ' ' + float_to_str(course) + ' ' + float_to_str(dict_order[symb_list[i]]) + ' '
                 del dict_order[symb_list[i]]
