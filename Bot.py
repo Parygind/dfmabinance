@@ -73,7 +73,7 @@ def alarm1(context):
         if symb_list[i] in dict_order:
             dict_last_price[symb_list[i]] = max(course, dict_last_price[symb_list[i]])
             #if course - dict_order[symb_list[i]] >= 0.000003:
-            if course >= dict_order[symb_list[i]] * 1.035:
+            if course >= dict_order[symb_list[i]] * 1.025:
                 tk = tk + 1
                 mesOrd = mesOrd + 'Профит ' + symb_list[i] + ' ' + float_to_str(course) + ' ' + float_to_str(dict_order[symb_list[i]]) + ' '
                 del dict_order[symb_list[i]]
@@ -83,11 +83,11 @@ def alarm1(context):
                 mesOrd = mesOrd + 'Убыток ' + symb_list[i] + ' ' + float_to_str(course) + ' ' + float_to_str(dict_order[symb_list[i]]) + ' '
                 del dict_order[symb_list[i]]
 
-        if vol >= dict_curr[symb_list[i]]*0.02:
+        if vol >= dict_curr[symb_list[i]]*0.15:
             passMes = False
             lim = limit.get(symb_list[i])
             if lim != None:
-                if vol >= dict_curr[symb_list[i]]*(pow(2,lim[0]+1)/100):
+                if vol >= dict_curr[symb_list[i]]*(pow(1.5, lim[0]+1)/100):
                     limit[symb_list[i]] = (30, (lim[1]+1))
                 else:
                     passMes = True
