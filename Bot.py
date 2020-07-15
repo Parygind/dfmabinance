@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from telegram.ext import Updater, CommandHandler
-from binance_api import Binance
+#from binance_api import Binance
+import ccxt
 import os
 import decimal
 
@@ -51,8 +52,9 @@ def updateData(context):
     dict_prev = dict_curr
     dict_curr = dict()
 
-    for pr in bin_bot.ticker24hr():
-        if pr['symbol'][-3:] == 'BTC' and float(pr['quoteVolume']) >= 0.00001 and float(pr['lastPrice']) >= 0.0001:
+    #for pr in bin_bot.ticker24hr():
+    for pr in bin_bot.get_ticker():
+        if pr['symbol'][-3:] == 'BTC' and float(pr['quoteVolume']) >= 0.00001 and float(pr['lastPrice']) >= 0.00001:
             dict_curr[pr['symbol']] = float(pr['quoteVolume'])
 
     symb_list = list(dict_curr.keys())
@@ -66,7 +68,7 @@ def alarm1(context):
 
     #for i in range(0, int(len(symb_list)/2)):
     for i in range(0, int(len(symb_list))):
-        inf = bin_bot.klines(symbol=symb_list[i], interval='1m', limit=1)
+        inf = bin_bot.fetch_ohlcv(symb_list[i], '1m', None, 1)
         vol = float(inf[0][10])
         course = float(inf[0][4])
 
@@ -107,13 +109,19 @@ def alarm1(context):
                 if not symb_list[i] in dict_order:
                     dict_order[symb_list[i]] = course
                     dict_last_price[symb_list[i]] = course
-                    bin_bot.testOrder(
-                                        symbol=symb_list[i],
-                                        side='BUY',
-                                        type='MARKET',
-                                        quantity=0.1,
-                                        timeInForce='IOC'
-                                     )
+                    symbol = 'ETH/BTC'
+                    type = 'market'  # or 'market'
+                    side = 'sell'  # or 'buy'
+                    amount = 1.0
+                    price = None  # or None
+
+                    # extra params and overrides if needed
+                    params = {
+                        'test': True,  # test if it's valid, but don't actually place it
+                    }
+
+                    order = bin_bot.create_order(symbol, type, side, amount, price, params)
+                    context.bot.send_message(chat_id='-1001242337520', text=order)
 
     if len(mesVol) > 0:
         mes = 'Объемы выросли : ' + mesVol
@@ -151,10 +159,11 @@ def set_timer(update, context):
 
         global bin_bot
 
-        bin_bot = Binance(
-            API_KEY=os.environ['API_KEY'],
-            API_SECRET=os.environ['API_SECRET']
-        )
+        bin_bot = ccxt.binance({
+            'apiKey' : os.environ['API_KEY'],
+            'secret' : os.environ['API_SECRET'],
+            'enableRateLimit': True,
+        })
 
         job = context.job_queue.run_repeating(updateData, due, first=0, context=chat_id)
         job = context.job_queue.run_repeating(alarm1, 5, first=10, context=chat_id)
