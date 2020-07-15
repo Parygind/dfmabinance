@@ -83,11 +83,11 @@ def alarm1(context):
                 mesOrd = mesOrd + 'Убыток ' + symb_list[i] + ' ' + float_to_str(course) + ' ' + float_to_str(dict_order[symb_list[i]]) + ' '
                 del dict_order[symb_list[i]]
 
-        if vol >= dict_curr[symb_list[i]]*0.015:
+        if vol >= dict_curr[symb_list[i]]*0.02:
             passMes = False
             lim = limit.get(symb_list[i])
             if lim != None:
-                if vol >= dict_curr[symb_list[i]]*(pow(1.5, lim[0]+1)/100):
+                if vol >= dict_curr[symb_list[i]]*(pow(2, lim[0]+1)/100):
                     limit[symb_list[i]] = (30, (lim[1]+1))
                 else:
                     passMes = True
@@ -111,8 +111,8 @@ def alarm1(context):
                                         symbol=symb_list[i],
                                         side='BUY',
                                         type='MARKET',
-                                        timeInForce='IOC',
-                                        quantity=0.1
+                                        quantity=0.1,
+                                        timeInForce='IOC'
                                      )
 
     if len(mesVol) > 0:
