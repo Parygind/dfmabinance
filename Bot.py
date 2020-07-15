@@ -53,7 +53,7 @@ def updateData(context):
     dict_curr = dict()
 
     #for pr in bin_bot.ticker24hr():
-    for pr in bin_bot.get_ticker():
+    for pr in bin_bot.fetch_tickers():
         if pr['symbol'][-3:] == 'BTC' and float(pr['quoteVolume']) >= 0.00001 and float(pr['lastPrice']) >= 0.00001:
             dict_curr[pr['symbol']] = float(pr['quoteVolume'])
 
