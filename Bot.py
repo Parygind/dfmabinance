@@ -67,10 +67,12 @@ def alarm1(context):
     job = context.job
     global dict_prev, dict_curr, symb_list, limit, tk, sl, dict_last_price, dict_order
 
-    #for i in range(0, int(len(symb_list)/2)):
     for i in range(0, int(len(symb_list))):
         vol = 0
-        tr = bin_bot.fetch_trades('FTT/BTC', since=bin_bot.milliseconds() - 60000)
+        tr = bin_bot.fetch_trades(symb_list[i], since=bin_bot.milliseconds() - 60000)
+        if len(tr) == 0:
+            continue
+        
         for t in tr:
             if t['side'] == 'buy':
                 vol += t['price'] * t['amount']
