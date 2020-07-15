@@ -52,10 +52,11 @@ def updateData(context):
     dict_prev = dict_curr
     dict_curr = dict()
 
+    tickers = bin_bot.fetch_tickers()
     #for pr in bin_bot.ticker24hr():
-    for pr in bin_bot.fetch_tickers():
-        if pr['symbol'][-3:] == 'BTC' and float(pr['quoteVolume']) >= 0.00001 and float(pr['lastPrice']) >= 0.00001:
-            dict_curr[pr['symbol']] = float(pr['quoteVolume'])
+    for pr in tickers:
+        if tickers[pr]['symbol'][-3:] == 'BTC' and float(tickers[pr]['quoteVolume']) >= 0.00001 and float(tickers[pr]['close']) >= 0.00001:
+            dict_curr[tickers[pr]['symbol']] = float(tickers[pr]['quoteVolume'])
 
     symb_list = list(dict_curr.keys())
 
@@ -69,7 +70,7 @@ def alarm1(context):
     #for i in range(0, int(len(symb_list)/2)):
     for i in range(0, int(len(symb_list))):
         inf = bin_bot.fetch_ohlcv(symb_list[i], '1m', None, 1)
-        vol = float(inf[0][10])
+        vol = float(inf[0][5])
         course = float(inf[0][4])
 
         if symb_list[i] in dict_order:
