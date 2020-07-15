@@ -83,7 +83,7 @@ def alarm1(context):
                 mesOrd = mesOrd + 'Убыток ' + symb_list[i] + ' ' + float_to_str(course) + ' ' + float_to_str(dict_order[symb_list[i]]) + ' '
                 del dict_order[symb_list[i]]
 
-        if vol >= dict_curr[symb_list[i]]*0.15:
+        if vol >= dict_curr[symb_list[i]]*0.015:
             passMes = False
             lim = limit.get(symb_list[i])
             if lim != None:
