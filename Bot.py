@@ -69,12 +69,12 @@ def alarm1(context):
 
     #for i in range(0, int(len(symb_list)/2)):
     for i in range(0, int(len(symb_list))):
-        inf = bin_bot.fetch_ohlcv(symb_list[i], '1m', None, 1)
         vol = 0
-        course = float(inf[0][4])
-        book = bin_bot.fetch_order_book(symb_list[i])['bids']
-        for b in book:
-            vol += b[1] * b[0]
+        tr = bin_bot.fetch_trades('FTT/BTC', since=bin_bot.milliseconds() - 60000)
+        for t in tr:
+            if t['side'] == 'buy':
+                vol += t['price'] * t['amount']
+        course = tr[len(tr) - 1]['price']
 
         if symb_list[i] in dict_order:
             dict_last_price[symb_list[i]] = max(course, dict_last_price[symb_list[i]])
@@ -172,7 +172,7 @@ def set_timer(update, context):
         })
 
         job = context.job_queue.run_repeating(updateData, due, first=0, context=chat_id)
-        job = context.job_queue.run_repeating(alarm1, 10, first=20, context=chat_id)
+        job = context.job_queue.run_repeating(alarm1, 60, first=20, context=chat_id)
         #job = context.job_queue.run_repeating(alarm2, 120, first=70, context=chat_id)
         context.chat_data['job'] = job
 
@@ -246,4 +246,6 @@ updater.bot.set_webhook(URL + TOKEN)
 
 #updater.start_polling()
 updater.idle()
+
+
 
