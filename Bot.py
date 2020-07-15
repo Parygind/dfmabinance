@@ -72,10 +72,12 @@ def alarm1(context):
         tr = bin_bot.fetch_trades(symb_list[i], since=bin_bot.milliseconds() - 60000)
         if len(tr) == 0:
             continue
-        
+
         for t in tr:
             if t['side'] == 'buy':
                 vol += t['price'] * t['amount']
+            else:
+                vol -= t['price'] * t['amount']
         course = tr[len(tr) - 1]['price']
 
         if symb_list[i] in dict_order:
