@@ -191,7 +191,6 @@ def get_vol(update, context):
         update.message.reply_text('Usage: /get <trade_pair>')
 
 def unset(update, context):
-    """Remove the job if the user changed their mind."""
     if 'job' not in context.chat_data:
         update.message.reply_text('У вас нет запущенного таймера')
         return
