@@ -110,6 +110,7 @@ def alarm1(context):
                 if not symb_list[i] in dict_order:
                     dict_order[symb_list[i]] = course
                     dict_last_price[symb_list[i]] = course
+                    '''
                     symbol = 'ETH/BTC'
                     type = 'market'  # or 'market'
                     side = 'sell'  # or 'buy'
@@ -123,6 +124,7 @@ def alarm1(context):
 
                     order = bin_bot.create_order(symbol, type, side, amount, price, params)
                     context.bot.send_message(chat_id='-1001242337520', text=order)
+                    '''
 
     if len(mesVol) > 0:
         mes = 'Объемы выросли : ' + mesVol
