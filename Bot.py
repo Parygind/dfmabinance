@@ -52,7 +52,7 @@ def updateData(context):
     dict_curr = dict()
 
     for pr in bin_bot.ticker24hr():
-        if pr['symbol'][-3:] == 'BTC' and float(pr['quoteVolume']) >= 0.00001 and float(pr['lastPrice']) >= 0.00001:
+        if pr['symbol'][-3:] == 'BTC' and float(pr['quoteVolume']) >= 0.00001 and float(pr['lastPrice']) >= 0.0001:
             dict_curr[pr['symbol']] = float(pr['quoteVolume'])
 
     symb_list = list(dict_curr.keys())
