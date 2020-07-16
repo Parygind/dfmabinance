@@ -35,6 +35,16 @@ sl = 0
 dict_order = dict()
 dict_last_price = dict()
 
+def get_klines(symb):
+    params = {}
+    bin_bot.load_markets()
+    market = bin_bot.market(symb)
+    request = {'symbol': market['id'], 'interval': bin_bot.timeframes['1m'], }
+    request['limit'] = 1  # default == max == 500
+    method = 'publicGetKlines' if market['spot'] else 'fapiPublicGetKlines'
+
+    return getattr(bin_bot, method)(bin_bot.extend(request, params))
+
 def start(update, context):
     update.message.reply_text('Hi! Use /set <seconds> to set a timer')
 
@@ -68,7 +78,10 @@ def alarm1(context):
     global dict_prev, dict_curr, symb_list, limit, tk, sl, dict_last_price, dict_order
 
     for i in range(0, int(len(symb_list))):
-        vol = 0
+        kline = get_klines(symb_list[i])
+        vol = kline[0][10]
+        course = kline[0][4]
+        '''
         tr = bin_bot.fetch_trades(symb_list[i], since=bin_bot.milliseconds() - 60000)
         if len(tr) == 0:
             continue
@@ -79,6 +92,7 @@ def alarm1(context):
             else:
                 vol -= t['price'] * t['amount']
         course = tr[len(tr) - 1]['price']
+        '''
 
         if symb_list[i] in dict_order:
             dict_last_price[symb_list[i]] = max(course, dict_last_price[symb_list[i]])
@@ -250,6 +264,4 @@ updater.bot.set_webhook(URL + TOKEN)
 
 #updater.start_polling()
 updater.idle()
-
-
 
