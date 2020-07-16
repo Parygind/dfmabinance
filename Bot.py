@@ -79,8 +79,8 @@ def alarm1(context):
 
     for i in range(0, int(len(symb_list))):
         kline = get_klines(symb_list[i])
-        vol = kline[0][10]
-        course = kline[0][4]
+        vol = float(kline[0][10])
+        course = float(kline[0][4])
         '''
         tr = bin_bot.fetch_trades(symb_list[i], since=bin_bot.milliseconds() - 60000)
         if len(tr) == 0:
