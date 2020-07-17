@@ -206,7 +206,7 @@ def alarm4(context):
         if dict_wall[symb_list[i]] * 0.8 >= vol:
             dict_wall[symb_list[i]] = vol
             if not symb_list[i] in dict_order:
-                mesVol += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%) Курс : ' + float_to_str(course) + " "
+                mesVol += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_wall[symb_list[i]])*100, 2)) + '%) Курс : ' + float_to_str(course) + " "
                 dict_order[symb_list[i]] = course
                 dict_last_price[symb_list[i]] = course
 
