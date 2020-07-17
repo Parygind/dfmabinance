@@ -5,6 +5,7 @@ from telegram.ext import Updater, CommandHandler
 import ccxt
 import os
 import decimal
+import time
 
 # create a new context for this task
 ctx = decimal.Context()
@@ -65,7 +66,20 @@ def updateData(context):
     tickers = bin_bot.fetch_tickers()
     #for pr in bin_bot.ticker24hr():
     for pr in tickers:
-        if tickers[pr]['symbol'][-3:] == 'BTC' and float(tickers[pr]['quoteVolume']) >= 0.00001 and float(tickers[pr]['close']) >= 0.00001:
+        if tickers[pr]['symbol'][-3:] == 'BTC' and float(tickers[pr]['quoteVolume']) >= 0.01 and float(tickers[pr]['close']) >= 0.00001:
+            dict_curr[tickers[pr]['symbol']] = float(tickers[pr]['quoteVolume'])
+
+    symb_list = list(dict_curr.keys())
+
+def updateData1():
+    global dict_prev, dict_curr, symb_list
+    dict_prev = dict_curr
+    dict_curr = dict()
+
+    tickers = bin_bot.fetch_tickers()
+    #for pr in bin_bot.ticker24hr():
+    for pr in tickers:
+        if tickers[pr]['symbol'][-3:] == 'BTC' and float(tickers[pr]['quoteVolume']) >= 5 and float(tickers[pr]['close']) >= 0.00001:
             dict_curr[tickers[pr]['symbol']] = float(tickers[pr]['quoteVolume'])
 
     symb_list = list(dict_curr.keys())
@@ -78,10 +92,11 @@ def alarm1(context):
     global dict_prev, dict_curr, symb_list, limit, tk, sl, dict_last_price, dict_order
 
     for i in range(0, int(len(symb_list))):
-        kline = get_klines(symb_list[i])
-        vol = float(kline[0][10])
-        course = float(kline[0][4])
-        '''
+        #kline = get_klines(symb_list[i])
+        #vol = float(kline[0][10])
+        #course = float(kline[0][4])
+
+        vol = 0
         tr = bin_bot.fetch_trades(symb_list[i], since=bin_bot.milliseconds() - 60000)
         if len(tr) == 0:
             continue
@@ -92,19 +107,19 @@ def alarm1(context):
             else:
                 vol -= t['price'] * t['amount']
         course = tr[len(tr) - 1]['price']
-        '''
+
 
         if symb_list[i] in dict_order:
-            dict_last_price[symb_list[i]] = max(course, dict_last_price[symb_list[i]])
+            dict_last_price[symb_list[i]] = course
             #if course - dict_order[symb_list[i]] >= 0.000003:
             if course >= dict_order[symb_list[i]] * 1.025:
                 tk = tk + 1
-                mesOrd = mesOrd + 'Профит ' + symb_list[i] + ' ' + float_to_str(course) + ' ' + float_to_str(dict_order[symb_list[i]]) + ' '
+                mesOrd = mesOrd + 'Профит ' + symb_list[i] + ' ' + float_to_str(dict_order[symb_list[i]]) + ' ' + float_to_str(course) + ' '
                 del dict_order[symb_list[i]]
             #elif course - dict_order[symb_list[i]] <= -0.000003:
             elif course <= dict_order[symb_list[i]] * 0.965:
                 sl = sl + 1
-                mesOrd = mesOrd + 'Убыток ' + symb_list[i] + ' ' + float_to_str(course) + ' ' + float_to_str(dict_order[symb_list[i]]) + ' '
+                mesOrd = mesOrd + 'Убыток ' + symb_list[i] + ' ' + float_to_str(dict_order[symb_list[i]]) + ' ' + float_to_str(course) + ' '
                 del dict_order[symb_list[i]]
 
         if vol >= dict_curr[symb_list[i]]*0.02:
@@ -153,6 +168,71 @@ def alarm1(context):
     if len(mesOrd) > 0:
         mes = 'Сделки закрыты : ' + mesOrd
         context.bot.send_message(chat_id='-1001242337520', text=mes)
+
+def alarm3():
+    """Send the alarm message."""
+    mesVol = ''
+    mesOrd = ''
+
+    global dict_prev, dict_curr, symb_list, limit, tk, sl, dict_last_price, dict_order
+
+    for i in range(0, int(len(symb_list))):
+        #kline = get_klines(symb_list[i])
+        #vol = float(kline[0][10])
+        #course = float(kline[0][4])
+
+        vol = 0
+        tr = bin_bot.fetch_trades(symb_list[i], since=bin_bot.milliseconds() - 60000)
+        if len(tr) == 0:
+            continue
+
+        for t in tr:
+            if t['side'] == 'buy':
+                vol += t['price'] * t['amount']
+            else:
+                vol -= t['price'] * t['amount']
+        course = tr[len(tr) - 1]['price']
+
+
+        if symb_list[i] in dict_order:
+            dict_last_price[symb_list[i]] = course
+            #if course - dict_order[symb_list[i]] >= 0.000003:
+            if course >= dict_order[symb_list[i]] * 1.025:
+                tk = tk + 1
+                mesOrd = mesOrd + 'Профит ' + symb_list[i] + ' ' + float_to_str(course) + ' ' + float_to_str(dict_order[symb_list[i]]) + ' '
+                del dict_order[symb_list[i]]
+            #elif course - dict_order[symb_list[i]] <= -0.000003:
+            elif course <= dict_order[symb_list[i]] * 0.965:
+                sl = sl + 1
+                mesOrd = mesOrd + 'Убыток ' + symb_list[i] + ' ' + float_to_str(course) + ' ' + float_to_str(dict_order[symb_list[i]]) + ' '
+                del dict_order[symb_list[i]]
+
+        if vol >= dict_curr[symb_list[i]]*0.02:
+            passMes = False
+            lim = limit.get(symb_list[i])
+            if lim != None:
+                if vol >= dict_curr[symb_list[i]]*(pow(2, lim[0]+1)/100):
+                    limit[symb_list[i]] = (30, (lim[1]+1))
+                else:
+                    passMes = True
+                    if (lim[0]-1)%5 == 0:
+                        l = lim[1] - 1
+                        if l <= 1:
+                            limit[symb_list[i]] = None
+                        else:
+                            limit[symb_list[i]] = (lim[0]-1, l)
+                    else:
+                        limit[symb_list[i]] = (lim[0] - 1, lim[1])
+
+            else:
+                limit[symb_list[i]] = (30, 1)
+            if not passMes:
+                mesVol += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%) Курс : ' + float_to_str(course) + " "
+                if not symb_list[i] in dict_order:
+                    dict_order[symb_list[i]] = course
+                    dict_last_price[symb_list[i]] = course
+
+
 
 def alarm2(context):
     """Send the alarm message."""
@@ -264,4 +344,3 @@ updater.bot.set_webhook(URL + TOKEN)
 
 #updater.start_polling()
 updater.idle()
-
