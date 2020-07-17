@@ -35,6 +35,7 @@ tk = 0
 sl = 0
 dict_order = dict()
 dict_last_price = dict()
+dict_wall = dict()
 
 def get_klines(symb):
     params = {}
@@ -169,11 +170,11 @@ def alarm1(context):
         mes = 'Сделки закрыты : ' + mesOrd
         context.bot.send_message(chat_id='-1001242337520', text=mes)
 
-def alarm3():
+def alarm4(context):
     """Send the alarm message."""
     mesVol = ''
     mesOrd = ''
-
+    job = context.job
     global dict_prev, dict_curr, symb_list, limit, tk, sl, dict_last_price, dict_order
 
     for i in range(0, int(len(symb_list))):
@@ -182,55 +183,39 @@ def alarm3():
         #course = float(kline[0][4])
 
         vol = 0
-        tr = bin_bot.fetch_trades(symb_list[i], since=bin_bot.milliseconds() - 60000)
-        if len(tr) == 0:
+        f = bin_bot.fetchOrderBook(symb_list[i])
+        course = f['asks'][0][0]
+        for item in f['asks']:
+            vol += float(item[0]) * float(item[1])
+
+        if not symb_list[i] in dict_wall:
+            dict_wall[symb_list[i]] = vol
             continue
-
-        for t in tr:
-            if t['side'] == 'buy':
-                vol += t['price'] * t['amount']
-            else:
-                vol -= t['price'] * t['amount']
-        course = tr[len(tr) - 1]['price']
-
 
         if symb_list[i] in dict_order:
             dict_last_price[symb_list[i]] = course
-            #if course - dict_order[symb_list[i]] >= 0.000003:
             if course >= dict_order[symb_list[i]] * 1.025:
                 tk = tk + 1
-                mesOrd = mesOrd + 'Профит ' + symb_list[i] + ' ' + float_to_str(course) + ' ' + float_to_str(dict_order[symb_list[i]]) + ' '
+                mesOrd = mesOrd + 'Профит ' + symb_list[i] + ' ' + float_to_str(dict_order[symb_list[i]]) + ' ' + float_to_str(course) + ' '
                 del dict_order[symb_list[i]]
-            #elif course - dict_order[symb_list[i]] <= -0.000003:
             elif course <= dict_order[symb_list[i]] * 0.965:
                 sl = sl + 1
-                mesOrd = mesOrd + 'Убыток ' + symb_list[i] + ' ' + float_to_str(course) + ' ' + float_to_str(dict_order[symb_list[i]]) + ' '
+                mesOrd = mesOrd + 'Убыток ' + symb_list[i] + ' ' + float_to_str(dict_order[symb_list[i]]) + ' ' + float_to_str(course) + ' '
                 del dict_order[symb_list[i]]
 
-        if vol >= dict_curr[symb_list[i]]*0.02:
-            passMes = False
-            lim = limit.get(symb_list[i])
-            if lim != None:
-                if vol >= dict_curr[symb_list[i]]*(pow(2, lim[0]+1)/100):
-                    limit[symb_list[i]] = (30, (lim[1]+1))
-                else:
-                    passMes = True
-                    if (lim[0]-1)%5 == 0:
-                        l = lim[1] - 1
-                        if l <= 1:
-                            limit[symb_list[i]] = None
-                        else:
-                            limit[symb_list[i]] = (lim[0]-1, l)
-                    else:
-                        limit[symb_list[i]] = (lim[0] - 1, lim[1])
-
-            else:
-                limit[symb_list[i]] = (30, 1)
-            if not passMes:
+        if dict_wall[symb_list[i]] * 0.8 >= vol:
+            dict_wall[symb_list[i]] = vol
+            if not symb_list[i] in dict_order:
                 mesVol += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%) Курс : ' + float_to_str(course) + " "
-                if not symb_list[i] in dict_order:
-                    dict_order[symb_list[i]] = course
-                    dict_last_price[symb_list[i]] = course
+                dict_order[symb_list[i]] = course
+                dict_last_price[symb_list[i]] = course
+
+    if len(mesVol) > 0:
+        mes = 'Пробитие стены : ' + mesVol
+        context.bot.send_message(chat_id='-1001242337520', text=mes)
+    if len(mesOrd) > 0:
+        mes = 'Сделки закрыты : ' + mesOrd
+        context.bot.send_message(chat_id='-1001242337520', text=mes)
 
 
 
@@ -270,7 +255,7 @@ def set_timer(update, context):
         })
 
         job = context.job_queue.run_repeating(updateData, due, first=0, context=chat_id)
-        job = context.job_queue.run_repeating(alarm1, 60, first=20, context=chat_id)
+        job = context.job_queue.run_repeating(alarm4, 60, first=20, context=chat_id)
         #job = context.job_queue.run_repeating(alarm2, 120, first=70, context=chat_id)
         context.chat_data['job'] = job
 
