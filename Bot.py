@@ -314,7 +314,7 @@ def get_top(update, context):
 
     except (IndexError, ValueError):
         update.message.reply_text('COMMAND ERROR')
-'''
+
 URL = os.environ.get('URL')
 PORT = int(os.environ.get('PORT', '5000'))
 TOKEN = os.environ['TEL_TOKEN']
@@ -337,20 +337,3 @@ updater.bot.set_webhook(URL + TOKEN)
 
 #updater.start_polling()
 updater.idle()
-'''
-bin_bot = ccxt.binance({
-            'apiKey' : '7ky41JML91VbXgtJkLvArjQknwCOojJtLBGaMeYlQyuJragEhzGaRQCYtCmkR3IR',
-            'secret' : '6kYRGbm0ObOzxxUCswVBz4mJnrpj3IXzVVNBIIsRwzqKhGrlV0QK6dnvhWNvR4oK',
-            'enableRateLimit': True,
-        })
-vol1 = 0
-vol2 = 0
-f = bin_bot.fetchOrderBook('SNX/BTC')
-course = f['asks'][0][0]
-for item in f['asks']:
-    vol1 += float(item[0]) * float(item[1])
-for item in f['bids']:
-    vol2 += float(item[0]) * float(item[1])
-print(vol1)
-print(vol2)
-print(course)
