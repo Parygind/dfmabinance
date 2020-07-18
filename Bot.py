@@ -61,7 +61,7 @@ def get_balance(update, context):
             update.message.reply_text('Баланс : ' + str(i['free']))
 
 def count(update, context):
-    update.message.reply_text('Кол-во пар : ' + str(len(symb_list)) + ', take profit : ' + str(tk) + ', stop loss : ' + str(sl) + ', loops : ' + c)
+    update.message.reply_text('Кол-во пар : ' + str(len(symb_list)) + ', take profit : ' + str(tk) + ', stop loss : ' + str(sl) + ', loops : ' + str(c))
 
 def get_orders(update, context):
     mes = ''
