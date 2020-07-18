@@ -242,7 +242,7 @@ def alarm4(context):
                 bin_bot.createOrder(symb_list[i], 'STOP_LOSS_LIMIT', 'sell', order['amount'], limit_price,
                                            { 'stopPrice': stop_price})
 
-                mesVol += order + '\n'
+                mesVol += str(order) + '\n'
                 dict_order[symb_list[i]] = course
                 dict_last_price[symb_list[i]] = course
 
