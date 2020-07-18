@@ -178,7 +178,7 @@ def alarm1(context):
         mes = 'Сделки закрыты : ' + mesOrd
         context.bot.send_message(chat_id='-1001242337520', text=mes)
 
-def alarm4(context):
+async def alarm4(context):
     """Send the alarm message."""
     mesVol = ''
     mesOrd = ''
