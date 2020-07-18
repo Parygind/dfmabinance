@@ -239,7 +239,7 @@ def alarm4(context):
                 limit_price = float(order['price']) * 0.97
                 stop_price = float(order['price']) * 1.011
 
-                bin_bot.createOrder(symb_list[i], 'stop_loss', 'sell', order['amount'], limit_price,
+                bin_bot.createOrder(symb_list[i], 'STOP_LOSS_LIMIT', 'sell', order['amount'], limit_price,
                                            { 'stopPrice': stop_price})
 
                 mesVol += order + '\n'
