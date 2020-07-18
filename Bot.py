@@ -7,6 +7,7 @@ import os
 import decimal
 import time
 import asyncio
+import sys
 
 # create a new context for this task
 ctx = decimal.Context()
@@ -34,6 +35,7 @@ limit = dict()
 
 tk = 0
 sl = 0
+c = 0
 dict_order = dict()
 dict_last_price = dict()
 dict_wall_a = dict()
@@ -59,7 +61,7 @@ def get_balance(update, context):
             update.message.reply_text('Баланс : ' + str(i['free']))
 
 def count(update, context):
-    update.message.reply_text('Кол-во пар : ' + str(len(symb_list)) + ', take profit : ' + str(tk) + ', stop loss : ' + str(sl))
+    update.message.reply_text('Кол-во пар : ' + str(len(symb_list)) + ', take profit : ' + str(tk) + ', stop loss : ' + str(sl) + ', loops : ' + c)
 
 def get_orders(update, context):
     mes = ''
@@ -180,79 +182,81 @@ def alarm1(context):
 
 async def alarm4(context):
     """Send the alarm message."""
-    mesVol = ''
-    mesOrd = ''
-    job = context.job
-    global dict_prev, dict_curr, symb_list, limit, tk, sl, dict_last_price, dict_order
+    try:
+        mesVol = ''
+        mesOrd = ''
+        job = context.job
+        global dict_prev, dict_curr, symb_list, limit, tk, sl, dict_last_price, dict_order, c
+        c += 1
+        for i in range(0, int(len(symb_list))):
+            #kline = get_klines(symb_list[i])
+            #vol = float(kline[0][10])
+            #course = float(kline[0][4])
+            pass_val = False
+            vol_a = 0
+            vol_b = 0
+            f = bin_bot.fetchOrderBook(symb_list[i])
+            course = f['asks'][0][0]
+            for item in f['asks']:
+                vol_a += float(item[0]) * float(item[1])
 
-    for i in range(0, int(len(symb_list))):
-        #kline = get_klines(symb_list[i])
-        #vol = float(kline[0][10])
-        #course = float(kline[0][4])
-        pass_val = False
-        vol_a = 0
-        vol_b = 0
-        f = bin_bot.fetchOrderBook(symb_list[i])
-        course = f['asks'][0][0]
-        for item in f['asks']:
-            vol_a += float(item[0]) * float(item[1])
+            for item in f['bids']:
+                vol_b += float(item[0]) * float(item[1])
 
-        for item in f['bids']:
-            vol_b += float(item[0]) * float(item[1])
-
-        if not symb_list[i] in dict_wall_a:
-            dict_wall_a[symb_list[i]] = vol_a
-            dict_wall_b[symb_list[i]] = vol_b
-            continue
-
-        if symb_list[i] in dict_order:
-            dict_last_price[symb_list[i]] = course
-            if course >= dict_order[symb_list[i]] * 1.011:
-                pass_val = True
-                tk = tk + 1
-                #mesOrd = mesOrd + 'Профит ' + symb_list[i] + ' ' + float_to_str(dict_order[symb_list[i]]) + ' ' + float_to_str(course) + ' '
-                del dict_order[symb_list[i]]
-            elif course <= dict_order[symb_list[i]] * 0.97:
-                pass_val = True
-                sl = sl + 1
-                #mesOrd = mesOrd + 'Убыток ' + symb_list[i] + ' ' + float_to_str(dict_order[symb_list[i]]) + ' ' + float_to_str(course) + ' '
-                del dict_order[symb_list[i]]
-
-        if dict_wall_a[symb_list[i]] * 0.75 >= vol_a and dict_wall_b[symb_list[i]] * 1.25 < vol_b and not symb_list[i] in dict_order and not pass_val:
-            amount = int(0.002 / course)
-            type = 'market'  # or market
-            side = 'buy'
-            order = bin_bot.create_order(symb_list[i], type, side, amount, None)
-
-            while order['status'] != 'FILLED':
-                order = bin_bot.fetch_order(order['id'], symb_list[i])
-
-                if order['status'] == 'REJECTED' or order['status'] == 'EXPIRED':
-                    break
-
-            if order['status'] != 'FILLED':
+            if not symb_list[i] in dict_wall_a:
+                dict_wall_a[symb_list[i]] = vol_a
+                dict_wall_b[symb_list[i]] = vol_b
                 continue
 
-            limit_price = float(order['price']) * 0.97
-            stop_price = float(order['price']) * 1.011
+            if symb_list[i] in dict_order:
+                dict_last_price[symb_list[i]] = course
+                if course >= dict_order[symb_list[i]] * 1.011:
+                    pass_val = True
+                    tk = tk + 1
+                    #mesOrd = mesOrd + 'Профит ' + symb_list[i] + ' ' + float_to_str(dict_order[symb_list[i]]) + ' ' + float_to_str(course) + ' '
+                    del dict_order[symb_list[i]]
+                elif course <= dict_order[symb_list[i]] * 0.97:
+                    pass_val = True
+                    sl = sl + 1
+                    #mesOrd = mesOrd + 'Убыток ' + symb_list[i] + ' ' + float_to_str(dict_order[symb_list[i]]) + ' ' + float_to_str(course) + ' '
+                    del dict_order[symb_list[i]]
 
-            await bin_bot.createOrder(symb_list[i], 'limit', 'sell', order['executedQty'], limit_price,
-                                       {'stop': 'loss', 'stop_price': stop_price})
+            if dict_wall_a[symb_list[i]] * 0.75 >= vol_a and dict_wall_b[symb_list[i]] * 1.25 < vol_b and not symb_list[i] in dict_order and not pass_val:
+                amount = int(0.002 / course)
+                type = 'market'  # or market
+                side = 'buy'
+                order = bin_bot.create_order(symb_list[i], type, side, amount, None)
 
-            mesVol += order + '\n'
-            dict_order[symb_list[i]] = course
-            dict_last_price[symb_list[i]] = course
+                while order['status'] != 'FILLED':
+                    order = bin_bot.fetch_order(order['id'], symb_list[i])
 
-        dict_wall_a[symb_list[i]] = vol_a
-        dict_wall_b[symb_list[i]] = vol_b
+                    if order['status'] == 'REJECTED' or order['status'] == 'EXPIRED':
+                        break
 
-    if len(mesVol) > 0:
-        mes = 'Пробитие стены : ' + mesVol
-        context.bot.send_message(chat_id='-1001242337520', text=mes)
-    if len(mesOrd) > 0:
-        mes = 'Сделки закрыты : ' + mesOrd
-        context.bot.send_message(chat_id='-1001242337520', text=mes)
+                if order['status'] != 'FILLED':
+                    continue
 
+                limit_price = float(order['price']) * 0.97
+                stop_price = float(order['price']) * 1.011
+
+                await bin_bot.createOrder(symb_list[i], 'limit', 'sell', order['executedQty'], limit_price,
+                                           {'stop': 'loss', 'stop_price': stop_price})
+
+                mesVol += order + '\n'
+                dict_order[symb_list[i]] = course
+                dict_last_price[symb_list[i]] = course
+
+            dict_wall_a[symb_list[i]] = vol_a
+            dict_wall_b[symb_list[i]] = vol_b
+
+        if len(mesVol) > 0:
+            mes = 'Пробитие стены : ' + mesVol
+            context.bot.send_message(chat_id='-1001242337520', text=mes)
+        if len(mesOrd) > 0:
+            mes = 'Сделки закрыты : ' + mesOrd
+            context.bot.send_message(chat_id='-1001242337520', text=mes)
+    except Exception:
+        context.bot.send_message(chat_id='-1001242337520', text=sys.exc_info()[0])
 
 
 def alarm2(context):
