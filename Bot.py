@@ -227,13 +227,13 @@ def alarm4(context):
                 side = 'buy'
                 order = bin_bot.create_order(symb_list[i], type, side, amount, None)
 
-                while order['status'] != 'FILLED':
+                while order['status'] != 'closed':
                     order = bin_bot.fetch_order(order['id'], symb_list[i])
 
-                    if order['status'] == 'REJECTED' or order['status'] == 'EXPIRED':
+                    if order['status'] == 'rejected' or order['status'] == 'canceled':
                         break
 
-                if order['status'] != 'FILLED':
+                if order['status'] != 'closed':
                     continue
 
                 limit_price = float(order['price']) * 0.97
