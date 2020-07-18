@@ -208,7 +208,8 @@ def alarm4(context):
                 mesVol += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_wall[symb_list[i]])*100, 2)) + '%) Курс : ' + float_to_str(course) + " "
                 dict_order[symb_list[i]] = course
                 dict_last_price[symb_list[i]] = course
-            dict_wall[symb_list[i]] = vol
+
+        dict_wall[symb_list[i]] = vol
 
     if len(mesVol) > 0:
         mes = 'Пробитие стены : ' + mesVol
