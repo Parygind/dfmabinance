@@ -35,7 +35,8 @@ tk = 0
 sl = 0
 dict_order = dict()
 dict_last_price = dict()
-dict_wall = dict()
+dict_wall_a = dict()
+dict_wall_b = dict()
 
 def get_klines(symb):
     params = {}
@@ -182,14 +183,19 @@ def alarm4(context):
         #vol = float(kline[0][10])
         #course = float(kline[0][4])
 
-        vol = 0
+        vol_a = 0
+        vol_b = 0
         f = bin_bot.fetchOrderBook(symb_list[i])
         course = f['asks'][0][0]
         for item in f['asks']:
-            vol += float(item[0]) * float(item[1])
+            vol_a += float(item[0]) * float(item[1])
 
-        if not symb_list[i] in dict_wall:
-            dict_wall[symb_list[i]] = vol
+        for item in f['bids']:
+            vol_b += float(item[0]) * float(item[1])
+
+        if not symb_list[i] in dict_wall_a:
+            dict_wall_a[symb_list[i]] = vol_a
+            dict_wall_b[symb_list[i]] = vol_b
             continue
 
         if symb_list[i] in dict_order:
@@ -203,13 +209,14 @@ def alarm4(context):
                 mesOrd = mesOrd + 'Убыток ' + symb_list[i] + ' ' + float_to_str(dict_order[symb_list[i]]) + ' ' + float_to_str(course) + ' '
                 del dict_order[symb_list[i]]
 
-        if dict_wall[symb_list[i]] * 0.8 >= vol:
+        if dict_wall_a[symb_list[i]] * 0.75 >= vol_a and dict_wall_b[symb_list[i]] * 1.25 < vol_b:
             if not symb_list[i] in dict_order:
-                mesVol += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_wall[symb_list[i]])*100, 2)) + '%) Курс : ' + float_to_str(course) + " "
+                mesVol += symb_list[i] + '(' + str(round((vol_a/dict_wall_a[symb_list[i]])*100, 2)) + '% / ' + str(round((vol_b/dict_wall_b[symb_list[i]])*100, 2)) + '%) Курс : ' + float_to_str(course) + " "
                 dict_order[symb_list[i]] = course
                 dict_last_price[symb_list[i]] = course
 
-        dict_wall[symb_list[i]] = vol
+        dict_wall_a[symb_list[i]] = vol_a
+        dict_wall_b[symb_list[i]] = vol_b
 
     if len(mesVol) > 0:
         mes = 'Пробитие стены : ' + mesVol
@@ -307,7 +314,7 @@ def get_top(update, context):
 
     except (IndexError, ValueError):
         update.message.reply_text('COMMAND ERROR')
-
+'''
 URL = os.environ.get('URL')
 PORT = int(os.environ.get('PORT', '5000'))
 TOKEN = os.environ['TEL_TOKEN']
@@ -330,3 +337,20 @@ updater.bot.set_webhook(URL + TOKEN)
 
 #updater.start_polling()
 updater.idle()
+'''
+bin_bot = ccxt.binance({
+            'apiKey' : '7ky41JML91VbXgtJkLvArjQknwCOojJtLBGaMeYlQyuJragEhzGaRQCYtCmkR3IR',
+            'secret' : '6kYRGbm0ObOzxxUCswVBz4mJnrpj3IXzVVNBIIsRwzqKhGrlV0QK6dnvhWNvR4oK',
+            'enableRateLimit': True,
+        })
+vol1 = 0
+vol2 = 0
+f = bin_bot.fetchOrderBook('SNX/BTC')
+course = f['asks'][0][0]
+for item in f['asks']:
+    vol1 += float(item[0]) * float(item[1])
+for item in f['bids']:
+    vol2 += float(item[0]) * float(item[1])
+print(vol1)
+print(vol2)
+print(course)
