@@ -236,8 +236,8 @@ def alarm4(context):
                 if order['status'] != 'closed':
                     continue
 
-                limit_price = float(order['price']) * 0.97
-                stop_price = float(order['price']) * 1.011
+                limit_price = float(order['price']) * 1.011
+                stop_price = float(order['price']) * 0.97
 
                 bin_bot.createOrder(symb_list[i], 'STOP_LOSS_LIMIT', 'sell', order['amount'], limit_price,
                                            { 'stopPrice': stop_price})
