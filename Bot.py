@@ -180,7 +180,7 @@ def alarm1(context):
         mes = 'Сделки закрыты : ' + mesOrd
         context.bot.send_message(chat_id='-1001242337520', text=mes)
 
-async def alarm4(context):
+def alarm4(context):
     """Send the alarm message."""
     try:
         mesVol = ''
@@ -239,7 +239,7 @@ async def alarm4(context):
                 limit_price = float(order['price']) * 0.97
                 stop_price = float(order['price']) * 1.011
 
-                await bin_bot.createOrder(symb_list[i], 'limit', 'sell', order['executedQty'], limit_price,
+                bin_bot.createOrder(symb_list[i], 'limit', 'sell', order['executedQty'], limit_price,
                                            {'stop': 'loss', 'stop_price': stop_price})
 
                 mesVol += order + '\n'
