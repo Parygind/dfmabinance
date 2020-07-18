@@ -6,6 +6,7 @@ import ccxt
 import os
 import decimal
 import time
+import asyncio
 
 # create a new context for this task
 ctx = decimal.Context()
