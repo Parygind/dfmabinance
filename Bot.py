@@ -66,7 +66,7 @@ def count(update, context):
 def get_orders(update, context):
     mes = ''
     for k in dict_order.keys():
-        mes = mes + k + ' : ' + float_to_str(dict_order[k]) + ' ' + float_to_str(dict_last_price[k]) + ' ' + float_to_str(round(dict_last_price[k] / dict_order[k] - 1, 4)) + '\n'
+        mes = mes + k + ' : ' + float_to_str(dict_order[k][0]) + ' ' + float_to_str(dict_last_price[k]) + ' ' + float_to_str(round(dict_last_price[k] / dict_order[k][0] - 1, 4)) + '\n'
     update.message.reply_text(mes)
 
 def updateData(context):
@@ -123,12 +123,12 @@ def alarm1(context):
         if symb_list[i] in dict_order:
             dict_last_price[symb_list[i]] = course
             #if course - dict_order[symb_list[i]] >= 0.000003:
-            if course >= dict_order[symb_list[i]] * 1.025:
+            if course >= dict_order[symb_list[i]][0] * 1.025:
                 tk = tk + 1
                 mesOrd = mesOrd + 'Профит ' + symb_list[i] + ' ' + float_to_str(dict_order[symb_list[i]]) + ' ' + float_to_str(course) + ' '
                 del dict_order[symb_list[i]]
             #elif course - dict_order[symb_list[i]] <= -0.000003:
-            elif course <= dict_order[symb_list[i]] * 0.965:
+            elif course <= dict_order[symb_list[i]][0] * 0.965:
                 sl = sl + 1
                 mesOrd = mesOrd + 'Убыток ' + symb_list[i] + ' ' + float_to_str(dict_order[symb_list[i]]) + ' ' + float_to_str(course) + ' '
                 del dict_order[symb_list[i]]
@@ -155,7 +155,7 @@ def alarm1(context):
             if not passMes:
                 mesVol += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%) Курс : ' + float_to_str(course) + " "
                 if not symb_list[i] in dict_order:
-                    dict_order[symb_list[i]] = course
+                    dict_order[symb_list[i]][0] = course
                     dict_last_price[symb_list[i]] = course
                     '''
                     symbol = 'ETH/BTC'
@@ -210,15 +210,30 @@ def alarm4(context):
 
             if symb_list[i] in dict_order:
                 dict_last_price[symb_list[i]] = course
-                if course >= dict_order[symb_list[i]] * 1.011:
+                if course >= dict_order[symb_list[i]][0] * 1.011:
                     pass_val = True
                     tk = tk + 1
                     #mesOrd = mesOrd + 'Профит ' + symb_list[i] + ' ' + float_to_str(dict_order[symb_list[i]]) + ' ' + float_to_str(course) + ' '
                     del dict_order[symb_list[i]]
-                elif course <= dict_order[symb_list[i]] * 0.97:
+                elif course <= dict_order[symb_list[i]][0]* 0.97:
                     pass_val = True
                     sl = sl + 1
-                    #mesOrd = mesOrd + 'Убыток ' + symb_list[i] + ' ' + float_to_str(dict_order[symb_list[i]]) + ' ' + float_to_str(course) + ' '
+
+                    ord_id = dict_order[symb_list[i]][2]
+
+                    order = bin_bot.cancel_order(ord_id, symb_list[i])
+                    while order['status'] != 'canceled':
+                        order = bin_bot.fetch_order(ord_id, symb_list[i])
+
+                        if order['status'] != 'new':
+                            break
+                    amount = dict_order[symb_list[i]][1]
+                    type = 'market'  # or market
+                    side = 'sell'
+                    order = bin_bot.create_order(symb_list[i], type, side, amount, None)
+
+                    mesOrd = mesOrd + 'Убыток ' + symb_list[i] + ' ' + float_to_str(dict_order[symb_list[i]][0]) + ' ' + float_to_str(order['amount']) + ' '
+
                     del dict_order[symb_list[i]]
 
             if dict_wall_a[symb_list[i]] * 0.75 >= vol_a and dict_wall_b[symb_list[i]] * 1.25 < vol_b and not symb_list[i] in dict_order and not pass_val:
@@ -237,16 +252,17 @@ def alarm4(context):
                     continue
 
                 take_profit = float(order['price']) * 1.011
-                stop_loss = float(order['price']) * 0.97
+                #stop_loss = float(order['price']) * 0.97
 
-                bin_bot.createOrder(symb_list[i], 'TAKE_PROFIT', 'sell', order['amount'], take_profit,
+                order = bin_bot.createOrder(symb_list[i], 'TAKE_PROFIT_LIMIT', 'sell', order['amount'], take_profit,
                                     {'stopPrice': take_profit})
 
+                '''
                 bin_bot.createOrder(symb_list[i], 'STOP_LOSS', 'sell', order['amount'], stop_loss,
                                            { 'stopPrice': stop_loss})
-
+                '''
                 mesVol += str(order) + '\n'
-                dict_order[symb_list[i]] = course
+                dict_order[symb_list[i]] = [order['average'], order['amount'], order['id']]
                 dict_last_price[symb_list[i]] = course
 
             dict_wall_a[symb_list[i]] = vol_a
