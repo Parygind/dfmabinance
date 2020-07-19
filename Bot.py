@@ -242,7 +242,7 @@ def alarm4(context):
                 stop_loss = float(order['price']) * 0.97
 
                 order = bin_bot.private_post_order_oco(
-                    {"symbol": symb_list[i].replace('/'), "side": "sell", "quantity": order['amount'], "price": take_profit, "stopPrice": stop_loss,
+                    {"symbol": symb_list[i].replace('/', ''), "side": "sell", "quantity": order['amount'], "price": take_profit, "stopPrice": stop_loss,
                      "stopLimitPrice": stop_loss, "stopLimitTimeInForce": "GTC"})
                 '''
                 order = bin_bot.createOrder(symb_list[i], 'TAKE_PROFIT_LIMIT', 'sell', order['amount'], take_profit,
