@@ -252,12 +252,16 @@ def alarm4(context):
                 take_profit = float_to_str(round(price * 1.01, n))
                 stop_loss = float_to_str(round(price * 0.98, n))
 
-                last_price = take_profit
-                last_stop = stop_loss
+                if last_price == None:
+                    last_price = take_profit
+                    last_stop = stop_loss
 
                 order = bin_bot.private_post_order_oco(
                     {"symbol": symb_list[i].replace('/', ''), "side": "sell", "quantity": order['amount'], "price": take_profit, "stopPrice": stop_loss,
                      "stopLimitPrice": stop_loss, "stopLimitTimeInForce": "GTC"})
+
+                last_price = None
+                last_stop = None
                 '''
                 order = bin_bot.createOrder(symb_list[i], 'TAKE_PROFIT_LIMIT', 'sell', order['amount'], take_profit,
                                     {'stopPrice': take_profit})
