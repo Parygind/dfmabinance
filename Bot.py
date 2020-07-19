@@ -49,6 +49,7 @@ dict_order = dict()
 dict_last_price = dict()
 dict_wall_a = dict()
 dict_wall_b = dict()
+dict_prec = dict()
 
 def get_klines(symb):
     params = {}
@@ -79,16 +80,17 @@ def get_orders(update, context):
     update.message.reply_text(mes)
 
 def updateData(context):
-    global dict_prev, dict_curr, symb_list
+    global dict_prev, dict_curr, symb_list, dict_prec
     dict_prev = dict_curr
     dict_curr = dict()
-
     tickers = bin_bot.fetch_tickers()
+    bin_bot.load_markets()
     #for pr in bin_bot.ticker24hr():
     for pr in tickers:
         if tickers[pr]['symbol'][-3:] == 'BTC' and float(tickers[pr]['quoteVolume']) >= 0.01 and float(tickers[pr]['close']) >= 0.00001 and tickers[pr]['symbol'] != 'BNB/BTC' and tickers[pr]['symbol'] != 'LINK/BTC':
             dict_curr[tickers[pr]['symbol']] = float(tickers[pr]['quoteVolume'])
-
+            market = bin_bot.market(tickers[pr]['symbol'])
+            dict_prec[tickers[pr]['symbol']] = int(market['precision']['price'])
     symb_list = list(dict_curr.keys())
 
 def updateData1():
@@ -195,7 +197,7 @@ def alarm4(context):
         mesVol = ''
         mesOrd = ''
         job = context.job
-        global dict_prev, dict_curr, symb_list, limit, tk, sl, dict_last_price, dict_order, c, last_price, last_stop
+        global dict_prev, dict_curr, symb_list, limit, tk, sl, dict_last_price, dict_order, c, last_price, last_stop, dict_prec
         c += 1
         for i in range(0, int(len(symb_list))):
             #kline = get_klines(symb_list[i])
@@ -248,7 +250,7 @@ def alarm4(context):
                     continue
 
                 price = float(order['price'])
-                n = num_after_point(price)
+                n = dict_prec[symb_list[i]]
                 take_profit = float_to_str(round(price * 1.01, n))
                 stop_loss = float_to_str(round(price * 0.98, n))
 
