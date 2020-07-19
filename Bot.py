@@ -222,7 +222,7 @@ def alarm4(context):
                     del dict_order[symb_list[i]]
 
             if dict_wall_a[symb_list[i]] * 0.75 >= vol_a and dict_wall_b[symb_list[i]] * 1.25 < vol_b and not symb_list[i] in dict_order and not pass_val:
-                amount = int(0.002 / course)
+                amount = int(0.001 / course)
                 type = 'market'  # or market
                 side = 'buy'
                 order = bin_bot.create_order(symb_list[i], type, side, amount, None)
@@ -236,11 +236,14 @@ def alarm4(context):
                 if order['status'] != 'closed':
                     continue
 
-                limit_price = float(order['price']) * 1.011
-                stop_price = float(order['price']) * 0.97
+                take_profit = float(order['price']) * 1.011
+                stop_loss = float(order['price']) * 0.97
 
-                bin_bot.createOrder(symb_list[i], 'STOP_LOSS_LIMIT', 'sell', order['amount'], limit_price,
-                                           { 'stopPrice': stop_price})
+                bin_bot.createOrder(symb_list[i], 'TAKE_PROFIT_LIMIT', 'sell', order['amount'], take_profit,
+                                    {'stopPrice': take_profit})
+
+                bin_bot.createOrder(symb_list[i], 'STOP_LOSS_LIMIT', 'sell', order['amount'], stop_loss,
+                                           { 'stopPrice': stop_loss})
 
                 mesVol += str(order) + '\n'
                 dict_order[symb_list[i]] = course
