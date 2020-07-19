@@ -247,8 +247,8 @@ def alarm4(context):
 
                 price = float(order['price'])
                 n = num_after_point(price)
-                take_profit = round(price * 1.011, n)
-                stop_loss = round(price * 0.97, n)
+                take_profit = float_to_str(round(price * 1.011, n))
+                stop_loss = float_to_str(round(price * 0.97, n))
 
                 order = bin_bot.private_post_order_oco(
                     {"symbol": symb_list[i].replace('/', ''), "side": "sell", "quantity": order['amount'], "price": take_profit, "stopPrice": stop_loss,
