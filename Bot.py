@@ -32,6 +32,8 @@ def num_after_point(x):
 
 bin_bot = None
 symb_list = None
+last_price = None
+last_stop = None
 dict_prev = dict()
 dict_curr = dict()
 
@@ -68,7 +70,7 @@ def get_balance(update, context):
             update.message.reply_text('Баланс : ' + str(i['free']))
 
 def count(update, context):
-    update.message.reply_text('Кол-во пар : ' + str(len(symb_list)) + ', take profit : ' + str(tk) + ', stop loss : ' + str(sl) + ', loops : ' + str(c))
+    update.message.reply_text('Кол-во пар : ' + str(len(symb_list)) + ', take profit : ' + str(tk) + ', stop loss : ' + str(sl) + ', loops : ' + str(c) + ' ' + last_price + ' ' + last_stop)
 
 def get_orders(update, context):
     mes = ''
@@ -193,7 +195,7 @@ def alarm4(context):
         mesVol = ''
         mesOrd = ''
         job = context.job
-        global dict_prev, dict_curr, symb_list, limit, tk, sl, dict_last_price, dict_order, c
+        global dict_prev, dict_curr, symb_list, limit, tk, sl, dict_last_price, dict_order, c, last_price, last_stop
         c += 1
         for i in range(0, int(len(symb_list))):
             #kline = get_klines(symb_list[i])
@@ -217,12 +219,12 @@ def alarm4(context):
 
             if symb_list[i] in dict_order:
                 dict_last_price[symb_list[i]] = course
-                if course >= dict_order[symb_list[i]] * 1.011:
+                if course >= dict_order[symb_list[i]] * 1.01:
                     pass_val = True
                     tk = tk + 1
                     #mesOrd = mesOrd + 'Профит ' + symb_list[i] + ' ' + float_to_str(dict_order[symb_list[i]]) + ' ' + float_to_str(course) + ' '
                     del dict_order[symb_list[i]]
-                elif course <= dict_order[symb_list[i]] * 0.97:
+                elif course <= dict_order[symb_list[i]] * 0.98:
                     pass_val = True
                     sl = sl + 1
 
@@ -247,8 +249,11 @@ def alarm4(context):
 
                 price = float(order['price'])
                 n = num_after_point(price)
-                take_profit = float_to_str(round(price * 1.011, n))
-                stop_loss = float_to_str(round(price * 0.97, n))
+                take_profit = float_to_str(round(price * 1.01, n))
+                stop_loss = float_to_str(round(price * 0.98, n))
+
+                last_price = take_profit
+                last_stop = stop_loss
 
                 order = bin_bot.private_post_order_oco(
                     {"symbol": symb_list[i].replace('/', ''), "side": "sell", "quantity": order['amount'], "price": take_profit, "stopPrice": stop_loss,
