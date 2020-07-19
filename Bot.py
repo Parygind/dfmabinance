@@ -15,6 +15,12 @@ ctx = decimal.Context()
 # 20 digits should be enough for everyone :D
 ctx.prec = 20
 
+def num_after_point(x):
+    s = str(x)
+    if not '.' in s:
+        return 0
+    return len(s) - s.index('.') - 1
+
 def float_to_str(f):
     """
     Convert the given float to a string,
@@ -238,8 +244,10 @@ def alarm4(context):
                 if order['status'] != 'closed':
                     continue
 
-                take_profit = float(order['price']) * 1.011
-                stop_loss = float(order['price']) * 0.97
+                price = float(order['price'])
+                n = num_after_point(price)
+                take_profit = round(price * 1.011, n)
+                stop_loss = round(price * 0.97, n)
 
                 order = bin_bot.private_post_order_oco(
                     {"symbol": symb_list[i].replace('/', ''), "side": "sell", "quantity": order['amount'], "price": take_profit, "stopPrice": stop_loss,
@@ -253,7 +261,7 @@ def alarm4(context):
                                            { 'stopPrice': stop_loss})
                 '''
                 mesVol += str(order) + '\n'
-                dict_order[symb_list[i]] = course
+                dict_order[symb_list[i]] = price
                 dict_last_price[symb_list[i]] = course
 
             dict_wall_a[symb_list[i]] = vol_a
