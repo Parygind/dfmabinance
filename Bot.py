@@ -15,11 +15,6 @@ ctx = decimal.Context()
 # 20 digits should be enough for everyone :D
 ctx.prec = 20
 
-def num_after_point(x):
-    s = str(x)
-    if not '.' in s:
-        return 0
-    return len(s) - s.index('.') - 1
 
 def float_to_str(f):
     """
@@ -28,6 +23,12 @@ def float_to_str(f):
     """
     d1 = ctx.create_decimal(repr(f))
     return format(d1, 'f')
+
+def num_after_point(x):
+    s = float_to_str(x)
+    if not '.' in s:
+        return 0
+    return len(s) - s.index('.') - 1
 
 bin_bot = None
 symb_list = None
@@ -83,7 +84,7 @@ def updateData(context):
     tickers = bin_bot.fetch_tickers()
     #for pr in bin_bot.ticker24hr():
     for pr in tickers:
-        if tickers[pr]['symbol'][-3:] == 'BTC' and float(tickers[pr]['quoteVolume']) >= 0.01 and float(tickers[pr]['close']) >= 0.00001 and tickers[pr]['symbol'] != 'BNB/BTC':
+        if tickers[pr]['symbol'][-3:] == 'BTC' and float(tickers[pr]['quoteVolume']) >= 0.01 and float(tickers[pr]['close']) >= 0.00001 and tickers[pr]['symbol'] != 'BNB/BTC' and tickers[pr]['symbol'] != 'LINK/BTC':
             dict_curr[tickers[pr]['symbol']] = float(tickers[pr]['quoteVolume'])
 
     symb_list = list(dict_curr.keys())
