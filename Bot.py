@@ -71,7 +71,7 @@ def get_balance(update, context):
             update.message.reply_text('Баланс : ' + str(i['free']))
 
 def count(update, context):
-    update.message.reply_text('Кол-во пар : ' + str(len(symb_list)) + ', take profit : ' + str(tk) + ', stop loss : ' + str(sl) + ', loops : ' + str(c) + ' ' + last_price + ' ' + last_stop)
+    update.message.reply_text('Кол-во пар : ' + str(len(symb_list)) + ', take profit : ' + str(tk) + ', stop loss : ' + str(sl) + ', loops : ' + str(c))
 
 def get_orders(update, context):
     mes = ''
@@ -206,8 +206,14 @@ def alarm4(context):
             pass_val = False
             vol_a = 0
             vol_b = 0
+            course = None
             f = bin_bot.fetchOrderBook(symb_list[i])
-            course = f['asks'][0][0]
+
+            try:
+                course = f['asks'][0][0]
+            except Exception:
+                continue
+
             for item in f['asks']:
                 vol_a += float(item[0]) * float(item[1])
 
@@ -400,3 +406,4 @@ updater.bot.set_webhook(URL + TOKEN)
 
 #updater.start_polling()
 updater.idle()
+
