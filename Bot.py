@@ -168,21 +168,6 @@ def alarm1(context):
                 if not symb_list[i] in dict_order:
                     dict_order[symb_list[i]][0] = course
                     dict_last_price[symb_list[i]] = course
-                    '''
-                    symbol = 'ETH/BTC'
-                    type = 'market'  # or 'market'
-                    side = 'sell'  # or 'buy'
-                    amount = 1.0
-                    price = None  # or None
-
-                    # extra params and overrides if needed
-                    params = {
-                        'test': True,  # test if it's valid, but don't actually place it
-                    }
-
-                    order = bin_bot.create_order(symbol, type, side, amount, price, params)
-                    context.bot.send_message(chat_id='-1001242337520', text=order)
-                    '''
 
     if len(mesVol) > 0:
         mes = 'Объемы выросли : ' + mesVol
@@ -227,12 +212,12 @@ def alarm4(context):
 
             if symb_list[i] in dict_order:
                 dict_last_price[symb_list[i]] = course
-                if course >= dict_order[symb_list[i]] * 1.01:
+                if course >= dict_order[symb_list[i]] * 1.015:
                     pass_val = True
                     tk = tk + 1
                     #mesOrd = mesOrd + 'Профит ' + symb_list[i] + ' ' + float_to_str(dict_order[symb_list[i]]) + ' ' + float_to_str(course) + ' '
                     del dict_order[symb_list[i]]
-                elif course <= dict_order[symb_list[i]] * 0.98:
+                elif course <= dict_order[symb_list[i]] * 0.985:
                     pass_val = True
                     sl = sl + 1
 
@@ -257,8 +242,8 @@ def alarm4(context):
 
                 price = float(order['price'])
                 n = dict_prec[symb_list[i]]
-                take_profit = float_to_str(round(price * 1.01, n))
-                stop_loss = float_to_str(round(price * 0.98, n))
+                take_profit = float_to_str(round(price * 1.015, n))
+                stop_loss = float_to_str(round(price * 0.985, n))
 
                 if last_price == None:
                     last_price = take_profit
@@ -278,7 +263,7 @@ def alarm4(context):
                 bin_bot.createOrder(symb_list[i], 'STOP_LOSS', 'sell', order['amount'], stop_loss,
                                            { 'stopPrice': stop_loss})
                 '''
-                mesVol += str(order) + '\n'
+                mesVol += symb_list[i] + '(' + str(round((vol_a/dict_wall_a[symb_list[i]])*100, 2)) + '% / ' + str(round((vol_b/dict_wall_b[symb_list[i]])*100, 2)) + '%) Курс : ' + float_to_str(price) + '\n'
                 dict_order[symb_list[i]] = price
                 dict_last_price[symb_list[i]] = course
 
@@ -404,6 +389,4 @@ updater.dispatcher.add_handler(CommandHandler('balance', get_balance, pass_chat_
 updater.start_webhook(listen='0.0.0.0', port=PORT, url_path=TOKEN)
 updater.bot.set_webhook(URL + TOKEN)
 
-#updater.start_polling()
 updater.idle()
-
