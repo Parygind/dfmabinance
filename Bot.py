@@ -215,8 +215,8 @@ def alarm4(context):
                 if course >= dict_order[symb_list[i]] * 1.015:
                     pass_val = True
                     tk = tk + 1
+                    dict_order[symb_list[i]] = course
                     #mesOrd = mesOrd + 'Профит ' + symb_list[i] + ' ' + float_to_str(dict_order[symb_list[i]]) + ' ' + float_to_str(course) + ' '
-                    del dict_order[symb_list[i]]
                 elif course <= dict_order[symb_list[i]] * 0.985:
                     pass_val = True
                     sl = sl + 1
