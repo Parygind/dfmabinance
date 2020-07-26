@@ -212,7 +212,7 @@ def alarm4(context):
 
             if symb_list[i] in dict_order:
                 dict_last_price[symb_list[i]] = course
-                if course >= dict_order[symb_list[i]] * 1.015:
+                if course >= dict_order[symb_list[i]] * 1.01:
                     pass_val = True
                     tk = tk + 1
                     dict_order[symb_list[i]] = course
@@ -242,7 +242,7 @@ def alarm4(context):
 
                 price = float(order['price'])
                 n = dict_prec[symb_list[i]]
-                take_profit = float_to_str(round(price * 1.015, n))
+                take_profit = float_to_str(round(price * 1.01, n))
                 stop_loss = float_to_str(round(price * 0.985, n))
 
                 if last_price == None:
@@ -278,24 +278,6 @@ def alarm4(context):
             context.bot.send_message(chat_id='-1001242337520', text=mes)
     except Exception:
         context.bot.send_message(chat_id='-1001242337520', text=sys.exc_info()[0])
-
-
-def alarm2(context):
-    """Send the alarm message."""
-    mesVol = ''
-    job = context.job
-    global dict_prev, dict_curr, symb_list
-
-    for i in range(int(len(symb_list)/2), len(symb_list)):
-        inf = bin_bot.klines(symbol=symb_list[i], interval='1m', limit=1)
-        vol = float(inf[0][10])
-
-        if vol >= dict_curr[symb_list[i]]*0.02:
-            mesVol += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%) '
-
-    if len(mesVol) > 0:
-        mes = 'Объемы выросли : ' + mesVol
-        context.bot.send_message(chat_id='-1001242337520', text=mes)
 
 def set_timer(update, context):
     """Add a job to the queue."""
