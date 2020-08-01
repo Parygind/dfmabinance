@@ -225,7 +225,7 @@ def alarm4(context):
 
                     del dict_order[symb_list[i]]
 
-            if dict_wall_a[symb_list[i]] * 0.75 >= vol_a and dict_wall_b[symb_list[i]] * 1.25 < vol_b and not symb_list[i] in dict_order and not pass_val:
+            if dict_wall_a[symb_list[i]] * 0.65 >= vol_a and dict_wall_b[symb_list[i]] * 1.25 < vol_b and not symb_list[i] in dict_order and not pass_val:
                 amount = int(0.001 / course)
                 type = 'market'  # or market
                 side = 'buy'
@@ -349,7 +349,6 @@ def get_top(update, context):
 
     except (IndexError, ValueError):
         update.message.reply_text('COMMAND ERROR')
-
 URL = os.environ.get('URL')
 PORT = int(os.environ.get('PORT', '5000'))
 TOKEN = os.environ['TEL_TOKEN']
