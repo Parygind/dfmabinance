@@ -191,7 +191,7 @@ def alarm4(context):
             pass_val = False
             vol_a = 0
             vol_b = 0
-            course = None
+            course = 0
             f = bin_bot.fetchOrderBook(symb_list[i])
 
             try:
@@ -208,10 +208,10 @@ def alarm4(context):
             if not symb_list[i] in dict_wall_a:
                 dict_wall_a[symb_list[i]] = vol_a
                 dict_wall_b[symb_list[i]] = vol_b
+                dict_last_price[symb_list[i]] = course
                 continue
 
             if symb_list[i] in dict_order:
-                dict_last_price[symb_list[i]] = course
                 if course >= dict_order[symb_list[i]] * 1.01:
                     pass_val = True
                     tk = tk + 1
@@ -263,12 +263,12 @@ def alarm4(context):
                 bin_bot.createOrder(symb_list[i], 'STOP_LOSS', 'sell', order['amount'], stop_loss,
                                            { 'stopPrice': stop_loss})
                 '''
-                mesVol += symb_list[i] + '(' + str(round((vol_a/dict_wall_a[symb_list[i]])*100, 2)) + '% / ' + str(round((vol_b/dict_wall_b[symb_list[i]])*100, 2)) + '%) Курс : ' + float_to_str(price) + '\n'
+                mesVol += symb_list[i] + '(' + str(round((vol_a/dict_wall_a[symb_list[i]])*100, 2)) + '% / ' + str(round((vol_b/dict_wall_b[symb_list[i]])*100, 2)) + '%) Курс : ' + float_to_str(price) + ' ' + float_to_str(dict_last_price[symb_list[i]] - course) +'\n'
                 dict_order[symb_list[i]] = price
-                dict_last_price[symb_list[i]] = course
 
             dict_wall_a[symb_list[i]] = vol_a
             dict_wall_b[symb_list[i]] = vol_b
+            dict_last_price[symb_list[i]] = course
 
         if len(mesVol) > 0:
             mes = 'Пробитие стены : ' + mesVol
@@ -349,6 +349,7 @@ def get_top(update, context):
 
     except (IndexError, ValueError):
         update.message.reply_text('COMMAND ERROR')
+
 URL = os.environ.get('URL')
 PORT = int(os.environ.get('PORT', '5000'))
 TOKEN = os.environ['TEL_TOKEN']
