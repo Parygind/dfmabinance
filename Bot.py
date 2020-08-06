@@ -51,6 +51,8 @@ dict_wall_a = dict()
 dict_wall_b = dict()
 dict_prec = dict()
 
+dict_book = dict()
+
 def get_klines(symb):
     params = {}
     bin_bot.load_markets()
@@ -209,6 +211,7 @@ def alarm4(context):
                 dict_wall_a[symb_list[i]] = vol_a
                 dict_wall_b[symb_list[i]] = vol_b
                 dict_last_price[symb_list[i]] = course
+                dict_book[symb_list[i]] = f
                 continue
 
             if symb_list[i] in dict_order:
@@ -217,6 +220,7 @@ def alarm4(context):
                     tk = tk + 1
                     dict_order[symb_list[i]] = course
                     #mesOrd = mesOrd + 'Профит ' + symb_list[i] + ' ' + float_to_str(dict_order[symb_list[i]]) + ' ' + float_to_str(course) + ' '
+
                 elif course <= dict_order[symb_list[i]] * 0.985:
                     pass_val = True
                     sl = sl + 1
@@ -264,8 +268,11 @@ def alarm4(context):
                                            { 'stopPrice': stop_loss})
                 '''
                 mesVol += symb_list[i] + '(' + str(round((vol_a/dict_wall_a[symb_list[i]])*100, 2)) + '% / ' + str(round((vol_b/dict_wall_b[symb_list[i]])*100, 2)) + '%) Курс : ' + float_to_str(price) + ' ' + float_to_str(dict_last_price[symb_list[i]] - course) +'\n'
+                mesVol += mesVol + str(dict_book[symb_list[i]]) +'\n'
+                mesVol += mesVol + str(f) + '\n'
                 dict_order[symb_list[i]] = price
 
+            dict_book[symb_list[i]] = f
             dict_wall_a[symb_list[i]] = vol_a
             dict_wall_b[symb_list[i]] = vol_b
             dict_last_price[symb_list[i]] = course
