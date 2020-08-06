@@ -268,8 +268,8 @@ def alarm4(context):
                                            { 'stopPrice': stop_loss})
                 '''
                 mesVol += symb_list[i] + '(' + str(round((vol_a/dict_wall_a[symb_list[i]])*100, 2)) + '% / ' + str(round((vol_b/dict_wall_b[symb_list[i]])*100, 2)) + '%) Курс : ' + float_to_str(price) + ' ' + float_to_str(dict_last_price[symb_list[i]] - course) +'\n'
-                mesVol += mesVol + str(dict_book[symb_list[i]]) +'\n'
-                mesVol += mesVol + str(f) + '\n'
+                mesVol += str(dict_book[symb_list[i]]) +'\n'
+                mesVol += str(f) + '\n'
                 dict_order[symb_list[i]] = price
 
             dict_book[symb_list[i]] = f
