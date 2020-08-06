@@ -281,7 +281,7 @@ def alarm4(context):
             mes = 'Пробитие стены : ' + mesVol
             if len(mes) > 4096:
                 for x in range(0, len(mes), 4096):
-                    context.send_message(chat_id='-1001242337520', text=mes[x:x + 4096])
+                    context.bot.send_message(chat_id='-1001242337520', text=mes[x:x + 4096])
             else:
                 context.bot.send_message(chat_id='-1001242337520', text=mes)
         if len(mesOrd) > 0:
