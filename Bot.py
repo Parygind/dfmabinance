@@ -184,7 +184,7 @@ def alarm2(context):
     mesVol = ''
     mesOrd = ''
     job = context.job
-    global dict_prev, dict_curr, symb_list
+    global dict_prev, dict_curr, symb_list, c, tk, sl, dict_order
 
     for i in range(0, int(len(symb_list))):
         inf = get_klines(symb_list[i])
