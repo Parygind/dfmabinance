@@ -8,6 +8,7 @@ import decimal
 import time
 import asyncio
 import sys
+import ast
 
 # create a new context for this task
 ctx = decimal.Context()
@@ -178,6 +179,41 @@ def alarm1(context):
         mes = 'Сделки закрыты : ' + mesOrd
         context.bot.send_message(chat_id='-1001242337520', text=mes)
 
+def alarm2(context):
+    """Send the alarm message."""
+    mesVol = ''
+    mesOrd = ''
+    job = context.job
+    global dict_prev, dict_curr, symb_list
+
+    for i in range(0, int(len(symb_list))):
+        inf = get_klines(symb_list[i])
+        vol = float(inf[0][10])
+        course = float(inf[0][4])
+
+        if symb_list[i] in dict_order:
+            if course >= dict_order[symb_list[i]] * 1.03:
+                tk = tk + 1
+                mesOrd = mesOrd + 'Профит ' + symb_list[i] + ' ' + float_to_str(dict_order[symb_list[i]]) + ' ' + float_to_str(course) + ' '
+                del dict_order[symb_list[i]]
+
+            elif course <= dict_order[symb_list[i]] * 0.98:
+                sl = sl + 1
+                mesOrd = mesOrd + 'Убыток ' + symb_list[i] + ' ' + float_to_str(dict_order[symb_list[i]]) + ' ' + float_to_str(course) + ' '
+                del dict_order[symb_list[i]]
+
+        if vol >= dict_curr[symb_list[i]]*0.02:
+            if not symb_list[i] in dict_order:
+                dict_order[symb_list[i]] = course
+            mesVol += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%) '
+
+    if len(mesVol) > 0:
+        mes = 'Объемы выросли : ' + mesVol
+        context.bot.send_message(chat_id='-1001242337520', text=mes)
+    if len(mesOrd) > 0:
+        mes = 'Сделки закрыты : ' + mesOrd
+        context.bot.send_message(chat_id='-1001242337520', text=mes)
+
 def alarm4(context):
     """Send the alarm message."""
     try:
@@ -309,7 +345,7 @@ def set_timer(update, context):
         })
 
         job = context.job_queue.run_repeating(updateData, due, first=0, context=chat_id)
-        job = context.job_queue.run_repeating(alarm4, 60, first=20, context=chat_id)
+        job = context.job_queue.run_repeating(alarm2, 60, first=20, context=chat_id)
         #job = context.job_queue.run_repeating(alarm2, 120, first=70, context=chat_id)
         context.chat_data['job'] = job
 
