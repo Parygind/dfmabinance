@@ -202,7 +202,7 @@ def alarm2(context):
                 mesOrd = mesOrd + 'Убыток ' + symb_list[i] + ' ' + float_to_str(dict_order[symb_list[i]]) + ' ' + float_to_str(course) + ' '
                 del dict_order[symb_list[i]]
 
-        if vol >= dict_curr[symb_list[i]]*0.02:
+        if vol >= dict_curr[symb_list[i]]*0.03:
             if not symb_list[i] in dict_order:
                 dict_order[symb_list[i]] = course
             mesVol += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%)\n'
