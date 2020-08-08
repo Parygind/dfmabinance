@@ -205,7 +205,8 @@ def alarm2(context):
         if vol >= dict_curr[symb_list[i]]*0.02:
             if not symb_list[i] in dict_order:
                 dict_order[symb_list[i]] = course
-            mesVol += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%) '
+            mesVol += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%)\n'
+            mesVol += str(inf) + '\n'
     c += 1
 
     if len(mesVol) > 0:
