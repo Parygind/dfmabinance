@@ -193,12 +193,12 @@ def alarm2(context):
         dict_last_price[symb_list[i]] = course
 
         if symb_list[i] in dict_order:
-            if course >= dict_order[symb_list[i]] * 1.01:
+            if course >= dict_order[symb_list[i]] * 1.007:
                 tk = tk + 1
                 mesOrd = mesOrd + 'Профит ' + symb_list[i] + ' ' + float_to_str(dict_order[symb_list[i]]) + ' ' + float_to_str(course) + ' '
                 del dict_order[symb_list[i]]
 
-            elif course <= dict_order[symb_list[i]] * 0.985:
+            elif course <= dict_order[symb_list[i]] * 0.99:
                 sl = sl + 1
                 mesOrd = mesOrd + 'Убыток ' + symb_list[i] + ' ' + float_to_str(dict_order[symb_list[i]]) + ' ' + float_to_str(course) + ' '
                 del dict_order[symb_list[i]]
