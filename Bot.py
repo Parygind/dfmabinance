@@ -79,7 +79,7 @@ def count(update, context):
 def get_orders(update, context):
     mes = ''
     for k in dict_order.keys():
-        mes = mes + k + ' : ' + float_to_str(dict_order[k][0]) + ' ' + float_to_str(dict_last_price[k]) + ' ' + float_to_str(round(dict_last_price[k] / dict_order[k][0] - 1, 4)) + '\n'
+        mes = mes + k + ' : ' + float_to_str(dict_order[k]) + ' ' + float_to_str(dict_last_price[k]) + ' ' + float_to_str(round(dict_last_price[k] / dict_order[k] - 1, 4)) + '\n'
     update.message.reply_text(mes)
 
 def updateData(context):
