@@ -142,7 +142,7 @@ def alarm1(context):
                 mesOrd = mesOrd + 'Профит ' + symb_list[i] + ' ' + float_to_str(dict_order[symb_list[i]]) + ' ' + float_to_str(course) + ' '
                 del dict_order[symb_list[i]]
             #elif course - dict_order[symb_list[i]] <= -0.000003:
-            elif course <= dict_order[symb_list[i]] * 0.965:
+            elif course <= dict_order[symb_list[i]] * 0.99:
                 sl = sl + 1
                 mesOrd = mesOrd + 'Убыток ' + symb_list[i] + ' ' + float_to_str(dict_order[symb_list[i]]) + ' ' + float_to_str(course) + ' '
                 del dict_order[symb_list[i]]
@@ -348,7 +348,7 @@ def set_timer(update, context):
         })
 
         job = context.job_queue.run_repeating(updateData, due, first=0, context=chat_id)
-        job = context.job_queue.run_repeating(alarm4, 60, first=20, context=chat_id)
+        job = context.job_queue.run_repeating(alarm1, 60, first=20, context=chat_id)
         #job = context.job_queue.run_repeating(alarm2, 120, first=70, context=chat_id)
         context.chat_data['job'] = job
 
@@ -422,4 +422,3 @@ updater.start_webhook(listen='0.0.0.0', port=PORT, url_path=TOKEN)
 updater.bot.set_webhook(URL + TOKEN)
 
 updater.idle()
-
