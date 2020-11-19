@@ -254,13 +254,13 @@ def alarm4(context):
                 continue
 
             if symb_list[i] in dict_order:
-                if course >= dict_order[symb_list[i]] * 1.01:
+                if course >= dict_order[symb_list[i]] * 1.005:
                     pass_val = True
                     tk = tk + 1
                     dict_order[symb_list[i]] = course
                     #mesOrd = mesOrd + 'Профит ' + symb_list[i] + ' ' + float_to_str(dict_order[symb_list[i]]) + ' ' + float_to_str(course) + ' '
 
-                elif course <= dict_order[symb_list[i]] * 0.985:
+                elif course <= dict_order[symb_list[i]] * 0.993:
                     pass_val = True
                     sl = sl + 1
 
@@ -285,8 +285,8 @@ def alarm4(context):
 
                 price = float(order['price'])
                 n = dict_prec[symb_list[i]]
-                take_profit = float_to_str(round(price * 1.01, n))
-                stop_loss = float_to_str(round(price * 0.985, n))
+                take_profit = float_to_str(round(price * 1.005, n))
+                stop_loss = float_to_str(round(price * 0.993, n))
 
                 if last_price == None:
                     last_price = take_profit
@@ -348,7 +348,7 @@ def set_timer(update, context):
         })
 
         job = context.job_queue.run_repeating(updateData, due, first=0, context=chat_id)
-        job = context.job_queue.run_repeating(alarm1, 60, first=20, context=chat_id)
+        job = context.job_queue.run_repeating(alarm4, 60, first=20, context=chat_id)
         #job = context.job_queue.run_repeating(alarm2, 120, first=70, context=chat_id)
         context.chat_data['job'] = job
 
