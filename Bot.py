@@ -307,8 +307,8 @@ def alarm4(context):
                                            { 'stopPrice': stop_loss})
                 '''
                 mesVol += symb_list[i] + '(' + str(round((vol_a/dict_wall_a[symb_list[i]])*100, 2)) + '% / ' + str(round((vol_b/dict_wall_b[symb_list[i]])*100, 2)) + '%) Курс : ' + float_to_str(price) + ' ' + float_to_str(dict_last_price[symb_list[i]] - course) +'\n'
-                mesVol += str(dict_book[symb_list[i]]) +'\n'
-                mesVol += str(f) + '\n'
+                #mesVol += str(dict_book[symb_list[i]]) +'\n'
+                #mesVol += str(f) + '\n'
                 dict_order[symb_list[i]] = price
 
             dict_book[symb_list[i]] = f
@@ -423,34 +423,3 @@ updater.bot.set_webhook(URL + TOKEN)
 
 updater.idle()
 
-
-'''
-from mplfinance.original_flavor import candlestick2_ohlc
-import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
-import datetime as datetime
-import numpy as np
-import pandas as pd
-
-quotes = pd.read_csv('binance__SXPBTC__kandles.csv', usecols=['t', 'o', 'h', 'l', 'c'])
-
-fig, ax = plt.subplots()
-candlestick2_ohlc(ax,quotes['o'],quotes['h'],quotes['l'],quotes['c'])
-
-xdate = [datetime.datetime.fromtimestamp(i / 1000) for i in quotes['t']]
-
-ax.xaxis.set_major_locator(ticker.MaxNLocator(6))
-
-def mydate(x,pos):
-    try:
-        return xdate[int(x)]
-    except IndexError:
-        return ''
-
-ax.xaxis.set_major_formatter(ticker.FuncFormatter(mydate))
-
-fig.autofmt_xdate()
-fig.tight_layout()
-
-plt.show()
-'''
