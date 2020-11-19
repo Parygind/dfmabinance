@@ -259,7 +259,7 @@ def alarm4(context):
                     tk = tk + 1
                     dict_order[symb_list[i]] = course
                     #mesOrd = mesOrd + 'Профит ' + symb_list[i] + ' ' + float_to_str(dict_order[symb_list[i]]) + ' ' + float_to_str(course) + ' '
-
+                    del dict_order[symb_list[i]]
                 elif course <= dict_order[symb_list[i]] * 0.993:
                     pass_val = True
                     sl = sl + 1
@@ -399,7 +399,7 @@ def get_top(update, context):
 
     except (IndexError, ValueError):
         update.message.reply_text('COMMAND ERROR')
-
+'''
 URL = os.environ.get('URL')
 PORT = int(os.environ.get('PORT', '5000'))
 TOKEN = os.environ['TEL_TOKEN']
@@ -422,3 +422,61 @@ updater.start_webhook(listen='0.0.0.0', port=PORT, url_path=TOKEN)
 updater.bot.set_webhook(URL + TOKEN)
 
 updater.idle()
+'''
+bin_bot = ccxt.binance({
+            'apiKey' : '7ky41JML91VbXgtJkLvArjQknwCOojJtLBGaMeYlQyuJragEhzGaRQCYtCmkR3IR',
+            'secret' : '6kYRGbm0ObOzxxUCswVBz4mJnrpj3IXzVVNBIIsRwzqKhGrlV0QK6dnvhWNvR4oK',
+            'enableRateLimit': True,
+        })
+'''
+money = 0
+for i in bin_bot.fetch_balance()['info']['balances']:
+    if (float(i['free']) > 0 or float(i['locked']) > 0) and i['asset'] != 'ALGO' and i['asset'] != 'JST':
+        print(i)
+
+        if i['asset'] == 'BTC':
+            money +=  float(i['free'])
+        else:
+            try:
+                #b = bin_bot.fetch_closed_orders(i['asset']+'/BTC', since = bin_bot.milliseconds() - 60000 * 60 * 24)
+
+                if i['asset'] != 'JST':
+                    p = bin_bot.fetch_ohlcv(i['asset']+'/BTC', '1m', limit=1)
+                    money += float(i['locked']) * p[0][1]
+                    money += float(i['free']) * p[0][1]
+                    #if float(i['free']) > 0:
+                    #    bin_bot.create_order(i['asset'] + '/BTC', 'market', 'sell', float(i['free']), None)
+            except Exception:
+                pass
+
+print(money)
+'''
+
+
+stop = 0
+profit = 0
+dict_prof = dict()
+dict_loss = dict()
+updateData1()
+for i in range(0, int(len(symb_list))):
+    b = bin_bot.fetch_closed_orders(symb_list[i], since = bin_bot.milliseconds() - 60000 * 60 * 4 )
+    for y in b:
+        if y['type'] == 'stop_loss_limit':
+            stop += 1
+            if symb_list[i] in dict_loss:
+                dict_loss[symb_list[i]] += 1
+            else:
+                dict_loss[symb_list[i]] = 1
+        elif y['type'] == 'limit':
+            profit += 1
+            if symb_list[i] in dict_prof:
+                dict_prof[symb_list[i]] += 1
+            else:
+                dict_prof[symb_list[i]] = 1
+print('profit ' + str(profit))
+for i in dict_prof:
+    print(i + ' ' + str(dict_prof[i]))
+
+print('loss ' + str(stop))
+for i in dict_loss:
+    print(i + ' ' + str(dict_loss[i]))
