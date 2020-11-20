@@ -90,7 +90,10 @@ def updateData(context):
     bin_bot.load_markets()
     #for pr in bin_bot.ticker24hr():
     for pr in tickers:
-        if tickers[pr]['symbol'][-3:] == 'BTC' and float(tickers[pr]['quoteVolume']) >= 0.01 and float(tickers[pr]['close']) >= 0.00001 and float(tickers[pr]['close']) <= 0.01 and tickers[pr]['symbol'] != 'BNB/BTC' and tickers[pr]['symbol'] != 'LINK/BTC' and tickers[pr]['symbol'] != 'DCR/BTC':
+        if tickers[pr]['symbol'][-3:] == 'BTC' and float(tickers[pr]['quoteVolume']) >= 0.01 and float(tickers[pr]['close']) >= 0.00001 and float(tickers[pr]['close']) <= 0.01 \
+                and tickers[pr]['symbol'] != 'BNB/BTC' and tickers[pr]['symbol'] != 'LINK/BTC' and tickers[pr]['symbol'] != 'DCR/BTC'\
+                and tickers[pr]['symbol'] != 'ENG/BTC' and tickers[pr]['symbol'] != 'LEND/BTC' and tickers[pr]['symbol'] != 'LUN/BTC'\
+                and tickers[pr]['symbol'] != 'TUSD/BTC' and tickers[pr]['symbol'] != 'PAX/BTC' and tickers[pr]['symbol'] != 'DAI/BTC':
             dict_curr[tickers[pr]['symbol']] = float(tickers[pr]['quoteVolume'])
             market = bin_bot.market(tickers[pr]['symbol'])
             dict_prec[tickers[pr]['symbol']] = int(market['precision']['price'])
