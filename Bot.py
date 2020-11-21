@@ -206,6 +206,7 @@ def alarm2(context):
                 tk = tk + 1
                 mesOrd = mesOrd + 'Профит ' + symb_list[i] + ' ' + float_to_str(dict_order[symb_list[i]]) + ' ' + float_to_str(course) + ' '
                 del dict_order[symb_list[i]]
+                dict_pass[symb_list[i]] = 15
 
             elif course <= dict_order[symb_list[i]] * 0.993:
                 sl = sl + 1
