@@ -216,8 +216,6 @@ def alarm2(context):
 
         if vol >= dict_curr[symb_list[i]] * 0.035 and course / float(inf[0][1]) < 1.02 and course / float(inf[0][1]) > 0.99 and len(dict_order) < 7:
             if not symb_list[i] in dict_order and not symb_list[i] in dict_pass:
-                dict_order[symb_list[i]] = course
-
                 amount = int(0.001 / course)
                 type = 'market'  # or market
                 side = 'buy'
@@ -233,6 +231,7 @@ def alarm2(context):
                     continue
 
                 price = float(order['price'])
+                dict_order[symb_list[i]] = price
                 n = dict_prec[symb_list[i]]
                 take_profit = float_to_str(round(price * 1.01, n))
                 stop_loss = float_to_str(round(price * 0.98, n))
@@ -242,7 +241,7 @@ def alarm2(context):
                      "price": take_profit, "stopPrice": stop_loss,
                      "stopLimitPrice": stop_loss, "stopLimitTimeInForce": "GTC"})
 
-            mesVol += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%)\n'
+            mesVol += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%, ' + str(price) +')\n'
             mesVol += str(inf) + '\n'
     c += 1
 
