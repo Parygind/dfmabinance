@@ -204,7 +204,7 @@ def alarm2(context):
         course = float(inf[0][4])
         dict_last_price[symb_list[i]] = course
 
-        if dict_max_price[symb_list[i]] in dict_pass:
+        if symb_list[i] in dict_max_price:
             dict_max_price[symb_list[i]] = max(dict_max_price[symb_list[i]], course)
 
         if symb_list[i] in dict_pass:
