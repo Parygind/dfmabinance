@@ -208,13 +208,13 @@ def alarm2(context):
                 del dict_order[symb_list[i]]
                 dict_pass[symb_list[i]] = 15
 
-            elif course <= dict_order[symb_list[i]] * 0.993:
+            elif course <= dict_order[symb_list[i]] * 0.98:
                 sl = sl + 1
                 mesOrd = mesOrd + 'Убыток ' + symb_list[i] + ' ' + float_to_str(dict_order[symb_list[i]]) + ' ' + float_to_str(course) + ' '
                 del dict_order[symb_list[i]]
                 dict_pass[symb_list[i]] = 15
 
-        if vol >= dict_curr[symb_list[i]] * 0.035 and course / float(inf[0][1]) < 1.04 and len(dict_order) < 7:
+        if vol >= dict_curr[symb_list[i]] * 0.035 and course / float(inf[0][1]) < 1.02 and course / float(inf[0][1]) > 0.99 and len(dict_order) < 7:
             if not symb_list[i] in dict_order and not symb_list[i] in dict_pass:
                 dict_order[symb_list[i]] = course
 
@@ -235,7 +235,7 @@ def alarm2(context):
                 price = float(order['price'])
                 n = dict_prec[symb_list[i]]
                 take_profit = float_to_str(round(price * 1.01, n))
-                stop_loss = float_to_str(round(price * 0.993, n))
+                stop_loss = float_to_str(round(price * 0.98, n))
 
                 order = bin_bot.private_post_order_oco(
                     {"symbol": symb_list[i].replace('/', ''), "side": "sell", "quantity": order['amount'],
