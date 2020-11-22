@@ -252,8 +252,8 @@ def alarm2(context):
                      "price": take_profit, "stopPrice": stop_loss,
                      "stopLimitPrice": stop_loss, "stopLimitTimeInForce": "GTC"})
 
-            mesVol += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%, ' + str(price) +')\n'
-            mesVol += str(inf) + '\n'
+                mesVol += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%, ' + str(price) +')\n'
+                mesVol += str(inf) + '\n'
         elif vol >= dict_curr[symb_list[i]] * 0.035 and not symb_list[i] in dict_start_price:
             dict_start_price[symb_list[i]] = course
             dict_max_price[symb_list[i]] = course
