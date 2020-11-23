@@ -51,6 +51,7 @@ dict_pass = dict()
 dict_last_price = dict()
 dict_start_price = dict()
 dict_max_price = dict()
+dict_min_price = dict()
 dict_wall_a = dict()
 dict_wall_b = dict()
 dict_prec = dict()
@@ -89,6 +90,12 @@ def get_max(update, context):
     mes = ''
     for k in dict_max_price.keys():
         mes = mes + k + ' : ' + float_to_str(dict_start_price[k]) + ' ' + float_to_str(dict_max_price[k]) + ' ' + float_to_str(round(dict_max_price[k] / dict_start_price[k] - 1, 4)) + '\n'
+    update.message.reply_text(mes)
+
+def get_min(update, context):
+    mes = ''
+    for k in dict_max_price.keys():
+        mes = mes + k + ' : ' + float_to_str(dict_start_price[k]) + ' ' + float_to_str(dict_min_price[k]) + ' ' + float_to_str(round(dict_min_price[k] / dict_start_price[k] - 1, 4)) + '\n'
     update.message.reply_text(mes)
 
 def updateData(context):
@@ -196,7 +203,7 @@ def alarm2(context):
     mesVol = ''
     mesOrd = ''
     job = context.job
-    global dict_prev, dict_curr, symb_list, c, tk, sl, dict_order, dict_pass, dict_prec, dict_start_price, dict_max_price
+    global dict_prev, dict_curr, symb_list, c, tk, sl, dict_order, dict_pass, dict_prec, dict_start_price, dict_max_price, dict_min_price
 
     for i in range(0, int(len(symb_list))):
         inf = get_klines(symb_list[i])
@@ -204,8 +211,9 @@ def alarm2(context):
         course = float(inf[0][4])
         dict_last_price[symb_list[i]] = course
 
-        if symb_list[i] in dict_max_price:
+        if symb_list[i] in dict_start_price:
             dict_max_price[symb_list[i]] = max(dict_max_price[symb_list[i]], course)
+            dict_min_price[symb_list[i]] = min(dict_min_price[symb_list[i]], course)
 
         if symb_list[i] in dict_pass:
             dict_pass[symb_list[i]] -= 1
@@ -230,6 +238,7 @@ def alarm2(context):
                 amount = int(0.001 / course)
                 type = 'market'  # or market
                 side = 'buy'
+                '''
                 order = bin_bot.create_order(symb_list[i], type, side, amount, None)
 
                 while order['status'] != 'closed':
@@ -251,12 +260,18 @@ def alarm2(context):
                     {"symbol": symb_list[i].replace('/', ''), "side": "sell", "quantity": order['amount'],
                      "price": take_profit, "stopPrice": stop_loss,
                      "stopLimitPrice": stop_loss, "stopLimitTimeInForce": "GTC"})
+                '''
+                price = course
+                dict_start_price[symb_list[i]] = price
+                dict_max_price[symb_list[i]] = price
+                dict_min_price[symb_list[i]] = price
 
                 mesVol += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%, ' + str(price) +')\n'
                 mesVol += str(inf) + '\n'
         elif vol >= dict_curr[symb_list[i]] * 0.035 and not symb_list[i] in dict_start_price:
             dict_start_price[symb_list[i]] = course
             dict_max_price[symb_list[i]] = course
+            dict_min_price[symb_list[i]] = course
     c += 1
 
     if len(mesVol) > 0:
@@ -466,6 +481,7 @@ updater.dispatcher.add_handler(CommandHandler('unset', unset, pass_chat_data=Tru
 updater.dispatcher.add_handler(CommandHandler('count', count, pass_chat_data=True))
 updater.dispatcher.add_handler(CommandHandler('orders', get_orders, pass_chat_data=True))
 updater.dispatcher.add_handler(CommandHandler('max', get_max, pass_chat_data=True))
+updater.dispatcher.add_handler(CommandHandler('min', get_min, pass_chat_data=True))
 updater.dispatcher.add_handler(CommandHandler('balance', get_balance, pass_chat_data=True))
 
 updater.start_webhook(listen='0.0.0.0', port=PORT, url_path=TOKEN)
