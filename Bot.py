@@ -238,7 +238,7 @@ def alarm2(context):
                 amount = int(0.001 / course)
                 type = 'market'  # or market
                 side = 'buy'
-                '''
+
                 order = bin_bot.create_order(symb_list[i], type, side, amount, None)
 
                 while order['status'] != 'closed':
@@ -255,18 +255,20 @@ def alarm2(context):
                 n = dict_prec[symb_list[i]]
                 take_profit = float_to_str(round(price * 1.01, n))
                 stop_loss = float_to_str(round(price * 0.98, n))
-
+                type = 'limit'
+                side = 'sell'
+                order = bin_bot.create_order(symb_list[i], type, side, amount, take_profit)
+                '''
                 order = bin_bot.private_post_order_oco(
                     {"symbol": symb_list[i].replace('/', ''), "side": "sell", "quantity": order['amount'],
                      "price": take_profit, "stopPrice": stop_loss,
                      "stopLimitPrice": stop_loss, "stopLimitTimeInForce": "GTC"})
                 '''
-                price = course
                 dict_start_price[symb_list[i]] = price
                 dict_max_price[symb_list[i]] = price
                 dict_min_price[symb_list[i]] = price
 
-                dict_order[symb_list[i]] = price
+
 
                 mesVol += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%, ' + str(price) +')\n'
                 mesVol += str(inf) + '\n'
