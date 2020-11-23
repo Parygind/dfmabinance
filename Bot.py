@@ -266,6 +266,8 @@ def alarm2(context):
                 dict_max_price[symb_list[i]] = price
                 dict_min_price[symb_list[i]] = price
 
+                dict_order[symb_list[i]] = price
+
                 mesVol += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%, ' + str(price) +')\n'
                 mesVol += str(inf) + '\n'
         elif vol >= dict_curr[symb_list[i]] * 0.035 and not symb_list[i] in dict_start_price:
