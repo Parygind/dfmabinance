@@ -74,7 +74,7 @@ def start(update, context):
 def get_balance(update, context):
     f = bin_bot.fetch_balance()
     for i in f['info']['balances']:
-        if i['asset'] == 'BTC':
+        if i['asset'] == 'USDT':
             update.message.reply_text('Баланс : ' + str(i['free']))
 
 def count(update, context):
@@ -106,8 +106,8 @@ def updateData(context):
     bin_bot.load_markets()
     #for pr in bin_bot.ticker24hr():
     for pr in tickers:
-        if tickers[pr]['symbol'][-3:] == 'BTC' and float(tickers[pr]['quoteVolume']) >= 0.01 and float(tickers[pr]['close']) >= 0.00001 and float(tickers[pr]['close']) <= 0.01 \
-                and tickers[pr]['symbol'] != 'BNB/BTC' and tickers[pr]['symbol'] != 'LINK/BTC' and tickers[pr]['symbol'] != 'DCR/BTC'\
+        if tickers[pr]['symbol'][-4:] == 'USDT' and float(tickers[pr]['quoteVolume']) >= 400  \
+                and tickers[pr]['symbol'] != 'SUSD/USDT' and tickers[pr]['symbol'] != 'LINK/BTC' and tickers[pr]['symbol'] != 'DCR/BTC'\
                 and tickers[pr]['symbol'] != 'ENG/BTC' and tickers[pr]['symbol'] != 'LEND/BTC' and tickers[pr]['symbol'] != 'LUN/BTC'\
                 and tickers[pr]['symbol'] != 'TUSD/BTC' and tickers[pr]['symbol'] != 'PAX/BTC' and tickers[pr]['symbol'] != 'DAI/BTC':
             dict_curr[tickers[pr]['symbol']] = float(tickers[pr]['quoteVolume'])
@@ -235,7 +235,7 @@ def alarm2(context):
 
         if vol >= dict_curr[symb_list[i]] * 0.035 and course / float(inf[0][1]) < 1.02 and course / float(inf[0][1]) > 0.99 and len(dict_order) < 7:
             if not symb_list[i] in dict_order and not symb_list[i] in dict_pass:
-                amount = int(0.001 / course)
+                amount = int(20 / course)
                 type = 'market'  # or market
                 side = 'buy'
 
