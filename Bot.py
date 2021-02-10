@@ -206,7 +206,6 @@ def alarm2(context):
     global dict_prev, dict_curr, symb_list, c, tk, sl, dict_order, dict_pass, dict_prec, dict_start_price, dict_max_price, dict_min_price
 
     for i in range(0, int(len(symb_list))):
-        context.bot.send_message(chat_id='-1001242337520', text=symb_list[i])
         inf = get_klines(symb_list[i])
         vol = float(inf[0][10])
         course = float(inf[0][4])
@@ -236,11 +235,11 @@ def alarm2(context):
 
         if vol >= dict_curr[symb_list[i]] * 0.035 and course / float(inf[0][1]) < 1.02 and course / float(inf[0][1]) > 0.99 and len(dict_order) < 7:
             if not symb_list[i] in dict_order and not symb_list[i] in dict_pass:
-                '''
+
                 amount = int(20 / course)
                 type = 'market'  # or market
                 side = 'buy'
-
+                context.bot.send_message(chat_id='-1001242337520', text=symb_list[i])
                 order = bin_bot.create_order(symb_list[i], type, side, amount, None)
 
                 while order['status'] != 'closed':
@@ -259,14 +258,14 @@ def alarm2(context):
                 stop_loss = float_to_str(round(price * 0.98, n))
                 type = 'limit'
                 side = 'sell'
-                order = bin_bot.create_order(symb_list[i], type, side, amount, take_profit)'''
+                order = bin_bot.create_order(symb_list[i], type, side, amount, take_profit)
                 '''
                 order = bin_bot.private_post_order_oco(
                     {"symbol": symb_list[i].replace('/', ''), "side": "sell", "quantity": order['amount'],
                      "price": take_profit, "stopPrice": stop_loss,
                      "stopLimitPrice": stop_loss, "stopLimitTimeInForce": "GTC"})
                 '''
-                price = 123
+
                 dict_start_price[symb_list[i]] = price
                 dict_max_price[symb_list[i]] = price
                 dict_min_price[symb_list[i]] = price
