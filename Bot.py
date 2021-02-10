@@ -206,6 +206,7 @@ def alarm2(context):
     global dict_prev, dict_curr, symb_list, c, tk, sl, dict_order, dict_pass, dict_prec, dict_start_price, dict_max_price, dict_min_price
 
     for i in range(0, int(len(symb_list))):
+        context.bot.send_message(chat_id='-1001242337520', text=symb_list[i])
         inf = get_klines(symb_list[i])
         vol = float(inf[0][10])
         course = float(inf[0][4])
