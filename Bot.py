@@ -106,7 +106,7 @@ def updateData(context):
     bin_bot.load_markets()
     #for pr in bin_bot.ticker24hr():
     for pr in tickers:
-        if tickers[pr]['symbol'][-4:] == 'USDT' and float(tickers[pr]['quoteVolume']) >= 400  \
+        if tickers[pr]['symbol'][-4:] == 'USDT' and float(tickers[pr]['quoteVolume']) >= 4000  \
                 and tickers[pr]['symbol'] != 'SUSD/USDT' and tickers[pr]['symbol'] != 'LINK/BTC' and tickers[pr]['symbol'] != 'DCR/BTC'\
                 and tickers[pr]['symbol'] != 'ENG/BTC' and tickers[pr]['symbol'] != 'LEND/BTC' and tickers[pr]['symbol'] != 'LUN/BTC'\
                 and tickers[pr]['symbol'] != 'TUSD/BTC' and tickers[pr]['symbol'] != 'PAX/BTC' and tickers[pr]['symbol'] != 'DAI/BTC':
@@ -235,7 +235,6 @@ def alarm2(context):
 
         if vol >= dict_curr[symb_list[i]] * 0.035 and course / float(inf[0][1]) < 1.02 and course / float(inf[0][1]) > 0.99 and len(dict_order) < 7:
             if not symb_list[i] in dict_order and not symb_list[i] in dict_pass:
-                context.bot.send_message(chat_id='-1001242337520', text=symb_list[i])
                 amount = int(20 / course)
                 type = 'market'  # or market
                 side = 'buy'
@@ -269,10 +268,7 @@ def alarm2(context):
                 dict_max_price[symb_list[i]] = price
                 dict_min_price[symb_list[i]] = price
 
-
-
                 mesVol += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%, ' + str(price) +')\n'
-                mesVol += str(inf) + '\n'
         elif vol >= dict_curr[symb_list[i]] * 0.035 and not symb_list[i] in dict_start_price:
             dict_start_price[symb_list[i]] = course
             dict_max_price[symb_list[i]] = course
