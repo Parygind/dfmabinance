@@ -106,7 +106,7 @@ def updateData(context):
     bin_bot.load_markets()
     #for pr in bin_bot.ticker24hr():
     for pr in tickers:
-        if tickers[pr]['symbol'][-4:] == 'USDT' and float(tickers[pr]['quoteVolume']) >= 4000 and float(tickers[pr]['bidVolume']) > 0 \
+        if tickers[pr]['symbol'][-4:] == 'USDT' and float(tickers[pr]['quoteVolume']) >= 4000 and float(tickers[pr]['bidVolume']) > 0 and float(tickers[pr]['high']) < 20 \
                 and tickers[pr]['symbol'] != 'SUSD/USDT' and tickers[pr]['symbol'] != 'LINK/BTC' and tickers[pr]['symbol'] != 'DCR/BTC'\
                 and tickers[pr]['symbol'] != 'ENG/BTC' and tickers[pr]['symbol'] != 'LEND/BTC' and tickers[pr]['symbol'] != 'LUN/BTC'\
                 and tickers[pr]['symbol'].find('DOWN') == -1 and tickers[pr]['symbol'].find('UP') == -1 \
