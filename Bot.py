@@ -237,10 +237,10 @@ def alarm2(context):
         if vol >= dict_curr[symb_list[i]] * 0.035 and course / float(inf[0][1]) < 1.02 and course / float(inf[0][1]) > 0.99 and len(dict_order) < 7:
             if not symb_list[i] in dict_order and not symb_list[i] in dict_pass:
 
-                amount = int(20 / course)
+                amount = int(200 / course)
                 type = 'market'  # or market
                 side = 'buy'
-                context.bot.send_message(chat_id='-1001242337520', text=symb_list[i])
+
                 order = bin_bot.create_order(symb_list[i], type, side, amount, None)
 
                 while order['status'] != 'closed':
