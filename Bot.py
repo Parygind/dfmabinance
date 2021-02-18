@@ -133,6 +133,7 @@ def alarm1(context):
     """Send the alarm message."""
     mesVol = ''
     mesOrd = ''
+    mesShort = ''
     job = context.job
     global dict_prev, dict_curr, symb_list, limit, tk, sl, dict_last_price, dict_order
 
@@ -276,13 +277,19 @@ def alarm2(context):
             dict_start_price[symb_list[i]] = course
             dict_max_price[symb_list[i]] = course
             dict_min_price[symb_list[i]] = course
+            
+            mesShort += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%, ' + str(price) +')\n'
+            
     c += 1
-
+    
     if len(mesVol) > 0:
         mes = 'Объемы выросли : ' + mesVol
         context.bot.send_message(chat_id='-1001242337520', text=mes)
     if len(mesOrd) > 0:
         mes = 'Сделки закрыты : ' + mesOrd
+        context.bot.send_message(chat_id='-1001242337520', text=mes)
+    if len(mesShort) > 0:
+        mes = 'Можно шортануть : ' + mesShort
         context.bot.send_message(chat_id='-1001242337520', text=mes)
 
 def alarm4(context):
