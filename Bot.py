@@ -204,6 +204,7 @@ def alarm2(context):
     """Send the alarm message."""
     mesVol = ''
     mesOrd = ''
+    mesShort = ''
     job = context.job
     global dict_prev, dict_curr, symb_list, c, tk, sl, dict_order, dict_pass, dict_prec, dict_start_price, dict_max_price, dict_min_price
 
