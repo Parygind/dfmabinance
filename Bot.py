@@ -237,7 +237,11 @@ def alarm2(context):
                 dict_pass[symb_list[i]] = 15
 
         if vol >= dict_curr[symb_list[i]] * 0.035 and course / float(inf[0][1]) < 1.06 and course / float(inf[0][1]) > 0.98 and len(dict_order) < 7:
-            if not symb_list[i] in dict_order and not symb_list[i] in dict_pass:
+            passPair = False
+            if symb_list[i] in dict_max_price:
+                if dict_max_price[symb_list[i]] <= course:
+                    passPair = True
+            if not symb_list[i] in dict_order and not symb_list[i] in dict_pass and not passPair:
 
                 amount = int(200 / course)
                 type = 'market'  # or market
@@ -258,16 +262,16 @@ def alarm2(context):
                 dict_order[symb_list[i]] = price
                 n = dict_prec[symb_list[i]]
                 take_profit = float_to_str(round(price * 1.01, n))
-                stop_loss = float_to_str(round(price * 0.98, n))
+                stop_loss = float_to_str(round(price * 0.995, n))
                 type = 'limit'
                 side = 'sell'
-                order = bin_bot.create_order(symb_list[i], type, side, amount, take_profit)
-                '''
+                #order = bin_bot.create_order(symb_list[i], type, side, amount, take_profit)
+
                 order = bin_bot.private_post_order_oco(
                     {"symbol": symb_list[i].replace('/', ''), "side": "sell", "quantity": order['amount'],
                      "price": take_profit, "stopPrice": stop_loss,
                      "stopLimitPrice": stop_loss, "stopLimitTimeInForce": "GTC"})
-                '''
+
 
                 dict_start_price[symb_list[i]] = price
                 dict_max_price[symb_list[i]] = price
