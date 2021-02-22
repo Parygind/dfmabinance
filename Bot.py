@@ -268,7 +268,7 @@ def alarm2(context):
                 #order = bin_bot.create_order(symb_list[i], type, side, amount, take_profit)
 
                 order = bin_bot.private_post_order_oco(
-                    {"symbol": symb_list[i].replace('/', ''), "side": "sell", "quantity": order['amount'],
+                    {"symbol": symb_list[i].replace('/', ''), "side": "sell", "quantity": amount,
                      "price": take_profit, "stopPrice": stop_loss,
                      "stopLimitPrice": stop_loss, "stopLimitTimeInForce": "GTC"})
 
