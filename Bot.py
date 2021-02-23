@@ -243,7 +243,7 @@ def alarm2(context):
                     passPair = True
             if not symb_list[i] in dict_order and not symb_list[i] in dict_pass and not passPair:
 
-                amount = int(200 / course)
+                amount = int(180 / course)
                 type = 'market'  # or market
                 side = 'buy'
 
