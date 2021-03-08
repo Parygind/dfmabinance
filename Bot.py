@@ -262,7 +262,7 @@ def alarm2(context):
                 dict_order[symb_list[i]] = price
                 n = dict_prec[symb_list[i]]
                 take_profit = float_to_str(round(price * 1.01, n))
-                stop_loss = float_to_str(round(price * 0.995, n))
+                stop_loss = float_to_str(round(price * 0.98, n))
                 type = 'limit'
                 side = 'sell'
                 #order = bin_bot.create_order(symb_list[i], type, side, amount, take_profit)
