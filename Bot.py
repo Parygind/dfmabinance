@@ -228,13 +228,13 @@ def alarm2(context):
                 tk = tk + 1
                 mesOrd = mesOrd + 'Профит ' + symb_list[i] + ' ' + float_to_str(dict_order[symb_list[i]]) + ' ' + float_to_str(course) + ' '
                 del dict_order[symb_list[i]]
-                dict_pass[symb_list[i]] = 15
+                dict_pass[symb_list[i]] = 60
 
             elif course <= dict_order[symb_list[i]] * 0.98:
                 sl = sl + 1
                 mesOrd = mesOrd + 'Убыток ' + symb_list[i] + ' ' + float_to_str(dict_order[symb_list[i]]) + ' ' + float_to_str(course) + ' '
                 del dict_order[symb_list[i]]
-                dict_pass[symb_list[i]] = 15
+                dict_pass[symb_list[i]] = 60
 
         if vol >= dict_curr[symb_list[i]] * 0.035 and course / float(inf[0][1]) < 1.06 and course / float(inf[0][1]) > 0.98 and len(dict_order) < 7:
             passPair = False
