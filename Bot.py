@@ -512,9 +512,7 @@ bin_bot = ccxt.binance({
     'enableRateLimit': True,
 })
 
-job = updater.job_queue.run_repeating(updateData, 3600, first=0, context=updater.message.chat_id)
-job = updater.job_queue.run_repeating(alarm2, 60, first=20, context=updater.message.chat_id)
-# job = context.job_queue.run_repeating(alarm2, 120, first=70, context=chat_id)
-updater.chat_data['job'] = job
+job = updater.job_queue.run_repeating(updateData, 3600, first=0, context=None)
+job = updater.job_queue.run_repeating(alarm2, 60, first=20, context=None)
 
 updater.idle()
