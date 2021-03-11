@@ -507,3 +507,13 @@ updater.start_webhook(listen='0.0.0.0', port=PORT, url_path=TOKEN)
 updater.bot.set_webhook(URL + TOKEN)
 
 updater.idle()
+bin_bot = ccxt.binance({
+    'apiKey': os.environ['API_KEY'],
+    'secret': os.environ['API_SECRET'],
+    'enableRateLimit': True,
+})
+
+job = updater.job_queue.run_repeating(updateData, 3600, first=0, context=updater.message.chat_id)
+job = updater.job_queue.run_repeating(alarm2, 60, first=20, context=updater.message.chat_id)
+# job = context.job_queue.run_repeating(alarm2, 120, first=70, context=chat_id)
+updater.chat_data['job'] = job
