@@ -506,13 +506,4 @@ updater.dispatcher.add_handler(CommandHandler('balance', get_balance, pass_chat_
 updater.start_webhook(listen='0.0.0.0', port=PORT, url_path=TOKEN)
 updater.bot.set_webhook(URL + TOKEN)
 
-bin_bot = ccxt.binance({
-    'apiKey': os.environ['API_KEY'],
-    'secret': os.environ['API_SECRET'],
-    'enableRateLimit': True,
-})
-
-job = updater.job_queue.run_repeating(updateData, 3600, first=0, context=None)
-job = updater.job_queue.run_repeating(alarm2, 60, first=20, context=None)
-
 updater.idle()
