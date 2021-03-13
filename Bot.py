@@ -215,8 +215,8 @@ def alarm2(context):
         dict_last_price[symb_list[i]] = course
 
         if symb_list[i] in dict_start_price:
-            dict_max_price[symb_list[i]] = max(dict_max_price[symb_list[i]], course)
-            dict_min_price[symb_list[i]] = min(dict_min_price[symb_list[i]], course)
+            dict_max_price[symb_list[i]] = max(dict_max_price[symb_list[i]], float(inf[0][2]))
+            dict_min_price[symb_list[i]] = min(dict_min_price[symb_list[i]], float(inf[0][3]))
 
         if symb_list[i] in dict_pass:
             dict_pass[symb_list[i]] -= 1
