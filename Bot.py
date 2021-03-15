@@ -236,7 +236,7 @@ def alarm2(context):
                 del dict_order[symb_list[i]]
                 dict_pass[symb_list[i]] = 60
 
-        if vol >= dict_curr[symb_list[i]] * 0.02 and float(inf[0][2]) / float(inf[0][1]) < 1.06 and float(inf[0][4]) / float(inf[0][1]) > 0.98 and float(inf[0][2]) / float(inf[0][3]) > 1.005 and len(dict_order) < 7:
+        if vol >= dict_curr[symb_list[i]] * 0.0215 and float(inf[0][2]) / float(inf[0][1]) < 1.06 and float(inf[0][4]) / float(inf[0][1]) > 0.98 and float(inf[0][2]) / float(inf[0][3]) > 1.005 and len(dict_order) < 7:
             passPair = False
             if symb_list[i] in dict_max_price:
                 if dict_max_price[symb_list[i]] <= course:
