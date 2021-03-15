@@ -224,13 +224,13 @@ def alarm2(context):
                 del dict_pass[symb_list[i]]
 
         if symb_list[i] in dict_order:
-            if course >= dict_order[symb_list[i]] * 1.01:
+            if dict_max_price[symb_list[i]] >= dict_order[symb_list[i]] * 1.01:
                 tk = tk + 1
                 mesOrd = mesOrd + 'Профит ' + symb_list[i] + ' ' + float_to_str(dict_order[symb_list[i]]) + ' ' + float_to_str(course) + ' '
                 del dict_order[symb_list[i]]
                 dict_pass[symb_list[i]] = 60
 
-            elif course <= dict_order[symb_list[i]] * 0.98:
+            elif dict_min_price[symb_list[i]] <= dict_order[symb_list[i]] * 0.96:
                 sl = sl + 1
                 mesOrd = mesOrd + 'Убыток ' + symb_list[i] + ' ' + float_to_str(dict_order[symb_list[i]]) + ' ' + float_to_str(course) + ' '
                 del dict_order[symb_list[i]]
@@ -262,7 +262,7 @@ def alarm2(context):
                 dict_order[symb_list[i]] = price
                 n = dict_prec[symb_list[i]]
                 take_profit = float_to_str(round(price * 1.01, n))
-                stop_loss = float_to_str(round(price * 0.98, n))
+                stop_loss = float_to_str(round(price * 0.96, n))
                 type = 'limit'
                 side = 'sell'
                 #order = bin_bot.create_order(symb_list[i], type, side, amount, take_profit)
