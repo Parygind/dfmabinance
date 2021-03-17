@@ -58,6 +58,8 @@ dict_prec = dict()
 
 dict_book = dict()
 
+order_price = 400
+
 def get_klines(symb):
     params = {}
     bin_bot.load_markets()
@@ -243,7 +245,7 @@ def alarm2(context):
                     passPair = True
             if not symb_list[i] in dict_order and not symb_list[i] in dict_pass and not passPair:
 
-                amount = int(20 / course)
+                amount = int(order_price / course)
                 type = 'market'  # or market
                 side = 'buy'
 
@@ -411,6 +413,25 @@ def alarm4(context):
             context.bot.send_message(chat_id='-1001242337520', text=mes)
     except Exception:
         context.bot.send_message(chat_id='-1001242337520', text=sys.exc_info()[0])
+        
+def set_price(update, context):
+    """Add a job to the queue."""
+    chat_id = update.message.chat_id
+    try:
+        # args[0] should contain the time for the timer in seconds
+        due = int(context.args[0])
+        if due < 0:
+            update.message.reply_text('Введите положительное значение!')
+            return
+
+        global order_price
+
+        order_price = due
+
+        update.message.reply_text('Цена установлена!')
+
+    except (IndexError, ValueError):
+        update.message.reply_text('Usage: /set_price <value>')
 
 def set_timer(update, context):
     """Add a job to the queue."""
@@ -495,6 +516,7 @@ updater.dispatcher.add_handler(CommandHandler('set', set_timer, pass_args=True,
                                   pass_job_queue=True,
                                   pass_chat_data=True))
 updater.dispatcher.add_handler(CommandHandler('get', get_vol, pass_args=True, pass_chat_data=True))
+updater.dispatcher.add_handler(CommandHandler('set_price', set_price, pass_args=True, pass_chat_data=True))
 updater.dispatcher.add_handler(CommandHandler('gettop', get_top, pass_chat_data=True))
 updater.dispatcher.add_handler(CommandHandler('unset', unset, pass_chat_data=True))
 updater.dispatcher.add_handler(CommandHandler('count', count, pass_chat_data=True))
