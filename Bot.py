@@ -285,7 +285,7 @@ def alarm2(context):
             dict_start_price[symb_list[i]] = course
             dict_max_price[symb_list[i]] = course
             dict_min_price[symb_list[i]] = course
-            
+            dict_pass[symb_list[i]] = 60
             mesShort += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%, ' + str(course) + ' ' + str(course / float(inf[0][1])) + ' ' + str(float(inf[0][2]) / float(inf[0][1])) + ' ' + str(float(inf[0][2]) / float(inf[0][3])) + ')\n'
             
     c += 1
