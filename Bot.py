@@ -267,7 +267,8 @@ def alarm2(context):
                 stop_loss = float_to_str(round(price * 0.96, n))
                 type = 'limit'
                 side = 'sell'
-                #order = bin_bot.create_order(symb_list[i], type, side, amount, take_profit)
+                order = bin_bot.create_order(symb_list[i], type, side, amount, take_profit)
+                '''
                 try:
                     order = bin_bot.private_post_order_oco(
                         {"symbol": symb_list[i].replace('/', ''), "side": "sell", "quantity": amount,
@@ -276,7 +277,7 @@ def alarm2(context):
                 except:
                     type = 'market'
                     order = bin_bot.create_order(symb_list[i], type, side, amount, take_profit)
-
+                '''
 
                 dict_start_price[symb_list[i]] = price
                 dict_max_price[symb_list[i]] = price
