@@ -37,6 +37,7 @@ last_price = None
 last_stop = None
 dict_prev = dict()
 dict_curr = dict()
+dict_prev_vol = dict()
 
 dict_prev_pr = dict()
 dict_curr_pr = dict()
@@ -155,8 +156,7 @@ def alarm1(context):
             else:
                 vol -= t['price'] * t['amount']
         course = tr[len(tr) - 1]['price']
-
-
+        
         if symb_list[i] in dict_order:
             dict_last_price[symb_list[i]] = course
             #if course - dict_order[symb_list[i]] >= 0.000003:
@@ -283,14 +283,68 @@ def alarm2(context):
                 dict_min_price[symb_list[i]] = price
 
                 mesVol += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%, ' + str(price) + ' ' + str(course) + ' ' + str(course / float(inf[0][1])) + ' ' + str(float(inf[0][2]) / float(inf[0][1])) + ' ' + str(float(inf[0][2]) / float(inf[0][3])) +')\n'
+        elif c > 0 and vol + dict_prev_vol[symb_list[i]] >= dict_curr[symb_list[i]] * 0.035 and float(inf[0][2]) / float(inf[0][1]) < 1.06 and float(inf[0][2]) / float(inf[0][1]) > 1 and float(inf[0][4]) / float(inf[0][1]) > 0.96 and float(inf[0][2]) / float(inf[0][3]) > 1.01 and len(dict_order) < 7:
+            passPair = False
+            if symb_list[i] in dict_max_price:
+                if dict_max_price[symb_list[i]] <= course:
+                    passPair = True
+            if not symb_list[i] in dict_order and not symb_list[i] in dict_pass and not passPair:
+
+                amount = int(2 / course)
+                type = 'market'  # or market
+                side = 'buy'
+
+                order = bin_bot.create_order(symb_list[i], type, side, amount, None)
+
+                while order['status'] != 'closed':
+                    order = bin_bot.fetch_order(order['id'], symb_list[i])
+
+                    if order['status'] == 'rejected' or order['status'] == 'canceled':
+                        break
+
+                if order['status'] != 'closed':
+                    continue
+
+                price = float(order['price'])
+                dict_order[symb_list[i]] = price
+                n = dict_prec[symb_list[i]]
+                take_profit = float_to_str(round(price * 1.01, n))
+                stop_loss = float_to_str(round(price * 0.96, n))
+                type = 'limit'
+                side = 'sell'
+                #order = bin_bot.create_order(symb_list[i], type, side, amount, take_profit)
+                try:
+                    order = bin_bot.private_post_order_oco(
+                        {"symbol": symb_list[i].replace('/', ''), "side": "sell", "quantity": amount,
+                         "price": take_profit, "stopPrice": stop_loss,
+                         "stopLimitPrice": stop_loss, "stopLimitTimeInForce": "GTC"})
+                except:
+                    type = 'market'
+                    order = bin_bot.create_order(symb_list[i], type, side, amount, take_profit)
+
+
+                dict_start_price[symb_list[i]] = price
+                dict_max_price[symb_list[i]] = price
+                dict_min_price[symb_list[i]] = price
+
+                mesVol += symb_list[i] + 'TEST (+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%, ' + str(price) + ' ' + str(course) + ' ' + str(course / float(inf[0][1])) + ' ' + str(float(inf[0][2]) / float(inf[0][1])) + ' ' + str(float(inf[0][2]) / float(inf[0][3])) +')\n'
+       
         elif vol >= dict_curr[symb_list[i]] * 0.02 and not symb_list[i] in dict_start_price:
             dict_start_price[symb_list[i]] = course
             dict_max_price[symb_list[i]] = course
             dict_min_price[symb_list[i]] = course
             dict_pass[symb_list[i]] = 60
             mesShort += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%, ' + str(course) + ' ' + str(course / float(inf[0][1])) + ' ' + str(float(inf[0][2]) / float(inf[0][1])) + ' ' + str(float(inf[0][2]) / float(inf[0][3])) + ')\n'
-            
+        elif c > 0 and vol + dict_prev_vol[symb_list[i]] >= dict_curr[symb_list[i]] * 0.035 and not symb_list[i] in dict_start_price:
+            dict_start_price[symb_list[i]] = course
+            dict_max_price[symb_list[i]] = course
+            dict_min_price[symb_list[i]] = course
+            dict_pass[symb_list[i]] = 60
+            mesShort += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%, ' + str(course) + ' ' + str(course / float(inf[0][1])) + ' ' + str(float(inf[0][2]) / float(inf[0][1])) + ' ' + str(float(inf[0][2]) / float(inf[0][3])) + ')\n'
+          
     c += 1
+    
+    dict_prev_vol[symb_list[i]] = vol
     
     if len(mesVol) > 0:
         mes = 'Объемы выросли : ' + mesVol
