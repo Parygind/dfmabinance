@@ -344,9 +344,9 @@ def alarm2(context):
                 dict_pass[symb_list[i]] = 60
                 mesShort += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%, ' + str(course) + ' ' + str(course / float(inf[0][1])) + ' ' + str(float(inf[0][2]) / float(inf[0][1])) + ' ' + str(float(inf[0][2]) / float(inf[0][3])) + ')\n'
 
-    c += 1
+        dict_prev_vol[symb_list[i]] = vol
     
-    dict_prev_vol[symb_list[i]] = vol
+    c += 1
     
     if len(mesVol) > 0:
         mes = 'Объемы выросли : ' + mesVol
