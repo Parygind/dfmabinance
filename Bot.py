@@ -338,7 +338,7 @@ def alarm2(context):
                 dict_pass[symb_list[i]] = 60
                 mesShort += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%, ' + str(course) + ' ' + str(course / float(inf[0][1])) + ' ' + str(float(inf[0][2]) / float(inf[0][1])) + ' ' + str(float(inf[0][2]) / float(inf[0][3])) + ')\n'
             elif c > 0:
-                if vol + dict_prev_vol[symb_list[i]] >= dict_curr[symb_list[i]] * 0.035 and not symb_list[i] in dict_start_price:
+                if vol + dict_prev_vol[symb_list[i]] >= dict_curr[symb_list[i]] * 0.03 and not symb_list[i] in dict_start_price:
                     dict_start_price[symb_list[i]] = course
                     dict_max_price[symb_list[i]] = course
                     dict_min_price[symb_list[i]] = course
