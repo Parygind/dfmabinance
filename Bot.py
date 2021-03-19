@@ -285,7 +285,7 @@ def alarm2(context):
 
                 mesVol += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%, ' + str(price) + ' ' + str(course) + ' ' + str(course / float(inf[0][1])) + ' ' + str(float(inf[0][2]) / float(inf[0][1])) + ' ' + str(float(inf[0][2]) / float(inf[0][3])) +')\n'
         elif c > 0 and dict_prev_vol.get(symb_list[i]) != None:
-            if vol + dict_prev_vol[symb_list[i]] >= dict_curr[symb_list[i]] * 0.035 and float(inf[0][2]) / float(inf[0][1]) < 1.06 and float(inf[0][2]) / float(inf[0][1]) > 1 and float(inf[0][4]) / float(inf[0][1]) > 0.96 and float(inf[0][2]) / float(inf[0][3]) > 1.00 and len(dict_order) < 7:
+            if vol + dict_prev_vol[symb_list[i]] >= dict_curr[symb_list[i]] * 0.03 and float(inf[0][2]) / float(inf[0][1]) < 1.06 and float(inf[0][2]) / float(inf[0][1]) > 1 and float(inf[0][4]) / float(inf[0][1]) > 0.96 and float(inf[0][2]) / float(inf[0][3]) > 1.00 and len(dict_order) < 7:
                 passPair = False
                 if symb_list[i] in dict_max_price:
                     if dict_max_price[symb_list[i]] <= course:
