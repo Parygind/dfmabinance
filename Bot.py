@@ -295,7 +295,7 @@ def alarm2(context):
                     amount = int(10 / course)
                     type = 'market'  # or market
                     side = 'buy'
-
+                    '''
                     order = bin_bot.create_order(symb_list[i], type, side, amount, None)
 
                     while order['status'] != 'closed':
@@ -323,13 +323,13 @@ def alarm2(context):
                     except:
                         type = 'market'
                         order = bin_bot.create_order(symb_list[i], type, side, amount, take_profit)
+                    '''
 
+                    dict_start_price[symb_list[i]] = float(inf[0][4])
+                    dict_max_price[symb_list[i]] = float(inf[0][4])
+                    dict_min_price[symb_list[i]] = float(inf[0][4])
 
-                    dict_start_price[symb_list[i]] = price
-                    dict_max_price[symb_list[i]] = price
-                    dict_min_price[symb_list[i]] = price
-
-                    mesVol += symb_list[i] + 'TEST (+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%, ' + str(price) + ' ' + str(course) + ' ' + str(course / float(inf[0][1])) + ' ' + str(float(inf[0][2]) / float(inf[0][1])) + ' ' + str(float(inf[0][2]) / float(inf[0][3])) +')\n'
+                    mesVol += symb_list[i] + 'TEST (+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%, ' + str(float(inf[0][4])) + ' ' + str(course) + ' ' + str(course / float(inf[0][1])) + ' ' + str(float(inf[0][2]) / float(inf[0][1])) + ' ' + str(float(inf[0][2]) / float(inf[0][3])) +')\n'
 
             elif vol >= dict_curr[symb_list[i]] * 0.02 and not symb_list[i] in dict_start_price:
                 dict_start_price[symb_list[i]] = course
