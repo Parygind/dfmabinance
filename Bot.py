@@ -208,7 +208,7 @@ def alarm2(context):
     mesOrd = ''
     mesShort = ''
     job = context.job
-    global dict_prev, dict_curr, symb_list, c, tk, sl, dict_order, dict_pass, dict_prec, dict_start_price, dict_max_price, dict_min_price
+    global dict_prev, dict_curr, symb_list, c, tk, sl, dict_order, dict_pass, dict_prec, dict_start_price, dict_max_price, dict_min_price, dict_prev_vol
 
     for i in range(0, int(len(symb_list))):
         inf = get_klines(symb_list[i])
