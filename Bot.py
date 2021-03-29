@@ -59,7 +59,7 @@ dict_prec = dict()
 
 dict_book = dict()
 
-order_price = 400
+order_price = 500
 
 def get_klines(symb):
     params = {}
