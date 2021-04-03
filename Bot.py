@@ -98,7 +98,7 @@ def set_trade_on(update, context):
 
 def set_trade_off(update, context):
     global trade_on
-    trade_on = True
+    trade_on = False
     update.message.reply_text('Торговля выключена!')
 
 def get_max(update, context):
