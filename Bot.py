@@ -56,6 +56,7 @@ dict_min_price = dict()
 dict_wall_a = dict()
 dict_wall_b = dict()
 dict_prec = dict()
+dict_prev_min = dict()
 
 dict_book = dict()
 
@@ -220,12 +221,20 @@ def alarm2(context):
     mesOrd = ''
     mesShort = ''
     job = context.job
-    global dict_prev, dict_curr, symb_list, c, tk, sl, dict_order, dict_pass, dict_prec, dict_start_price, dict_max_price, dict_min_price, dict_prev_vol, trade_on
+    global dict_prev, dict_curr, symb_list, c, tk, sl, dict_order, dict_pass, dict_prec, dict_start_price, dict_max_price, dict_min_price, dict_prev_vol, dict_prev_min,trade_on
 
     for i in range(0, int(len(symb_list))):
         inf = get_klines(symb_list[i])
         vol = float(inf[0][10])
         course = float(inf[0][4])
+
+        prev_min = 0
+
+        if symb_list[i] in dict_prev_min:
+            prev_min = dict_prev_min[symb_list[i]]
+        else:
+            prev_min = float(inf[0][3])
+
         dict_last_price[symb_list[i]] = course
 
         if symb_list[i] in dict_start_price:
@@ -301,7 +310,7 @@ def alarm2(context):
                 dict_max_price[symb_list[i]] = price
                 dict_min_price[symb_list[i]] = price
 
-                mesVol += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%, ' + str(price) + ' ' + str(course) + ' ' + str(course / float(inf[0][1])) + ' ' + str(float(inf[0][2]) / float(inf[0][1])) + ' ' + str(float(inf[0][2]) / float(inf[0][3])) +')\n'
+                mesVol += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%, ' + str(price) + ' ' + str(course) + ' ' + str(course / float(inf[0][1])) + ' ' + str(float(inf[0][2]) / float(inf[0][1])) + ' ' + str(float(inf[0][2]) / float(inf[0][3])) + ' ' + str(float(inf[0][2]) / prev_min) +')\n'
         elif c > 0 and dict_prev_vol.get(symb_list[i]) != None:
             if vol + dict_prev_vol[symb_list[i]] >= dict_curr[symb_list[i]] * 0.023 and vol < dict_curr[symb_list[i]] * 0.0215 and float(inf[0][2]) / float(inf[0][1]) < 1.06 and float(inf[0][2]) / float(inf[0][1]) > 1 and float(inf[0][4]) / float(inf[0][1]) > 0.96 and float(inf[0][2]) / float(inf[0][3]) > 1.00 and len(dict_order) < 7:
                 passPair = False
@@ -343,24 +352,24 @@ def alarm2(context):
                     dict_max_price[symb_list[i]] = price
                     dict_min_price[symb_list[i]] = price
 
-                    mesVol += symb_list[i] + ' TEST (+' + str(round(vol + dict_prev_vol[symb_list[i]], 2)) + ' / ' + str(round(((vol + dict_prev_vol[symb_list[i]])/dict_curr[symb_list[i]])*100, 2)) + '%, ' + str(float(inf[0][4])) + ' ' + str(course) + ' ' + str(course / float(inf[0][1])) + ' ' + str(float(inf[0][2]) / float(inf[0][1])) + ' ' + str(float(inf[0][2]) / float(inf[0][3])) +')\n'
+                    mesVol += symb_list[i] + ' TEST (+' + str(round(vol + dict_prev_vol[symb_list[i]], 2)) + ' / ' + str(round(((vol + dict_prev_vol[symb_list[i]])/dict_curr[symb_list[i]])*100, 2)) + '%, ' + str(float(inf[0][4])) + ' ' + str(course) + ' ' + str(course / float(inf[0][1])) + ' ' + str(float(inf[0][2]) / float(inf[0][1])) + ' ' + str(float(inf[0][2]) / float(inf[0][3])) + ' ' + str(float(inf[0][2]) / prev_min) +')\n'
 
             elif vol >= dict_curr[symb_list[i]] * 0.02 and not symb_list[i] in dict_start_price:
                 dict_start_price[symb_list[i]] = course
                 dict_max_price[symb_list[i]] = course
                 dict_min_price[symb_list[i]] = course
                 dict_pass[symb_list[i]] = 60
-                mesShort += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%, ' + str(course) + ' ' + str(course / float(inf[0][1])) + ' ' + str(float(inf[0][2]) / float(inf[0][1])) + ' ' + str(float(inf[0][2]) / float(inf[0][3])) + ')\n'
+                mesShort += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(round((vol/dict_curr[symb_list[i]])*100, 2)) + '%, ' + str(course) + ' ' + str(course / float(inf[0][1])) + ' ' + str(float(inf[0][2]) / float(inf[0][1])) + ' ' + str(float(inf[0][2]) / float(inf[0][3])) + ' ' + str(float(inf[0][2]) / prev_min) + ')\n'
             elif c > 0:
                 if vol + dict_prev_vol[symb_list[i]] >= dict_curr[symb_list[i]] * 0.0215 and not symb_list[i] in dict_start_price:
                     dict_start_price[symb_list[i]] = course
                     dict_max_price[symb_list[i]] = course
                     dict_min_price[symb_list[i]] = course
                     dict_pass[symb_list[i]] = 60
-                    mesShort += symb_list[i] + 'TEST (+' + str(round(vol + dict_prev_vol[symb_list[i]], 2)) + ' / ' + str(round(((vol+dict_prev_vol[symb_list[i]])/dict_curr[symb_list[i]])*100, 2)) + '%, ' + str(course) + ' ' + str(course / float(inf[0][1])) + ' ' + str(float(inf[0][2]) / float(inf[0][1])) + ' ' + str(float(inf[0][2]) / float(inf[0][3])) + ')\n'
+                    mesShort += symb_list[i] + 'TEST (+' + str(round(vol + dict_prev_vol[symb_list[i]], 2)) + ' / ' + str(round(((vol+dict_prev_vol[symb_list[i]])/dict_curr[symb_list[i]])*100, 2)) + '%, ' + str(course) + ' ' + str(course / float(inf[0][1])) + ' ' + str(float(inf[0][2]) / float(inf[0][1])) + ' ' + str(float(inf[0][2]) / float(inf[0][3])) + ' ' + str(float(inf[0][2]) / prev_min) + ')\n'
 
         dict_prev_vol[symb_list[i]] = vol
-    
+        dict_prev_min[symb_list[i]] = float(inf[0][3])
     c += 1
     
     if len(mesVol) > 0:
