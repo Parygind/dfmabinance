@@ -60,7 +60,7 @@ dict_prev_min = dict()
 
 dict_book = dict()
 
-order_price = 750
+order_price = 850
 
 trade_on = True
 
