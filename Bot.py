@@ -62,7 +62,7 @@ dict_book = dict()
 
 order_price = 850
 
-trade_on = True
+trade_on = False
 
 def get_klines(symb):
     params = {}
@@ -70,6 +70,15 @@ def get_klines(symb):
     market = bin_bot.market(symb)
     request = {'symbol': market['id'], 'interval': bin_bot.timeframes['1m'], }
     request['limit'] = 1  # default == max == 500
+    method = 'publicGetKlines' if market['spot'] else 'fapiPublicGetKlines'
+
+    return getattr(bin_bot, method)(bin_bot.extend(request, params))
+def get_klines1(symb, interval, start, limit):
+    params = {}
+    bin_bot.load_markets()
+    market = bin_bot.market(symb)
+    request = {'symbol': market['id'], 'interval': bin_bot.timeframes[interval], 'startTime' : start, }
+    request['limit'] = limit  # default == max == 500
     method = 'publicGetKlines' if market['spot'] else 'fapiPublicGetKlines'
 
     return getattr(bin_bot, method)(bin_bot.extend(request, params))
@@ -140,7 +149,19 @@ def updateData1():
     tickers = bin_bot.fetch_tickers()
     #for pr in bin_bot.ticker24hr():
     for pr in tickers:
-        if tickers[pr]['symbol'][-3:] == 'BTC' and float(tickers[pr]['quoteVolume']) >= 5 and float(tickers[pr]['close']) >= 0.00001:
+        if tickers[pr]['symbol'][-4:] == 'USDT' and float(tickers[pr]['quoteVolume']) >= 300000 and float(
+                tickers[pr]['quoteVolume']) <= 25000000 and float(tickers[pr]['bidVolume']) > 0 and float(
+                tickers[pr]['high']) < 20 \
+                and tickers[pr]['symbol'] != 'SUSD/USDT' and tickers[pr]['symbol'] != 'LINK/BTC' and tickers[pr][
+            'symbol'] != 'DCR/BTC' \
+                and tickers[pr]['symbol'] != 'ENG/BTC' and tickers[pr]['symbol'] != 'LEND/BTC' and tickers[pr][
+            'symbol'] != 'LUN/BTC' and tickers[pr]['symbol'] != 'PAX/USDT' \
+                and tickers[pr]['symbol'].find('DOWN') == -1 and tickers[pr]['symbol'].find('UP') == -1 and tickers[pr][
+            'symbol'] != 'PNT/USDT' \
+                and tickers[pr]['symbol'] != 'ASR/USDT' and tickers[pr]['symbol'] != 'ATM/USDT' and tickers[pr][
+            'symbol'] != 'ACM/USDT' and tickers[pr]['symbol'] != 'TUSD/BTC' and tickers[pr]['symbol'] != 'TUSD/USDT' and \
+                tickers[pr]['symbol'] != 'PAX/BTC' and tickers[pr]['symbol'] != 'DAI/BTC' and tickers[pr][
+            'symbol'] != 'SUN/USDT':
             dict_curr[tickers[pr]['symbol']] = float(tickers[pr]['quoteVolume'])
 
     symb_list = list(dict_curr.keys())
@@ -656,3 +677,4 @@ job = updater.job_queue.run_repeating(updateData, 3600, first=0, context=None)
 job = updater.job_queue.run_repeating(alarm2, 60, first=20, context=None)
 
 updater.idle()
+
