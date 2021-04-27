@@ -280,7 +280,7 @@ def alarm2(context):
                 del dict_order[symb_list[i]]
                 dict_pass[symb_list[i]] = 60
 
-        if vol >= dict_curr[symb_list[i]] * 0.0215 and float(inf[0][2]) / float(inf[0][1]) < 1.07 and float(inf[0][2]) / float(inf[0][1]) > 1 and float(inf[0][4]) / float(inf[0][1]) > 0.96 and float(inf[0][2]) / float(inf[0][3]) > 1.01 and float(inf[0][2]) / prev_min > 1.01 and len(dict_order) < 7:
+        if vol >= dict_curr[symb_list[i]] * 0.0215 and float(inf[0][2]) / float(inf[0][1]) < 1.07 and float(inf[0][2]) / float(inf[0][1]) > 1 and float(inf[0][4]) / float(inf[0][1]) > 0.96 and float(inf[0][2]) / float(inf[0][3]) > 1.01 and float(inf[0][2]) / prev_min > 1.01 and float(inf[0][2]) / prev_min < 1.05 and len(dict_order) < 7:
             passPair = False
             if symb_list[i] in dict_max_price:
                 if dict_max_price[symb_list[i]] <= course:
@@ -352,7 +352,7 @@ def alarm2(context):
 
 
         elif c > 0 and dict_prev_vol.get(symb_list[i]) != None:
-            if vol + dict_prev_vol[symb_list[i]] >= dict_curr[symb_list[i]] * 0.022 and vol < dict_curr[symb_list[i]] * 0.0215 and float(inf[0][2]) / float(inf[0][1]) < 1.06 and float(inf[0][2]) / float(inf[0][1]) > 1 and float(inf[0][4]) / float(inf[0][1]) > 0.96 and float(inf[0][2]) / float(inf[0][3]) > 1.01 and float(inf[0][2]) / prev_min > 1.01 and len(dict_order) < 7:
+            if vol + dict_prev_vol[symb_list[i]] >= dict_curr[symb_list[i]] * 0.022 and vol < dict_curr[symb_list[i]] * 0.0215 and float(inf[0][2]) / float(inf[0][1]) < 1.06 and float(inf[0][2]) / float(inf[0][1]) > 1 and float(inf[0][4]) / float(inf[0][1]) > 0.96 and float(inf[0][2]) / float(inf[0][3]) > 1.01 and float(inf[0][2]) / prev_min > 1.01 and float(inf[0][2]) / prev_min < 1.05 and len(dict_order) < 7:
                 passPair = False
                 if symb_list[i] in dict_max_price:
                     if dict_max_price[symb_list[i]] <= course:
