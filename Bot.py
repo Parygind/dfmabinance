@@ -60,9 +60,9 @@ dict_prev_min = dict()
 
 dict_book = dict()
 
-order_price = 850
+order_price = 900
 
-trade_on = False
+trade_on = True
 
 def get_klines(symb):
     params = {}
