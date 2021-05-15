@@ -495,12 +495,12 @@ def hello(update, context):
 def get_top(update, context):
     try:
         # args[0] should contain the time for the timer in seconds
-        if len(dict_prev) == 0:
+        if len(dict_list) == 0:
             update.message.reply_text('База данных пуста!')
             return
 
-        update.message.reply_text(list(dict_prev.keys())[0])
-        update.message.reply_text(str(dict_prev[list(dict_prev.keys())[0]]))
+        update.message.reply_text(list(dict_list.keys())[0])
+        update.message.reply_text(str(dict_list[list(dict_list.keys())[0]]))
 
     except (IndexError, ValueError):
         update.message.reply_text('COMMAND ERROR')
@@ -824,7 +824,7 @@ bin_bot = ccxt.binance({
 updateData()
 
 binance_websocket_api_manager = unicorn_binance_websocket_api.BinanceWebSocketApiManager()
-'''
+
 # start a worker process to move the received stream_data from the stream_buffer to a print function
 worker_thread = threading.Thread(target=print_stream_data_from_stream_buffer, args=(binance_websocket_api_manager,))
 worker_thread.start()
@@ -847,7 +847,7 @@ for channel in channels:
                 markets_sub = []
                 i = 1
                 loops += 1
-            i += 1'''
+            i += 1
 updater.bot.send_message(chat_id='-1001242337520', text='Запуск!')
 
 updater.idle()
