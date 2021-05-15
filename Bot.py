@@ -824,7 +824,7 @@ bin_bot = ccxt.binance({
 updateData()
 
 binance_websocket_api_manager = unicorn_binance_websocket_api.BinanceWebSocketApiManager()
-
+'''
 # start a worker process to move the received stream_data from the stream_buffer to a print function
 worker_thread = threading.Thread(target=print_stream_data_from_stream_buffer, args=(binance_websocket_api_manager,))
 worker_thread.start()
@@ -847,7 +847,7 @@ for channel in channels:
                 markets_sub = []
                 i = 1
                 loops += 1
-            i += 1
+            i += 1'''
 updater.bot.send_message(chat_id='-1001242337520', text='Запуск!')
 
 updater.idle()
