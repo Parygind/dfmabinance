@@ -507,7 +507,7 @@ def get_top(update, context):
 
 
 def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
-    global profit
+    global profit, sl, trade_on
     while True:
         if binance_websocket_api_manager.is_manager_stopping():
             exit(0)
