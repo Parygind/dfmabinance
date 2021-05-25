@@ -70,7 +70,7 @@ profit = 0
 
 dict_book = dict()
 
-order_price = 500
+order_price = 800
 
 trade_on = False
 
@@ -523,6 +523,10 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
 
                     data = data['data']
                     t = data['E']
+
+                    if (t / 1000) + 60 < time.time():
+                        continue
+
                     symb = data['s'].replace('USDT', '/USDT')
                     price = float(data['p'])
                     if symb in dict_order and dict_order[symb][0] < t:
