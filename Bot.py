@@ -538,6 +538,11 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                             updater.bot.send_message(chat_id='-1001242337520', text='Профит ' + symb + ' ' + str(price) + ' баланс ' + str(profit))
                         elif price < dict_order[symb][1] * 0.96:
                             profit -= 0.0415
+                            sl += 1
+
+                            if sl > 3:
+                                trade_on = False
+                                sl = 0
                             del dict_order[symb]
                             dict_pass[symb] = t
                             updater.bot.send_message(chat_id='-1001242337520',
