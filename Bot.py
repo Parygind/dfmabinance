@@ -70,9 +70,9 @@ profit = 0
 
 dict_book = dict()
 
-order_price = 800
+order_price = 400
 
-trade_on = False
+trade_on = True
 
 
 def get_klines(symb):
@@ -507,7 +507,7 @@ def get_top(update, context):
 
 
 def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
-    global profit, sl, trade_on
+    global profit, sl, tk, trade_on
     while True:
         if binance_websocket_api_manager.is_manager_stopping():
             exit(0)
@@ -533,13 +533,18 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                         dict_max_price[symb] = max(dict_max_price[symb], price)
                         if price > dict_order[symb][1] * 1.01:
                             profit += 0.0085
+                            tk += 1
+                            if not trade_on and tk > 2:
+                                trade_on = True
+                                sl = 0
+                                tk = 0
                             del dict_order[symb]
                             dict_pass[symb] = t
                             updater.bot.send_message(chat_id='-1001242337520', text='Профит ' + symb + ' ' + str(price) + ' баланс ' + str(profit))
                         elif price < dict_order[symb][1] * 0.96:
                             profit -= 0.0415
                             sl += 1
-
+                            tk = 0
                             if sl > 1:
                                 trade_on = False
                                 sl = 0
