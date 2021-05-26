@@ -72,7 +72,7 @@ dict_book = dict()
 
 order_price = 800
 
-trade_on = True
+trade_on = False
 
 
 def get_klines(symb):
@@ -602,8 +602,8 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                         if max(float(inf[0][2]), price) / float(inf[0][3]) < 1.04 and float(
                                             inf[0][2]) / float(inf[0][3]) > 1.01 and float(inf[0][4]) / float(
                                             inf[0][1]) > 1:
-                                            hour = get_klines_hour(symb)
-                                            if float(hour[0][4]) / float(hour[0][1]) < 1.15:
+                                            hour = get_klines1(symb, '1m', int((time.time() - 3600) * 1000), 1)
+                                            if price / float(hour[0][1]) < 1.13:
                                                 amount = int(order_price / price)
                                                 type = 'market'  # or market
                                                 side = 'buy'
@@ -669,8 +669,8 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                         if max(float(inf[0][2]), price) / float(inf[0][3]) < 1.04 and float(
                                                 inf[0][2]) / float(inf[0][3]) > 1.01 and float(inf[0][4]) / float(
                                             inf[0][1]) > 1:
-                                            hour = get_klines_hour(symb)
-                                            if float(hour[0][4]) / float(hour[0][1]) < 1.15:
+                                            hour = get_klines1(symb, '1m', int((time.time() - 3600) * 1000), 1)
+                                            if price / float(hour[0][1]) < 1.13:
                                                 amount = int(order_price / price)
                                                 type = 'market'  # or market
                                                 side = 'buy'
@@ -733,8 +733,8 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                     if max(float(inf[0][2]), price) / float(inf[0][3]) < 1.04 and float(
                                             inf[0][2]) / float(inf[0][3]) > 1.01 and float(inf[0][4]) / float(
                                         inf[0][1]) > 1:
-                                        hour = get_klines_hour(symb)
-                                        if float(hour[0][4]) / float(hour[0][1]) < 1.15:
+                                        hour = get_klines1(symb, '1m', int((time.time() - 3600) * 1000), 1)
+                                        if price / float(hour[0][1]) < 1.13:
                                             amount = int(order_price / price)
                                             type = 'market'  # or market
                                             side = 'buy'
