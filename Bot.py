@@ -810,10 +810,12 @@ TOKEN = os.environ['TEL_TOKEN']
 updater = Updater(TOKEN, use_context=True)
 
 updater.dispatcher.add_handler(CommandHandler('hello', hello, pass_chat_data=True))
+'''
 updater.dispatcher.add_handler(CommandHandler('start', start, pass_chat_data=True))
+
 updater.dispatcher.add_handler(CommandHandler('set', set_timer, pass_args=True,
                               pass_job_queue=True,
-                              pass_chat_data=True))
+                              pass_chat_data=True))'''
 updater.dispatcher.add_handler(CommandHandler('get', get_vol, pass_args=True, pass_chat_data=True))
 updater.dispatcher.add_handler(CommandHandler('set_price', set_price, pass_args=True, pass_chat_data=True))
 updater.dispatcher.add_handler(CommandHandler('gettop', get_top, pass_chat_data=True))
