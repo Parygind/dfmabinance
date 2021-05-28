@@ -70,9 +70,9 @@ profit = 0
 
 dict_book = dict()
 
-order_price = 400
+order_price = 0
 
-trade_on = True
+trade_on = False
 
 
 def get_klines(symb):
@@ -507,7 +507,7 @@ def get_top(update, context):
 
 
 def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
-    global profit, sl, tk, trade_on
+    global profit, sl, tk, trade_on, order_price
     while True:
         if binance_websocket_api_manager.is_manager_stopping():
             exit(0)
@@ -534,7 +534,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                         if price > dict_order[symb][1] * 1.01:
                             profit += 0.0085
                             tk += 1
-                            if not trade_on and tk > 2:
+                            if not trade_on and tk > 2 and order_price > 0:
                                 trade_on = True
                                 sl = 0
                                 tk = 0
