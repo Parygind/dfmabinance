@@ -602,7 +602,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 prevVol += e[1]
                             elif (t - e[0]) / 1000 <= 45:
                                 if step == 2:
-                                    if prevVol >= dict_curr[symb] * 0.021 * (45 / 60) and price / dict_list[symb][0][2] > 1.005:
+                                    if prevVol >= dict_curr[symb] * 0.021 and price / dict_list[symb][0][2] > 1.005:
                                         inf = get_klines(symb)
                                         if max(float(inf[0][2]), price) / float(inf[0][3]) < 1.04 and float(
                                             inf[0][2]) / float(inf[0][3]) > 1.01 and float(inf[0][4]) / float(
@@ -665,13 +665,13 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 '%Y-%m-%d-%H:%M:%S') + ' ' + str(t))
                                                 print(hour)
                                                 print(inf)
-                                                print('30 ' +str(prevVol / (dict_curr[symb] * 0.021 * (30 / 60))))
+                                                print('30 ' +str(prevVol / (dict_curr[symb] * 0.021)))
                                                 break
                                 step = 3
                                 prevVol += e[1]
                             elif (t - e[0]) / 1000 <= 60:
                                 if step == 3:
-                                    if prevVol >= dict_curr[symb] * 0.021 * (60 / 60) and price / dict_list[symb][0][2] > 1.005:
+                                    if prevVol >= dict_curr[symb] * 0.027  and price / dict_list[symb][0][2] > 1.005:
                                         inf = get_klines(symb)
                                         if max(float(inf[0][2]), price) / float(inf[0][3]) < 1.04 and float(
                                                 inf[0][2]) / float(inf[0][3]) > 1.01 and float(inf[0][4]) / float(
@@ -731,7 +731,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 '%Y-%m-%d-%H:%M:%S') + ' ' + str(t))
                                                 print(hour)
                                                 print(inf)
-                                                print('45 ' + str(prevVol / (dict_curr[symb] * 0.021 * (45 / 60))))
+                                                print('45 ' + str(prevVol / (dict_curr[symb] * 0.027)))
                                                 break
                                 step = 4
                                 prevVol += e[1]
@@ -797,7 +797,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 '%Y-%m-%d-%H:%M:%S') + ' ' + str(t))
                                             print(hour)
                                             print(inf)
-                                            print(str(prevVol / (dict_curr[symb] * 0.021)))
+                                            print(str(prevVol / (dict_curr[symb] * 0.027)))
                                             break
                             elif (t - e[0]) / 1000 > 300:
                                 del dict_list[symb][0:i]
