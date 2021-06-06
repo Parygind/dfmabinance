@@ -603,9 +603,15 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                             elif (t - e[0]) / 1000 <= 45:
                                 if step == 2:
                                     if prevVol >= dict_curr[symb] * 0.021 and price / dict_list[symb][0][2] > 1.005:
-                                        inf = get_klines(symb)
-                                        if max(float(inf[0][2]), price) / float(inf[0][3]) < 1.04 and float(
-                                            inf[0][2]) / float(inf[0][3]) > 1.01 and float(inf[0][4]) / float(
+                                        inf = get_klines1(symb, '1m', int((time.time() - 300) * 1000), 5)
+                                        min_price = 999
+                                        max_price = 0
+
+                                        for d in inf:
+                                            max_price = max(max_price, float(d[2]))
+                                            min_price = min(min_price, float(d[3]))
+
+                                        if max(max_price, price) / min_price < 1.04 and max_price / min_price > 1.01 and float(inf[4][4]) / float(
                                             inf[0][1]) > 1:
                                             hour = get_klines1(symb, '1m', int((time.time() - 3600) * 1000), 1)
                                             if price / float(hour[0][1]) < 1.13:
@@ -672,10 +678,18 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                             elif (t - e[0]) / 1000 <= 60:
                                 if step == 3:
                                     if prevVol >= dict_curr[symb] * 0.027  and price / dict_list[symb][0][2] > 1.005:
-                                        inf = get_klines(symb)
-                                        if max(float(inf[0][2]), price) / float(inf[0][3]) < 1.04 and float(
-                                                inf[0][2]) / float(inf[0][3]) > 1.01 and float(inf[0][4]) / float(
-                                            inf[0][1]) > 1:
+                                        inf = get_klines1(symb, '1m', int((time.time() - 300) * 1000), 5)
+                                        min_price = 999
+                                        max_price = 0
+
+                                        for d in inf:
+                                            max_price = max(max_price, float(d[2]))
+                                            min_price = min(min_price, float(d[3]))
+
+                                        if max(max_price,
+                                               price) / min_price < 1.04 and max_price / min_price > 1.01 and float(
+                                                inf[4][4]) / float(
+                                                inf[0][1]) > 1:
                                             hour = get_klines1(symb, '1m', int((time.time() - 3600) * 1000), 1)
                                             if price / float(hour[0][1]) < 1.13:
                                                 amount = int(order_price / price)
@@ -737,11 +751,18 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 prevVol += e[1]
 
                                 if prevVol >= dict_curr[symb] * 0.027 and price / dict_list[symb][0][2] > 1.005:
-                                    inf = get_klines(symb)
+                                    inf = get_klines1(symb, '1m', int((time.time() - 300) * 1000), 5)
+                                    min_price = 999
+                                    max_price = 0
 
-                                    if max(float(inf[0][2]), price) / float(inf[0][3]) < 1.04 and float(
-                                            inf[0][2]) / float(inf[0][3]) > 1.01 and float(inf[0][4]) / float(
-                                        inf[0][1]) > 1:
+                                    for d in inf:
+                                        max_price = max(max_price, float(d[2]))
+                                        min_price = min(min_price, float(d[3]))
+
+                                    if max(max_price,
+                                           price) / min_price < 1.04 and max_price / min_price > 1.01 and float(
+                                            inf[4][4]) / float(
+                                            inf[0][1]) > 1:
                                         hour = get_klines1(symb, '1m', int((time.time() - 3600) * 1000), 1)
                                         if price / float(hour[0][1]) < 1.13:
                                             amount = int(order_price / price)
