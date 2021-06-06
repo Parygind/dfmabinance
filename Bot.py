@@ -545,7 +545,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                             profit -= 0.0415
                             sl += 1
                             tk = 0
-                            if sl > 1:
+                            if sl > 100:
                                 trade_on = False
                                 sl = 0
                             del dict_order[symb]
@@ -553,7 +553,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                             updater.bot.send_message(chat_id='-1001242337520',
                                                      text='Убыток ' + symb + ' ' + str(price) + ' баланс ' + str(profit))
 
-                        elif 1 == 2 and (t - dict_order[symb][0]) / 1000 > 600:
+                        elif 1 == 1 and (t - dict_order[symb][0]) / 1000 > 900:
                             if trade_on:
                                 try:
                                     bin_bot.cancel_order(dict_order[symb][2], symb)
