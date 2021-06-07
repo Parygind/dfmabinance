@@ -667,7 +667,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                                                      take_profit)
 
                                                 btcVol = 0
-                                                for ii, ee in reversed(list(enumerate(dict_list['BTC/BUSD']))):
+                                                for ii, ee in reversed(list(enumerate(dict_list['BTCBUSD']))):
                                                     if (t - ee[0]) / 1000 <= 30:
                                                         btcVol += ee[1]
 
