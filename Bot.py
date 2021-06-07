@@ -189,7 +189,8 @@ def updateData():
             #for i in b:
             #    dict_order[tickers[pr]['symbol']] = (i['info']['orderId'])
     symb_list = list(dict_curr.keys())
-
+    markets.append('BTCBUSD')
+    dict_list['BTC/BUSD'] = list()
 
 def alarm2(context):
     """Send the alarm message."""
@@ -592,7 +593,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                     if symb not in dict_min_price:
                         dict_min_price[symb] = price
 
-                    if symb not in dict_order and symb not in dict_pass:
+                    if symb not in dict_order and symb not in dict_pass and symb != 'BTC/BUSD':
                         q = float(data['q'])
                         vol = q * price
                         prevVol = vol
@@ -602,7 +603,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 prevVol += e[1]
                             elif (t - e[0]) / 1000 <= 45:
                                 if step == 2:
-                                    if prevVol >= dict_curr[symb] * (0.021 * (20/60)) and price / dict_list[symb][0][2] > 1.005:
+                                    if prevVol >= dict_curr[symb] * (0.021 * (30/60)) and price / dict_list[symb][0][2] > 1.005:
                                         inf = get_klines1(symb, '1m', int((time.time() - 300) * 1000), 5)
                                         min_price = 999
                                         max_price = 0
@@ -665,6 +666,12 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                         order = bin_bot.create_order(symb, type, side, amount,
                                                                                      take_profit)
 
+                                                btcVol = 0
+                                                for ii, ee in reversed(list(enumerate(dict_list['BTC/BUSD']))):
+                                                    if (t - ee[0]) / 1000 <= 30:
+                                                        btcVol += ee[1]
+
+                                                mes += ', BTC ' + btcVol + '$'
 
                                                 updater.bot.send_message(chat_id='-1001242337520', text=mes)
                                                 print(mes + ' ' + datetime.today().strftime(
@@ -677,7 +684,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 prevVol += e[1]
                             elif (t - e[0]) / 1000 <= 60:
                                 if step == 3:
-                                    if prevVol >= dict_curr[symb] * (0.021 * (30/60))  and price / dict_list[symb][0][2] > 1.005:
+                                    if prevVol >= dict_curr[symb] * (0.021 * (45/60))  and price / dict_list[symb][0][2] > 1.005:
                                         inf = get_klines1(symb, '1m', int((time.time() - 300) * 1000), 5)
                                         min_price = 999
                                         max_price = 0
@@ -824,6 +831,13 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 break
 
                         dict_list[symb].append((t, vol, price))
+                    elif symb == 'BTC/BUSD':
+                        q = float(data['q'])
+                        vol = q * price
+                        dict_list[symb].append((t, vol, price))
+
+                        if (t - dict_list[symb][0][0]) / 1000 > 60:
+                            del dict_list[symb][0]
                     dict_min_price[symb] = min(dict_min_price[symb], price)
         else:
             time.sleep(0.01)
