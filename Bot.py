@@ -190,7 +190,7 @@ def updateData():
             #    dict_order[tickers[pr]['symbol']] = (i['info']['orderId'])
     symb_list = list(dict_curr.keys())
     markets.append('BTCBUSD')
-    dict_list['BTC/BUSD'] = list()
+    dict_list['BTCBUSD'] = list()
 
 def alarm2(context):
     """Send the alarm message."""
