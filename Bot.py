@@ -593,7 +593,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                     if symb not in dict_min_price:
                         dict_min_price[symb] = price
 
-                    if symb not in dict_order and symb not in dict_pass and symb != 'BTC/BUSD':
+                    if symb not in dict_order and symb not in dict_pass and symb != 'BTCBUSD':
                         q = float(data['q'])
                         vol = q * price
                         prevVol = vol
@@ -831,7 +831,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 break
 
                         dict_list[symb].append((t, vol, price))
-                    elif symb == 'BTC/BUSD':
+                    elif symb == 'BTCBUSD':
                         q = float(data['q'])
                         vol = q * price
                         dict_list[symb].append((t, vol, price))
