@@ -671,7 +671,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                     if (t - ee[0]) / 1000 <= 30:
                                                         btcVol += ee[1]
 
-                                                mes += ', BTC ' + btcVol + '$'
+                                                mes += ', BTC ' + str(btcVol) + '$'
 
                                                 updater.bot.send_message(chat_id='-1001242337520', text=mes)
                                                 print(mes + ' ' + datetime.today().strftime(
