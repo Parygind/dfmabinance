@@ -189,8 +189,8 @@ def updateData():
             #for i in b:
             #    dict_order[tickers[pr]['symbol']] = (i['info']['orderId'])
     symb_list = list(dict_curr.keys())
-    markets.append('BTCBUSD')
-    dict_list['BTCBUSD'] = list()
+    #markets.append('BTCBUSD')
+    #dict_list['BTCBUSD'] = list()
 
 def alarm2(context):
     """Send the alarm message."""
@@ -554,7 +554,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                             updater.bot.send_message(chat_id='-1001242337520',
                                                      text='Убыток ' + symb + ' ' + str(price) + ' баланс ' + str(profit))
 
-                        elif 1 == 1 and (t - dict_order[symb][0]) / 1000 > 900:
+                        elif 1 == 2 and (t - dict_order[symb][0]) / 1000 > 900:
                             if trade_on:
                                 try:
                                     bin_bot.cancel_order(dict_order[symb][2], symb)
@@ -665,11 +665,6 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                         type = 'market'
                                                         order = bin_bot.create_order(symb, type, side, amount,
                                                                                      take_profit)
-
-                                                btcVol = 0
-                                                for ii, ee in reversed(list(enumerate(dict_list['BTCBUSD']))):
-                                                    if (t - ee[0]) / 1000 <= 30:
-                                                        btcVol += ee[1]
 
                                                 mes += ', BTC ' + str(btcVol) + '$'
 
