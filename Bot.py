@@ -666,8 +666,6 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                         order = bin_bot.create_order(symb, type, side, amount,
                                                                                      take_profit)
 
-                                                mes += ', BTC ' + str(btcVol) + '$'
-
                                                 updater.bot.send_message(chat_id='-1001242337520', text=mes)
                                                 print(mes + ' ' + datetime.today().strftime(
                                                 '%Y-%m-%d-%H:%M:%S') + ' ' + str(t))
