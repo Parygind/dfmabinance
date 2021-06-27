@@ -180,11 +180,13 @@ def updateData():
             'symbol'] != 'ACM/USDT' and tickers[pr]['symbol'] != 'TUSD/BTC' and tickers[pr]['symbol'] != 'TUSD/USDT' and \
                 tickers[pr]['symbol'] != 'PAX/BTC' and tickers[pr]['symbol'] != 'DAI/BTC' and tickers[pr][
             'symbol'] != 'SUN/USDT' and tickers[pr]['symbol'] != 'PUNDIX/USDT':
-            dict_curr[tickers[pr]['symbol']] = float(tickers[pr]['quoteVolume'])
-            market = bin_bot.market(tickers[pr]['symbol'])
-            dict_prec[tickers[pr]['symbol']] = int(market['precision']['price'])
-            markets.append(tickers[pr]['symbol'].replace('/', ''))
-            dict_list[tickers[pr]['symbol']] = list()
+            for ppr in tickers:
+                if tickers[ppr]['symbol'] == tickers[pr]['symbol'].replace('USDT', 'BTC'):
+                    dict_curr[tickers[pr]['symbol']] = float(tickers[pr]['quoteVolume'])
+                    market = bin_bot.market(tickers[pr]['symbol'])
+                    dict_prec[tickers[pr]['symbol']] = int(market['precision']['price'])
+                    markets.append(tickers[pr]['symbol'].replace('/', ''))
+                    dict_list[tickers[pr]['symbol']] = list()
             #b = bin_bot.fetch_open_orders(tickers[pr]['symbol'])
             #for i in b:
             #    dict_order[tickers[pr]['symbol']] = (i['info']['orderId'])
