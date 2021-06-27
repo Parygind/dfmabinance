@@ -617,7 +617,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                         if max(max_price, price) / min_price < 1.04 and max_price / min_price > 1.01 and price / float(
                                             inf[0][1]) > 1:
 
-                                            inf = get_klines1(symb.replace('USDT', 'BTC'), '1m', int((time.time() - 300) * 1000), 5)
+                                            inf = get_klines1(symb.replace('USDT', 'BTC'), '1m', None, 5)
                                             print(inf)
                                             hour = get_klines1(symb, '1m', int((time.time() - 3600) * 1000), 1)
                                             if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01 and float(inf[4][4]) / float(inf[0][1]) > 1.02:
@@ -695,7 +695,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                price) / min_price < 1.04 and max_price / min_price > 1.01 and price / float(
                                                 inf[0][1]) > 1:
                                             inf = get_klines1(symb.replace('USDT', 'BTC'), '1m',
-                                                              int((time.time() - 300) * 1000), 5)
+                                                              None, 5)
                                             print(inf)
                                             hour = get_klines1(symb, '1m', int((time.time() - 3600) * 1000), 1)
                                             if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01 and float(inf[4][4]) / float(inf[0][1]) > 1.02:
@@ -770,7 +770,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                            price) / min_price < 1.04 and max_price / min_price > 1.01 and price / float(
                                             inf[0][1]) > 1:
                                         inf = get_klines1(symb.replace('USDT', 'BTC'), '1m',
-                                                          int((time.time() - 300) * 1000), 5)
+                                                          None, 5)
                                         hour = get_klines1(symb, '1m', int((time.time() - 3600) * 1000), 1)
                                         print(inf)
                                         if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01 and float(inf[4][4]) / float(inf[0][1]) > 1.02:
