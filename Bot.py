@@ -99,7 +99,10 @@ def get_klines1(symb, interval, start, limit):
     params = {}
     bin_bot.load_markets()
     market = bin_bot.market(symb)
-    request = {'symbol': market['id'], 'interval': bin_bot.timeframes[interval], 'startTime': start, }
+    if start is None:
+        request = {'symbol': market['id'], 'interval': bin_bot.timeframes[interval], }
+    else:
+        request = {'symbol': market['id'], 'interval': bin_bot.timeframes[interval], 'startTime': start, }
     request['limit'] = limit  # default == max == 500
     method = 'publicGetKlines' if market['spot'] else 'fapiPublicGetKlines'
 
