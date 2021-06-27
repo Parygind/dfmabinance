@@ -179,7 +179,7 @@ def updateData():
                 and tickers[pr]['symbol'] != 'ASR/USDT' and tickers[pr]['symbol'] != 'ATM/USDT' and tickers[pr][
             'symbol'] != 'ACM/USDT' and tickers[pr]['symbol'] != 'TUSD/BTC' and tickers[pr]['symbol'] != 'TUSD/USDT' and \
                 tickers[pr]['symbol'] != 'PAX/BTC' and tickers[pr]['symbol'] != 'DAI/BTC' and tickers[pr][
-            'symbol'] != 'SUN/USDT':
+            'symbol'] != 'SUN/USDT' and tickers[pr]['symbol'] != 'PUNDIX/USDT':
             dict_curr[tickers[pr]['symbol']] = float(tickers[pr]['quoteVolume'])
             market = bin_bot.market(tickers[pr]['symbol'])
             dict_prec[tickers[pr]['symbol']] = int(market['precision']['price'])
@@ -614,8 +614,11 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
 
                                         if max(max_price, price) / min_price < 1.04 and max_price / min_price > 1.01 and price / float(
                                             inf[0][1]) > 1:
+
+                                            inf = get_klines1(symb.replace('USDT', 'BTC'), '1m', int((time.time() - 300) * 1000), 5)
+
                                             hour = get_klines1(symb, '1m', int((time.time() - 3600) * 1000), 1)
-                                            if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01:
+                                            if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01 and float(inf[4][4]) / float(inf[0][1]) > 1.02:
                                                 amount = int(order_price / price)
                                                 type = 'market'  # or market
                                                 side = 'buy'
@@ -689,8 +692,10 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                         if max(max_price,
                                                price) / min_price < 1.04 and max_price / min_price > 1.01 and price / float(
                                                 inf[0][1]) > 1:
+                                            inf = get_klines1(symb.replace('USDT', 'BTC'), '1m',
+                                                              int((time.time() - 300) * 1000), 5)
                                             hour = get_klines1(symb, '1m', int((time.time() - 3600) * 1000), 1)
-                                            if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01:
+                                            if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01 and float(inf[4][4]) / float(inf[0][1]) > 1.02:
                                                 amount = int(order_price / price)
                                                 type = 'market'  # or market
                                                 side = 'buy'
@@ -761,8 +766,10 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                     if max(max_price,
                                            price) / min_price < 1.04 and max_price / min_price > 1.01 and price / float(
                                             inf[0][1]) > 1:
+                                        inf = get_klines1(symb.replace('USDT', 'BTC'), '1m',
+                                                          int((time.time() - 300) * 1000), 5)
                                         hour = get_klines1(symb, '1m', int((time.time() - 3600) * 1000), 1)
-                                        if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01:
+                                        if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01 and float(inf[4][4]) / float(inf[0][1]) > 1.02:
                                             amount = int(order_price / price)
                                             type = 'market'  # or market
                                             side = 'buy'
