@@ -621,9 +621,10 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                             inf[0][1]) > 1:
 
                                             inf = get_klines1(symb.replace('USDT', 'BTC'), '1m', None, 5)
-                                            print(inf)
+
                                             hour = get_klines1(symb, '1m', int((time.time() - 3600) * 1000), 1)
                                             if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01 and float(inf[4][4]) / float(inf[0][1]) > 1.02:
+                                                print(inf)
                                                 amount = int(order_price / price)
                                                 type = 'market'  # or market
                                                 side = 'buy'
@@ -699,9 +700,10 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 inf[0][1]) > 1:
                                             inf = get_klines1(symb.replace('USDT', 'BTC'), '1m',
                                                               None, 5)
-                                            print(inf)
+
                                             hour = get_klines1(symb, '1m', int((time.time() - 3600) * 1000), 1)
                                             if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01 and float(inf[4][4]) / float(inf[0][1]) > 1.02:
+                                                print(inf)
                                                 amount = int(order_price / price)
                                                 type = 'market'  # or market
                                                 side = 'buy'
@@ -775,8 +777,9 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                         inf = get_klines1(symb.replace('USDT', 'BTC'), '1m',
                                                           None, 5)
                                         hour = get_klines1(symb, '1m', int((time.time() - 3600) * 1000), 1)
-                                        print(inf)
+
                                         if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01 and float(inf[4][4]) / float(inf[0][1]) > 1.02:
+                                            print(inf)
                                             amount = int(order_price / price)
                                             type = 'market'  # or market
                                             side = 'buy'
