@@ -70,9 +70,9 @@ profit = 0
 
 dict_book = dict()
 
-order_price = 0
+order_price = 1400
 
-trade_on = False
+trade_on = True
 
 
 def get_klines(symb):
