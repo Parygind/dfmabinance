@@ -70,9 +70,9 @@ profit = 0
 
 dict_book = dict()
 
-order_price = 1400
+order_price = 0
 
-trade_on = True
+trade_on = False
 
 
 def get_klines(symb):
@@ -592,7 +592,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                             dict_pass[symb] = t
 
                     if symb in dict_pass:
-                        if (dict_pass[symb] - t) / 1000 > 1800:
+                        if (t - dict_pass[symb]) / 1000 > 1800:
                             del dict_pass[symb]
 
                     if symb not in dict_min_price:
@@ -682,6 +682,9 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 print(inf)
                                                 print('30 ' +str(prevVol / (dict_curr[symb] * 0.021)))
                                                 break
+                                            elif price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01:
+                                                dict_pass[symb] = t - 1700 * 1000
+
                                 step = 3
                                 prevVol += e[1]
                             elif (t - e[0]) / 1000 <= 60:
@@ -759,6 +762,8 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 print(inf)
                                                 print('45 ' + str(prevVol / (dict_curr[symb] * 0.027)))
                                                 break
+                                            elif price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01:
+                                                dict_pass[symb] = t - 1700 * 1000
                                 step = 4
                                 prevVol += e[1]
 
@@ -835,6 +840,8 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                             print(inf)
                                             print(str(prevVol / (dict_curr[symb] * 0.027)))
                                             break
+                                        elif price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01:
+                                            dict_pass[symb] = t - 1700 * 1000
                             elif (t - e[0]) / 1000 > 300:
                                 del dict_list[symb][0:i]
                                 dict_min_price[symb] = price
