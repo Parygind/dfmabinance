@@ -559,7 +559,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                             updater.bot.send_message(chat_id='-1001242337520',
                                                      text='Убыток ' + symb + ' ' + str(price) + ' баланс ' + str(profit))
 
-                        elif (t - dict_order[symb][0]) / 1000 > 30:
+                        elif (t - dict_order[symb][0]) / 1000 > 45:
                             if price > dict_order[symb][1]:
                                 profit += (price / dict_order[symb][1] - 1)
                                 profit -= 0.0015
