@@ -537,8 +537,8 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                     price = float(data['p'])
                     if symb in dict_order and dict_order[symb][0] < t:
                         dict_max_price[symb] = max(dict_max_price[symb], price)
-                        if price > dict_order[symb][1] * 1.004:
-                            profit += 0.0085
+                        if price > dict_order[symb][1] * 1.005:
+                            profit += 0.0035
                             tk += 1
                             if not trade_on and tk > 2 and order_price > 0:
                                 trade_on = True
@@ -620,10 +620,10 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                         if max(max_price, price) / min_price < 1.04 and max_price / min_price > 1.01 and price / float(
                                             inf[0][1]) > 1:
 
-                                            #inf = get_klines1(symb.replace('USDT', 'BTC'), '1m', None, 5)
+                                            inf = get_klines1(symb.replace('USDT', 'BTC'), '1m', None, 5)
 
                                             hour = get_klines1(symb, '1m', int((time.time() - 3600) * 1000), 1)
-                                            if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01:
+                                            if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01 and float(inf[4][4]) / float(inf[0][1]) > 1.01:
                                                 print(inf)
                                                 amount = int(order_price / price)
                                                 type = 'market'  # or market
@@ -654,7 +654,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
 
                                                 dict_order[symb] = price
                                                 n = dict_prec[symb]
-                                                take_profit = float_to_str(round(price * 1.004, n))
+                                                take_profit = float_to_str(round(price * 1.005, n))
                                                 stop_loss = float_to_str(round(price * 0.96, n))
                                                 type = 'limit'
                                                 side = 'sell'
@@ -701,11 +701,11 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                         if max(max_price,
                                                price) / min_price < 1.04 and max_price / min_price > 1.01 and price / float(
                                                 inf[0][1]) > 1:
-                                            #inf = get_klines1(symb.replace('USDT', 'BTC'), '1m',
-                                            #                  None, 5)
+                                            inf = get_klines1(symb.replace('USDT', 'BTC'), '1m',
+                                                              None, 5)
 
                                             hour = get_klines1(symb, '1m', int((time.time() - 3600) * 1000), 1)
-                                            if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01:
+                                            if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01 and float(inf[4][4]) / float(inf[0][1]) > 1.01:
                                                 print(inf)
                                                 amount = int(order_price / price)
                                                 type = 'market'  # or market
@@ -734,7 +734,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
 
                                                 dict_order[symb] = price
                                                 n = dict_prec[symb]
-                                                take_profit = float_to_str(round(price * 1.004, n))
+                                                take_profit = float_to_str(round(price * 1.005, n))
                                                 stop_loss = float_to_str(round(price * 0.96, n))
                                                 type = 'limit'
                                                 side = 'sell'
@@ -779,11 +779,11 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                     if max(max_price,
                                            price) / min_price < 1.04 and max_price / min_price > 1.01 and price / float(
                                             inf[0][1]) > 1:
-                                        #inf = get_klines1(symb.replace('USDT', 'BTC'), '1m',
-                                        #                  None, 5)
+                                        inf = get_klines1(symb.replace('USDT', 'BTC'), '1m',
+                                                          None, 5)
                                         hour = get_klines1(symb, '1m', int((time.time() - 3600) * 1000), 1)
 
-                                        if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01:
+                                        if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01 and float(inf[4][4]) / float(inf[0][1]) > 1.01:
                                             print(inf)
                                             amount = int(order_price / price)
                                             type = 'market'  # or market
@@ -812,7 +812,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
 
                                             dict_order[symb] = price
                                             n = dict_prec[symb]
-                                            take_profit = float_to_str(round(price * 1.004, n))
+                                            take_profit = float_to_str(round(price * 1.005, n))
                                             stop_loss = float_to_str(round(price * 0.96, n))
                                             type = 'limit'
                                             side = 'sell'
