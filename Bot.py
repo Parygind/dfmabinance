@@ -550,6 +550,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 updater.bot.send_message(chat_id='-1001242337520',
                                                          text='Профит ' + symb + ' ' + str(dict_trail[symb] / (dict_order[symb][1] * 1.0015) - 1) + ' баланс ' + str(
                                                              profit))
+                                del dict_order[symb]
                             else:
                                 profit += (dict_trail[symb] / (dict_order[symb][1] * 1.0015) - 1)
                                 sl += 1
@@ -559,6 +560,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 updater.bot.send_message(chat_id='-1001242337520',
                                                          text='Убыток ' + symb + ' ' + str(dict_trail[symb] / (dict_order[symb][1] * 1.0015) - 1) + ' баланс ' + str(
                                                              profit))
+                                del dict_order[symb]
                         elif price > dict_trail[symb] * (1 + trail_step * 2):
                             dict_trail[symb] = dict_trail[symb] * (1 + trail_step)
 
@@ -648,7 +650,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                             inf = get_klines1(symb.replace('USDT', 'BTC'), '1m', None, 5)
 
                                             hour = get_klines1(symb, '1m', int((time.time() - 3600) * 1000), 1)
-                                            if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01 and float(inf[4][4]) / float(inf[0][1]) > 1.01:
+                                            if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01 and float(inf[4][4]) / float(inf[0][1]) > 1:
                                                 print(inf)
                                                 amount = int(order_price / price)
                                                 type = 'market'  # or market
@@ -731,7 +733,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                               None, 5)
 
                                             hour = get_klines1(symb, '1m', int((time.time() - 3600) * 1000), 1)
-                                            if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01 and float(inf[4][4]) / float(inf[0][1]) > 1.01:
+                                            if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01 and float(inf[4][4]) / float(inf[0][1]) > 1:
                                                 print(inf)
                                                 amount = int(order_price / price)
                                                 type = 'market'  # or market
@@ -810,7 +812,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                           None, 5)
                                         hour = get_klines1(symb, '1m', int((time.time() - 3600) * 1000), 1)
 
-                                        if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01 and float(inf[4][4]) / float(inf[0][1]) > 1.01:
+                                        if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01 and float(inf[4][4]) / float(inf[0][1]) > 1:
                                             print(inf)
                                             amount = int(order_price / price)
                                             type = 'market'  # or market
