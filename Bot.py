@@ -74,7 +74,7 @@ dict_trail = dict()
 order_price = 0
 
 trade_on = False
-trail_step = 0.003
+trail_step = 0.005
 
 
 def get_klines(symb):
@@ -547,7 +547,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 tk += 1
                                 dict_pass[symb] = t
                                 updater.bot.send_message(chat_id='-1001242337520',
-                                                         text='Профит ' + symb + ' ' + str(dict_trail[symb] / (dict_order[symb][1] * 1.0015) - 1) + ' баланс ' + str(
+                                                         text='Профит ' + symb + ' ' + float_to_str(dict_trail[symb] / (dict_order[symb][1] * 1.0015) - 1) + ' баланс ' + float_to_str(
                                                              profit))
                                 del dict_order[symb]
                                 continue
@@ -557,7 +557,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 tk = 0
                                 dict_pass[symb] = t
                                 updater.bot.send_message(chat_id='-1001242337520',
-                                                         text='Убыток ' + symb + ' ' + str(dict_trail[symb] / (dict_order[symb][1] * 1.0015) - 1) + ' баланс ' + str(
+                                                         text='Убыток ' + symb + ' ' + float_to_str(dict_trail[symb] / (dict_order[symb][1] * 1.0015) - 1) + ' баланс ' + float_to_str(
                                                              profit))
                                 del dict_order[symb]
                                 continue
