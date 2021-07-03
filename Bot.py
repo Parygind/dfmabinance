@@ -550,6 +550,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                          text='Профит ' + symb + ' ' + str(dict_trail[symb] / (dict_order[symb][1] * 1.0015) - 1) + ' баланс ' + str(
                                                              profit))
                                 del dict_order[symb]
+                                continue
                             else:
                                 profit += (dict_trail[symb] / (dict_order[symb][1] * 1.0015) - 1)
                                 sl += 1
@@ -559,6 +560,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                          text='Убыток ' + symb + ' ' + str(dict_trail[symb] / (dict_order[symb][1] * 1.0015) - 1) + ' баланс ' + str(
                                                              profit))
                                 del dict_order[symb]
+                                continue
                         elif price > dict_trail[symb] * (1 + trail_step * 2):
                             dict_trail[symb] = dict_trail[symb] * (1 + trail_step)
 
