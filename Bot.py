@@ -69,10 +69,12 @@ markets = []
 profit = 0
 
 dict_book = dict()
+dict_trail = dict()
 
 order_price = 0
 
 trade_on = False
+trail_step = 0.002
 
 
 def get_klines(symb):
@@ -537,7 +539,30 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                     price = float(data['p'])
                     if symb in dict_order and dict_order[symb][0] < t:
                         dict_max_price[symb] = max(dict_max_price[symb], price)
-                        if price > dict_order[symb][1] * 1.005:
+                        #trail
+
+                        if price < dict_trail[symb]:
+                            if dict_trail[symb] > dict_order[symb][1] * 1.0015:
+                                profit += (dict_trail[symb] / (dict_order[symb][1] * 1.0015) - 1)
+                                tk += 1
+                                del dict_order[symb]
+                                dict_pass[symb] = t
+                                updater.bot.send_message(chat_id='-1001242337520',
+                                                         text='Профит ' + symb + ' ' + str(dict_trail[symb] / (dict_order[symb][1] * 1.0015) - 1) + ' баланс ' + str(
+                                                             profit))
+                            else:
+                                profit += (dict_trail[symb] / (dict_order[symb][1] * 1.0015) - 1)
+                                sl += 1
+                                tk = 0
+                                del dict_order[symb]
+                                dict_pass[symb] = t
+                                updater.bot.send_message(chat_id='-1001242337520',
+                                                         text='Убыток ' + symb + ' ' + str(dict_trail[symb] / (dict_order[symb][1] * 1.0015) - 1) + ' баланс ' + str(
+                                                             profit))
+                        elif price > dict_trail[symb] * (1 + trail_step * 2):
+                            dict_trail[symb] = dict_trail[symb] * (1 + trail_step)
+
+                        if price > dict_order[symb][1] * 1.005 and 1 == 2:
                             profit += 0.0035
                             tk += 1
                             if not trade_on and tk > 2 and order_price > 0:
@@ -547,7 +572,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                             del dict_order[symb]
                             dict_pass[symb] = t
                             updater.bot.send_message(chat_id='-1001242337520', text='Профит ' + symb + ' ' + str(price) + ' баланс ' + str(profit))
-                        elif price < dict_order[symb][1] * 0.96:
+                        elif price < dict_order[symb][1] * 0.96 and 1 == 2:
                             profit -= 0.0415
                             sl += 1
                             tk = 0
@@ -660,6 +685,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 side = 'sell'
 
                                                 dict_order[symb] = (t, price)
+                                                dict_trail[symb] = price * (1 - trail_step)
                                                 dict_max_price[symb] = price
 
                                                 if trade_on and not err:
@@ -740,6 +766,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 side = 'sell'
 
                                                 dict_order[symb] = (t, price)
+                                                dict_trail[symb] = price * (1 - trail_step)
                                                 dict_max_price[symb] = price
 
                                                 if trade_on and not err:
@@ -818,6 +845,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                             side = 'sell'
 
                                             dict_order[symb] = (t, price)
+                                            dict_trail[symb] = price * (1 - trail_step)
                                             dict_max_price[symb] = price
 
                                             if trade_on and not err:
