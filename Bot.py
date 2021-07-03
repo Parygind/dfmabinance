@@ -545,7 +545,6 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                             if dict_trail[symb] > dict_order[symb][1] * 1.0015:
                                 profit += (dict_trail[symb] / (dict_order[symb][1] * 1.0015) - 1)
                                 tk += 1
-                                del dict_order[symb]
                                 dict_pass[symb] = t
                                 updater.bot.send_message(chat_id='-1001242337520',
                                                          text='Профит ' + symb + ' ' + str(dict_trail[symb] / (dict_order[symb][1] * 1.0015) - 1) + ' баланс ' + str(
@@ -555,7 +554,6 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 profit += (dict_trail[symb] / (dict_order[symb][1] * 1.0015) - 1)
                                 sl += 1
                                 tk = 0
-                                del dict_order[symb]
                                 dict_pass[symb] = t
                                 updater.bot.send_message(chat_id='-1001242337520',
                                                          text='Убыток ' + symb + ' ' + str(dict_trail[symb] / (dict_order[symb][1] * 1.0015) - 1) + ' баланс ' + str(
