@@ -537,7 +537,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                     price = float(data['p'])
                     if symb in dict_order and dict_order[symb][0] < t:
                         dict_max_price[symb] = max(dict_max_price[symb], price)
-                        if price > dict_order[symb][1] * 1.01:
+                        if price > dict_order[symb][1] * 1.006:
                             profit += 0.0085
                             tk += 1
                             if not trade_on and tk > 2 and order_price > 0:
@@ -654,7 +654,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
 
                                                 dict_order[symb] = price
                                                 n = dict_prec[symb]
-                                                take_profit = float_to_str(round(price * 1.01, n))
+                                                take_profit = float_to_str(round(price * 1.006, n))
                                                 stop_loss = float_to_str(round(price * 0.96, n))
                                                 type = 'limit'
                                                 side = 'sell'
@@ -734,7 +734,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
 
                                                 dict_order[symb] = price
                                                 n = dict_prec[symb]
-                                                take_profit = float_to_str(round(price * 1.01, n))
+                                                take_profit = float_to_str(round(price * 1.006, n))
                                                 stop_loss = float_to_str(round(price * 0.96, n))
                                                 type = 'limit'
                                                 side = 'sell'
@@ -812,7 +812,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
 
                                             dict_order[symb] = price
                                             n = dict_prec[symb]
-                                            take_profit = float_to_str(round(price * 1.01, n))
+                                            take_profit = float_to_str(round(price * 1.006, n))
                                             stop_loss = float_to_str(round(price * 0.96, n))
                                             type = 'limit'
                                             side = 'sell'
