@@ -592,7 +592,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                             dict_pass[symb] = t
 
                     if symb in dict_pass:
-                        if (t - dict_pass[symb]) / 1000 > 1800:
+                        if (t - dict_pass[symb]) / 1000 > 18000:
                             del dict_pass[symb]
 
                     if symb not in dict_min_price:
