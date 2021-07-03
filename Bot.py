@@ -74,7 +74,7 @@ dict_trail = dict()
 order_price = 0
 
 trade_on = False
-trail_step = 0.002
+trail_step = 0.003
 
 
 def get_klines(symb):
@@ -687,7 +687,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 side = 'sell'
 
                                                 dict_order[symb] = (t, price)
-                                                dict_trail[symb] = price * (1 - trail_step * 2)
+                                                dict_trail[symb] = price * (1 - trail_step)
                                                 dict_max_price[symb] = price
 
                                                 if trade_on and not err:
@@ -768,7 +768,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 side = 'sell'
 
                                                 dict_order[symb] = (t, price)
-                                                dict_trail[symb] = price * (1 - trail_step * 2)
+                                                dict_trail[symb] = price * (1 - trail_step)
                                                 dict_max_price[symb] = price
 
                                                 if trade_on and not err:
@@ -847,7 +847,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                             side = 'sell'
 
                                             dict_order[symb] = (t, price)
-                                            dict_trail[symb] = price * (1 - trail_step * 2)
+                                            dict_trail[symb] = price * (1 - trail_step)
                                             dict_max_price[symb] = price
 
                                             if trade_on and not err:
