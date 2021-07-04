@@ -532,6 +532,9 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                     data = data['data']
                     t = data['E']
 
+                    if data['m']:
+                        continue
+
                     if (t / 1000) + 60 < time.time():
                         continue
 
