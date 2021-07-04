@@ -533,15 +533,12 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                     data = data['data']
                     t = data['E']
 
-                    if data['m']:
-                        continue
-
                     if (t / 1000) + 60 < time.time():
                         continue
 
                     symb = data['s'].replace('USDT', '/USDT')
                     price = float(data['p'])
-                    if symb in dict_order and dict_order[symb][0] < t:
+                    if symb in dict_order and dict_order[symb][0] < t and not data['m']:
                         dict_max_price[symb] = max(dict_max_price[symb], price)
                         #trail
 
