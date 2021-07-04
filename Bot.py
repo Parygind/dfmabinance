@@ -70,6 +70,7 @@ profit = 0
 
 dict_book = dict()
 dict_trail = dict()
+dict_trail_step = dict()
 
 order_price = 0
 
@@ -564,8 +565,17 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                              profit))
                                 del dict_order[symb]
                                 continue
-                        elif price > dict_trail[symb] * (1 + trail_step * 2):
-                            dict_trail[symb] = dict_trail[symb] * (1 + trail_step)
+                        else:
+                            if dict_trail_step[symb] == 0:
+                                if price < dict_order[symb][1] * 1.008:
+                                    if dict_order[symb][1] / price - 0.008 > dict_trail[symb]:
+                                        dict_trail[symb] = dict_order[symb][1] / price - 0.008
+                                else:
+                                    if dict_order[symb][1] / price - 0.005 > dict_trail[symb]:
+                                        dict_trail[symb] = dict_order[symb][1] / price - 0.005
+
+                        #elif price > dict_trail[symb] * (1 + trail_step * 2):
+                        #    dict_trail[symb] = dict_trail[symb] * (1 + trail_step)
 
                         if price > dict_order[symb][1] * 1.005 and 1 == 2:
                             profit += 0.0035
@@ -690,7 +700,8 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 side = 'sell'
 
                                                 dict_order[symb] = (t, price)
-                                                dict_trail[symb] = price * (1 - trail_step)
+                                                dict_trail[symb] = price * 0.99
+                                                dict_trail_step[symb] = 0
                                                 dict_max_price[symb] = price
 
                                                 if trade_on and not err:
@@ -771,7 +782,8 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 side = 'sell'
 
                                                 dict_order[symb] = (t, price)
-                                                dict_trail[symb] = price * (1 - trail_step)
+                                                dict_trail[symb] = price * 0.99
+                                                dict_trail_step[symb] = 0
                                                 dict_max_price[symb] = price
 
                                                 if trade_on and not err:
@@ -850,7 +862,8 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                             side = 'sell'
 
                                             dict_order[symb] = (t, price)
-                                            dict_trail[symb] = price * (1 - trail_step)
+                                            dict_trail[symb] = price * 0.99
+                                            dict_trail_step[symb] = 0
                                             dict_max_price[symb] = price
 
                                             if trade_on and not err:
