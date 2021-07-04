@@ -577,10 +577,10 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                     continue
                             if dict_trail_step[symb] == 0:
                                 if price < dict_order[symb][1] * 1.008:
-                                    if dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.992) > dict_trail[symb]:
+                                    if dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.992) > dict_trail[symb] and dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.992) / dict_trail[symb] > 0.001:
                                         dict_trail[symb] = dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.992)
                                 else:
-                                    if dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.995) > dict_trail[symb]:
+                                    if dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.995) > dict_trail[symb] and dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.992) / dict_trail[symb] > 0.001:
                                         dict_trail[symb] = dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.995)
 
                         #elif price > dict_trail[symb] * (1 + trail_step * 2):
