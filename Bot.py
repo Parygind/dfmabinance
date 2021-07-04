@@ -563,6 +563,18 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 del dict_order[symb]
                                 continue
                         else:
+                            if (t - dict_order[symb][0]) / 1000 > 300:
+                                if price > dict_order[symb][1] * 1.0015 and dict_trail[symb] < dict_order[symb][1] * 1.0015:
+                                    profit += (price / (dict_order[symb][1] * 1.0015) - 1)
+                                    tk += 1
+                                    dict_pass[symb] = t
+                                    updater.bot.send_message(chat_id='-1001242337520',
+                                                             text='Профит ' + symb + ' ' + float_to_str(
+                                                                 price / (dict_order[symb][
+                                                                                         1] * 1.0015) - 1) + ' баланс ' + float_to_str(
+                                                                 profit))
+                                    del dict_order[symb]
+                                    continue
                             if dict_trail_step[symb] == 0:
                                 if price < dict_order[symb][1] * 1.008:
                                     if dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.992) > dict_trail[symb]:
