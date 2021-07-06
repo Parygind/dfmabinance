@@ -597,8 +597,8 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                             bb = dict_order[symb]
                                             order = bin_bot.createOrder(symb, 'STOP_LOSS_LIMIT', 'sell',
                                                                         dict_order[symb][3], dict_trail[symb], params)
-                                            bb[2] = order['info']['orderId']
-                                            dict_order[symb] = bb
+                                            bbb = (bb[0], bb[1], order['info']['orderId'], bb[3])
+                                            dict_order[symb] = bbb
                                 else:
                                     if dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.995) > dict_trail[symb] and dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.992) / dict_trail[symb] > 0.001:
                                         dict_trail[symb] = dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.995)
@@ -611,8 +611,8 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                             bb = dict_order[symb]
                                             order = bin_bot.createOrder(symb, 'STOP_LOSS_LIMIT', 'sell',
                                                                         dict_order[symb][3], dict_trail[symb], params)
-                                            bb[2] = order['info']['orderId']
-                                            dict_order[symb] = bb
+                                            bbb = (bb[0], bb[1], order['info']['orderId'], bb[3])
+                                            dict_order[symb] = bbb
 
 
                         #elif price > dict_trail[symb] * (1 + trail_step * 2):
