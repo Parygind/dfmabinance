@@ -586,7 +586,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                     continue
                             if dict_trail_step[symb] == 0:
                                 if price < dict_order[symb][1] * 1.008:
-                                    if dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.992) > dict_trail[symb] and (dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.992)) / dict_trail[symb] > 0.001:
+                                    if dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.992) > dict_trail[symb] and ((dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.992)) / dict_trail[symb]) - 1 > 0.001:
                                         dict_trail[symb] = dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.992)
                                         if trade_on:
                                             try:
@@ -600,7 +600,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                             bbb = (bb[0], bb[1], order['info']['orderId'], bb[3])
                                             dict_order[symb] = bbb
                                 else:
-                                    if dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.995) > dict_trail[symb] and (dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.995)) / dict_trail[symb] > 0.001:
+                                    if dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.995) > dict_trail[symb] and ((dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.995)) / dict_trail[symb]) - 1 > 0.001:
                                         dict_trail[symb] = dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.995)
                                         if trade_on:
                                             try:
