@@ -750,7 +750,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                              "price": take_profit, "stopPrice": stop_loss,
                                                              "stopLimitPrice": stop_loss, "stopLimitTimeInForce": "GTC"})
                                                         '''
-                                                        dict_order[symb] = (t, price, order['orders'][0]['orderId'], amount)
+                                                        dict_order[symb] = (t, price, order['orderId'], amount)
                                                     except:
                                                         type = 'market'
                                                         order = bin_bot.create_order(symb, type, side, amount,
@@ -837,7 +837,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                              "price": take_profit, "stopPrice": stop_loss,
                                                              "stopLimitPrice": stop_loss, "stopLimitTimeInForce": "GTC"})
                                                         '''
-                                                        dict_order[symb] = (t, price, order['orders'][0]['orderId'], amount)
+                                                        dict_order[symb] = (t, price, order['orderId'], amount)
                                                     except:
                                                         type = 'market'
                                                         order = bin_bot.create_order(symb, type, side, amount,
@@ -922,7 +922,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                          "price": take_profit, "stopPrice": stop_loss,
                                                          "stopLimitPrice": stop_loss, "stopLimitTimeInForce": "GTC"})
                                                     '''
-                                                    dict_order[symb] = (t, price, order['orders'][0]['orderId'], amount)
+                                                    dict_order[symb] = (t, price, order['orderId'], amount)
                                                 except:
                                                     type = 'market'
                                                     order = bin_bot.create_order(symb, type, side, amount,
