@@ -571,6 +571,12 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                     profit += (price / (dict_order[symb][1] * 1.0015) - 1)
                                     tk += 1
                                     dict_pass[symb] = t
+                                    if trade_on:
+                                        try:
+                                            bin_bot.cancel_order(dict_order[symb][2], symb)
+                                        except:
+                                            pass
+                                        order = bin_bot.create_order(symb, 'limit', 'sell', dict_order[symb][3], price)
                                     updater.bot.send_message(chat_id='-1001242337520',
                                                              text='Профит ' + symb + ' ' + float_to_str(
                                                                  price / (dict_order[symb][
@@ -582,9 +588,25 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 if price < dict_order[symb][1] * 1.008:
                                     if dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.992) > dict_trail[symb] and dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.992) / dict_trail[symb] > 0.001:
                                         dict_trail[symb] = dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.992)
+                                        if trade_on:
+                                            try:
+                                                bin_bot.cancel_order(dict_order[symb][2], symb)
+                                            except:
+                                                pass
+                                            params = {'stopPrice': dict_trail[symb]}
+                                            order = bin_bot.createOrder(symb, 'STOP_LOSS_LIMIT', 'sell',
+                                                                        dict_order[symb][3], dict_trail[symb], params)
                                 else:
                                     if dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.995) > dict_trail[symb] and dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.992) / dict_trail[symb] > 0.001:
                                         dict_trail[symb] = dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.995)
+                                        if trade_on:
+                                            try:
+                                                bin_bot.cancel_order(dict_order[symb][2], symb)
+                                            except:
+                                                pass
+                                            params = {'stopPrice': dict_trail[symb]}
+                                            order = bin_bot.createOrder(symb, 'STOP_LOSS_LIMIT', 'sell',
+                                                                        dict_order[symb][3], dict_trail[symb], params)
 
                         #elif price > dict_trail[symb] * (1 + trail_step * 2):
                         #    dict_trail[symb] = dict_trail[symb] * (1 + trail_step)
@@ -711,19 +733,24 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 type = 'limit'
                                                 side = 'sell'
 
-                                                dict_order[symb] = (t, price)
+                                                dict_order[symb] = (t, price, amount)
                                                 dict_trail[symb] = price * 0.99
                                                 dict_trail_step[symb] = 0
                                                 dict_max_price[symb] = price
 
                                                 if trade_on and not err:
                                                     try:
+                                                        params = {'stopPrice': price * 0.99}
+                                                        order = bin_bot.createOrder(symb, 'STOP_LOSS_LIMIT', 'sell',
+                                                                                     amount, price * 0.99, params)
+                                                        '''
                                                         order = bin_bot.private_post_order_oco(
                                                             {"symbol": symb.replace('/', ''), "side": "sell",
                                                              "quantity": amount,
                                                              "price": take_profit, "stopPrice": stop_loss,
                                                              "stopLimitPrice": stop_loss, "stopLimitTimeInForce": "GTC"})
-                                                        dict_order[symb] = (t, price, order['orders'][0]['orderId'])
+                                                        '''
+                                                        dict_order[symb] = (t, price, order['orders'][0]['orderId'], amount)
                                                     except:
                                                         type = 'market'
                                                         order = bin_bot.create_order(symb, type, side, amount,
@@ -793,19 +820,24 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 type = 'limit'
                                                 side = 'sell'
 
-                                                dict_order[symb] = (t, price)
+                                                dict_order[symb] = (t, price, amount)
                                                 dict_trail[symb] = price * 0.99
                                                 dict_trail_step[symb] = 0
                                                 dict_max_price[symb] = price
 
                                                 if trade_on and not err:
                                                     try:
+                                                        params = {'stopPrice': price * 0.99}
+                                                        order = bin_bot.createOrder(symb, 'STOP_LOSS_LIMIT', 'sell',
+                                                                                    amount, price * 0.99, params)
+                                                        '''
                                                         order = bin_bot.private_post_order_oco(
                                                             {"symbol": symb.replace('/', ''), "side": "sell",
                                                              "quantity": amount,
                                                              "price": take_profit, "stopPrice": stop_loss,
                                                              "stopLimitPrice": stop_loss, "stopLimitTimeInForce": "GTC"})
-                                                        dict_order[symb] = (t, price, order['orders'][0]['orderId'])
+                                                        '''
+                                                        dict_order[symb] = (t, price, order['orders'][0]['orderId'], amount)
                                                     except:
                                                         type = 'market'
                                                         order = bin_bot.create_order(symb, type, side, amount,
@@ -873,19 +905,24 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                             type = 'limit'
                                             side = 'sell'
 
-                                            dict_order[symb] = (t, price)
+                                            dict_order[symb] = (t, price, amount)
                                             dict_trail[symb] = price * 0.99
                                             dict_trail_step[symb] = 0
                                             dict_max_price[symb] = price
 
                                             if trade_on and not err:
                                                 try:
+                                                    params = {'stopPrice': price * 0.99}
+                                                    order = bin_bot.createOrder(symb, 'STOP_LOSS_LIMIT', 'sell',
+                                                                                amount, price * 0.99, params)
+                                                    '''
                                                     order = bin_bot.private_post_order_oco(
                                                         {"symbol": symb.replace('/', ''), "side": "sell",
                                                          "quantity": amount,
                                                          "price": take_profit, "stopPrice": stop_loss,
                                                          "stopLimitPrice": stop_loss, "stopLimitTimeInForce": "GTC"})
-                                                    dict_order[symb] = (t, price, order['orders'][0]['orderId'])
+                                                    '''
+                                                    dict_order[symb] = (t, price, order['orders'][0]['orderId'], amount)
                                                 except:
                                                     type = 'market'
                                                     order = bin_bot.create_order(symb, type, side, amount,
