@@ -743,6 +743,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                         params = {'stopPrice': price * 0.99}
                                                         order = bin_bot.createOrder(symb, 'STOP_LOSS_LIMIT', 'sell',
                                                                                      amount, price * 0.99, params)
+                                                        print(str(order))
                                                         '''
                                                         order = bin_bot.private_post_order_oco(
                                                             {"symbol": symb.replace('/', ''), "side": "sell",
