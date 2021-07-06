@@ -594,8 +594,11 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                             except:
                                                 pass
                                             params = {'stopPrice': dict_trail[symb]}
+                                            bb = dict_order[symb]
                                             order = bin_bot.createOrder(symb, 'STOP_LOSS_LIMIT', 'sell',
                                                                         dict_order[symb][3], dict_trail[symb], params)
+                                            bb[2] = order['info']['orderId']
+                                            dict_order[symb] = bb
                                 else:
                                     if dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.995) > dict_trail[symb] and dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.992) / dict_trail[symb] > 0.001:
                                         dict_trail[symb] = dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.995)
@@ -605,8 +608,12 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                             except:
                                                 pass
                                             params = {'stopPrice': dict_trail[symb]}
+                                            bb = dict_order[symb]
                                             order = bin_bot.createOrder(symb, 'STOP_LOSS_LIMIT', 'sell',
                                                                         dict_order[symb][3], dict_trail[symb], params)
+                                            bb[2] = order['info']['orderId']
+                                            dict_order[symb] = bb
+
 
                         #elif price > dict_trail[symb] * (1 + trail_step * 2):
                         #    dict_trail[symb] = dict_trail[symb] * (1 + trail_step)
@@ -751,7 +758,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                              "price": take_profit, "stopPrice": stop_loss,
                                                              "stopLimitPrice": stop_loss, "stopLimitTimeInForce": "GTC"})
                                                         '''
-                                                        dict_order[symb] = (t, price, order['orderId'], amount)
+                                                        dict_order[symb] = (t, price, order['info']['orderId'], amount)
                                                     except:
                                                         type = 'market'
                                                         order = bin_bot.create_order(symb, type, side, amount,
@@ -839,7 +846,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                              "price": take_profit, "stopPrice": stop_loss,
                                                              "stopLimitPrice": stop_loss, "stopLimitTimeInForce": "GTC"})
                                                         '''
-                                                        dict_order[symb] = (t, price, order['orderId'], amount)
+                                                        dict_order[symb] = (t, price, order['info']['orderId'], amount)
                                                     except:
                                                         type = 'market'
                                                         order = bin_bot.create_order(symb, type, side, amount,
@@ -857,7 +864,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 step = 4
                                 prevVol += e[1]
 
-                                if prevVol >= dict_curr[symb] * 0.011 and price / dict_list[symb][0][2] > 1.005:
+                                if 1 == 2 and prevVol >= dict_curr[symb] * 0.011 and price / dict_list[symb][0][2] > 1.005:
                                     inf = get_klines1(symb, '1m', int((time.time() - 300) * 1000), 5)
                                     min_price = 999
                                     max_price = 0
@@ -925,7 +932,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                          "price": take_profit, "stopPrice": stop_loss,
                                                          "stopLimitPrice": stop_loss, "stopLimitTimeInForce": "GTC"})
                                                     '''
-                                                    dict_order[symb] = (t, price, order['orderId'], amount)
+                                                    dict_order[symb] = (t, price, order['info']['orderId'], amount)
                                                 except:
                                                     type = 'market'
                                                     order = bin_bot.create_order(symb, type, side, amount,
