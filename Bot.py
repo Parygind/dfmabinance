@@ -194,7 +194,7 @@ def updateData():
                     dict_prec[tickers[pr]['symbol']] = int(market['precision']['price'])
                     markets.append(tickers[pr]['symbol'].replace('/', ''))
                     markets.append(tickers[ppr]['symbol'].replace('/', ''))
-                    dict_list[tickers[pr]['symbol']] = list()
+                    dict_list[tickers[ppr]['symbol']] = list()
             #b = bin_bot.fetch_open_orders(tickers[pr]['symbol'])
             #for i in b:
             #    dict_order[tickers[pr]['symbol']] = (i['info']['orderId'])
