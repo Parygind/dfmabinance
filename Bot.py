@@ -46,6 +46,8 @@ dict_curr = dict()
 dict_prev_vol = dict()
 dict_list = dict()
 
+binance_websocket_api_manager = None
+
 
 dict_prev_pr = dict()
 dict_curr_pr = dict()
@@ -78,6 +80,8 @@ order_price = 0
 trade_on = False
 trail_step = 0.005
 
+channels = {'trade'}
+stream_id = None
 
 def get_klines(symb):
     params = {}
@@ -111,6 +115,7 @@ def get_klines1(symb, interval, start, limit):
     method = 'publicGetKlines' if market['spot'] else 'fapiPublicGetKlines'
 
     return getattr(bin_bot, method)(bin_bot.extend(request, params))
+
 
 
 def start(update, context):
@@ -192,7 +197,7 @@ def updateData():
                     dict_curr[tickers[ppr]['symbol']] = float(tickers[ppr]['quoteVolume'])
                     market = bin_bot.market(tickers[pr]['symbol'])
                     dict_prec[tickers[pr]['symbol']] = int(market['precision']['price'])
-                    markets.append(tickers[pr]['symbol'].replace('/', ''))
+                    #markets.append(tickers[pr]['symbol'].replace('/', ''))
                     markets.append(tickers[ppr]['symbol'].replace('/', ''))
                     dict_list[tickers[ppr]['symbol']] = list()
             #b = bin_bot.fetch_open_orders(tickers[pr]['symbol'])
@@ -220,34 +225,6 @@ def set_price(update, context):
 
     except (IndexError, ValueError):
         update.message.reply_text('Usage: /set_price <value>')
-
-
-def set_timer(update, context):
-    """Add a job to the queue."""
-    chat_id = update.message.chat_id
-    try:
-        # args[0] should contain the time for the timer in seconds
-        due = int(context.args[0])
-        if due < 0:
-            update.message.reply_text('Введите положительное время!')
-            return
-
-        global bin_bot
-
-        bin_bot = ccxt.binance({
-            'apiKey': os.environ['API_KEY'],
-            'secret': os.environ['API_SECRET'],
-            'enableRateLimit': True,
-        })
-
-        # job = context.job_queue.run_repeating(alarm2, 120, first=70, context=chat_id)
-        context.chat_data['job'] = job
-
-        update.message.reply_text('Таймер запущен!')
-
-    except (IndexError, ValueError):
-        update.message.reply_text('Usage: /set <seconds>')
-
 
 def get_vol(update, context):
     try:
@@ -296,7 +273,7 @@ def get_top(update, context):
 
 
 def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
-    global profit, sl, tk, trade_on, order_price
+    global profit, sl, tk, trade_on, order_price, channels
     while True:
         if binance_websocket_api_manager.is_manager_stopping():
             exit(0)
@@ -355,7 +332,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                                              1] * 1.0015) - 1) + ' баланс ' + float_to_str(
                                                                  profit))
                                     del dict_order[symb]
-                                    continue
+
                                 else:
                                     profit += (price / (dict_order[symb][1] * 1.0015) - 1)
                                     sl += 1
@@ -367,7 +344,11 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                                              1] * 1.0015) - 1) + ' баланс ' + float_to_str(
                                                                  profit))
                                     del dict_order[symb]
-                                    continue
+
+                                markets_sub = []
+                                markets_sub.append(symb)
+
+                                binance_websocket_api_manager.unsubscribe_from_stream(stream_id, markets=markets_sub)
                             else:
                                 if (t - dict_order[symb][0]) / 1000 > 300:
                                     if price > dict_order[symb][1] * 1.0015 and dict_trail[symb] < dict_order[symb][
@@ -400,6 +381,11 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                                                   1] * 1.0015) - 1) + ' баланс ' + float_to_str(
                                                                      profit))
                                         del dict_order[symb]
+                                        markets_sub = []
+                                        markets_sub.append(symb)
+
+                                        binance_websocket_api_manager.unsubscribe_from_stream(stream_id,
+                                                                                          markets=markets_sub)
                                         continue
                                 if dict_trail_step[symb] == 0:
                                     if price < dict_order[symb][1] * 1.008:
@@ -421,19 +407,20 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                     else:
                         symb = data['s'].replace('BTC', '/BTC')
                         symb_USDT = symb.replace('BTC', 'USDT')
-                        if symb_USDT not in dict_order and symb_USDT not in dict_pass and symb_USDT in dict_price:
+                        if symb_USDT not in dict_order and symb_USDT not in dict_pass:
                             q = float(data['q'])
                             vol = q * price
                             prevVol = vol
                             step = 2
-                            price = dict_price[symb_USDT]
+
                             for i, e in reversed(list(enumerate(dict_list[symb]))):
                                 if (t - e[0]) / 1000 <= 30:
                                     prevVol += e[1]
                                 elif (t - e[0]) / 1000 <= 45:
                                     if step == 2:
                                         if prevVol >= dict_curr[symb] * (0.011 * (30/60)):
-                                            inf = get_klines1(symb_USDT, '1m', int((time.time() - 300) * 1000), 5)
+                                            inf = get_klines1(symb_USDT, '1m', None, 5)
+                                            price = float(inf[4][4])
                                             min_price = 999
                                             max_price = 0
 
@@ -482,6 +469,11 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                     dict_trail_step[symb_USDT] = 0
                                                     dict_max_price[symb_USDT] = price
 
+                                                    markets_sub = []
+                                                    markets_sub.append(symb_USDT)
+
+                                                    binance_websocket_api_manager.subscribe_to_stream(stream_id, channel, markets_sub)
+
                                                     updater.bot.send_message(chat_id='-1001242337520', text=mes)
                                                     print(mes + ' ' + datetime.today().strftime(
                                                     '%Y-%m-%d-%H:%M:%S') + ' ' + str(t))
@@ -494,9 +486,10 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 elif (t - e[0]) / 1000 <= 60:
                                     if step == 3:
                                         if prevVol >= dict_curr[symb] * (0.011 * (45/60)):
-                                            inf = get_klines1(symb_USDT, '1m', int((time.time() - 300) * 1000), 5)
+                                            inf = get_klines1(symb_USDT, '1m', None, 5)
                                             min_price = 999
                                             max_price = 0
+                                            price = float(inf[4][4])
 
                                             for d in inf:
                                                 max_price = max(max_price, float(d[2]))
@@ -541,6 +534,13 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                     dict_trail[symb_USDT] = price * 0.99
                                                     dict_trail_step[symb_USDT] = 0
                                                     dict_max_price[symb_USDT] = price
+
+                                                    markets_sub = []
+                                                    markets_sub.append(symb_USDT)
+
+                                                    binance_websocket_api_manager.subscribe_to_stream(stream_id,
+                                                                                                      channel,
+                                                                                                      markets_sub)
 
                                                     updater.bot.send_message(chat_id='-1001242337520', text=mes)
                                                     print(mes + ' ' + datetime.today().strftime(
@@ -597,7 +597,6 @@ binance_websocket_api_manager = unicorn_binance_websocket_api.BinanceWebSocketAp
 # start a worker process to move the received stream_data from the stream_buffer to a print function
 worker_thread = threading.Thread(target=print_stream_data_from_stream_buffer, args=(binance_websocket_api_manager,))
 worker_thread.start()
-channels = {'trade'}
 divisor = math.ceil(len(markets) / binance_websocket_api_manager.get_limit_of_subscriptions_per_stream())
 max_subscriptions = math.ceil(len(markets) / divisor)
 print(max_subscriptions)
@@ -611,7 +610,7 @@ for channel in channels:
         for market in markets:
             markets_sub.append(market)
             if i == max_subscriptions or loops*max_subscriptions + i == len(markets):
-                binance_websocket_api_manager.create_stream(channel, markets_sub, stream_label=str(channel+"_"+str(i)),
+                stream_id = binance_websocket_api_manager.create_stream(channel, markets_sub, stream_label=str(channel+"_"+str(i)),
                                                             ping_interval=10, ping_timeout=10, close_timeout=5)
                 markets_sub = []
                 i = 1
