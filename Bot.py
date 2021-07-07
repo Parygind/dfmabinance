@@ -404,7 +404,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                         (price / dict_order[symb][1]) * 0.995)
 
                         if symb in dict_pass:
-                            if (t - dict_pass[symb]) / 1000 > 18000:
+                            if (t - dict_pass[symb]) / 1000 > 7200:
                                 del dict_pass[symb]
                     else:
                         symb = data['s'].replace('BTC', '/BTC')
@@ -548,8 +548,6 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                     print(hour)
                                                     print('45 ' + str(prevVol / (dict_curr[symb] * 0.027)))
                                                     break
-                                                elif price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01:
-                                                    dict_pass[symb] = t - 17900 * 1000
                                     step = 4
                                     prevVol += e[1]
 
