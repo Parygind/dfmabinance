@@ -595,8 +595,8 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 pass
                                             params = {'stopPrice': dict_trail[symb]}
                                             bb = dict_order[symb]
-                                            order = bin_bot.createOrder(symb, 'STOP_LOSS_LIMIT', 'sell',
-                                                                        dict_order[symb][3], dict_trail[symb], params)
+                                            order = bin_bot.createOrder(symb, 'STOP_LOSS', 'sell',
+                                                                        dict_order[symb][3], None, params)
                                             bbb = (bb[0], bb[1], order['info']['orderId'], bb[3])
                                             dict_order[symb] = bbb
                                 else:
@@ -609,8 +609,8 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 pass
                                             params = {'stopPrice': dict_trail[symb]}
                                             bb = dict_order[symb]
-                                            order = bin_bot.createOrder(symb, 'STOP_LOSS_LIMIT', 'sell',
-                                                                        dict_order[symb][3], dict_trail[symb], params)
+                                            order = bin_bot.createOrder(symb, 'STOP_LOSS', 'sell',
+                                                                        dict_order[symb][3], None, params)
                                             bbb = (bb[0], bb[1], order['info']['orderId'], bb[3])
                                             dict_order[symb] = bbb
 
@@ -713,7 +713,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
 
                                                 mes = 'Объемы выросли : ' + symb + ' (F) ' + str(price)
 
-                                                if trade_on:
+                                                if trade_on and len(dict_order) < 3:
                                                     try:
                                                         order = bin_bot.create_order(symb, type, side, amount, None)
 
@@ -745,11 +745,11 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 dict_trail_step[symb] = 0
                                                 dict_max_price[symb] = price
 
-                                                if trade_on and not err:
+                                                if trade_on and not err and len(dict_order) < 3:
                                                     try:
                                                         params = {'stopPrice': price * 0.99}
-                                                        order = bin_bot.createOrder(symb, 'STOP_LOSS_LIMIT', 'sell',
-                                                                                     amount, price * 0.99, params)
+                                                        order = bin_bot.createOrder(symb, 'STOP_LOSS', 'sell',
+                                                                                     amount, None, params)
                                                         print(str(order))
                                                         '''
                                                         order = bin_bot.private_post_order_oco(
@@ -801,7 +801,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 side = 'buy'
                                                 err = False
                                                 mes = 'Объемы выросли : ' + symb + ' (F) ' + str(price)
-                                                if trade_on:
+                                                if trade_on and len(dict_order) < 3:
                                                     try:
                                                         order = bin_bot.create_order(symb, type, side, amount, None)
 
@@ -833,11 +833,11 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 dict_trail_step[symb] = 0
                                                 dict_max_price[symb] = price
 
-                                                if trade_on and not err:
+                                                if trade_on and not err and len(dict_order) < 3:
                                                     try:
                                                         params = {'stopPrice': price * 0.99}
-                                                        order = bin_bot.createOrder(symb, 'STOP_LOSS_LIMIT', 'sell',
-                                                                                    amount, price * 0.99, params)
+                                                        order = bin_bot.createOrder(symb, 'STOP_LOSS', 'sell',
+                                                                                    amount, None, params)
                                                         print(str(order))
                                                         '''
                                                         order = bin_bot.private_post_order_oco(
@@ -887,7 +887,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                             side = 'buy'
                                             err = False
                                             mes = 'Объемы выросли : ' + symb + ' (F) ' + str(price)
-                                            if trade_on:
+                                            if trade_on and len(dict_order) < 3:
                                                 try:
                                                     order = bin_bot.create_order(symb, type, side, amount, None)
 
@@ -919,11 +919,11 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                             dict_trail_step[symb] = 0
                                             dict_max_price[symb] = price
 
-                                            if trade_on and not err:
+                                            if trade_on and not err and len(dict_order) < 3:
                                                 try:
                                                     params = {'stopPrice': price * 0.99}
-                                                    order = bin_bot.createOrder(symb, 'STOP_LOSS_LIMIT', 'sell',
-                                                                                amount, price * 0.99, params)
+                                                    order = bin_bot.createOrder(symb, 'STOP_LOSS', 'sell',
+                                                                                amount, None, params)
                                                     print(str(order))
                                                     '''
                                                     order = bin_bot.private_post_order_oco(
