@@ -534,8 +534,8 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                             err = True
                                                             mes = 'Объемы выросли : ' + symb_USDT + ' (F) ' + str(price)
 
-                                                    dict_order[symb] = price
-                                                    n = dict_prec[symb]
+                                                    dict_order[symb_USDT] = price
+                                                    n = dict_prec[symb_USDT]
 
                                                     dict_order[symb_USDT] = (t, price, None, amount)
                                                     dict_trail[symb_USDT] = price * 0.99
