@@ -474,7 +474,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                     markets_sub = []
                                                     markets_sub.append(symb_USDT)
 
-                                                    binance_websocket_api_manager.subscribe_to_stream(stream_id, channels, markets_sub)
+                                                    binance_websocket_api_manager.subscribe_to_stream(stream_id, markets=markets_sub)
 
                                                     updater.bot.send_message(chat_id='-1001242337520', text=mes)
                                                     print(mes + ' ' + datetime.today().strftime(
@@ -540,9 +540,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                     markets_sub = []
                                                     markets_sub.append(symb_USDT)
 
-                                                    binance_websocket_api_manager.subscribe_to_stream(stream_id,
-                                                                                                      channels,
-                                                                                                      markets_sub)
+                                                    binance_websocket_api_manager.subscribe_to_stream(stream_id, markets=markets_sub)
 
                                                     updater.bot.send_message(chat_id='-1001242337520', text=mes)
                                                     print(mes + ' ' + datetime.today().strftime(
