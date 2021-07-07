@@ -65,6 +65,7 @@ dict_wall_a = dict()
 dict_wall_b = dict()
 dict_prec = dict()
 dict_prev_min = dict()
+dict_price = dict()
 markets = []
 profit = 0
 
@@ -188,10 +189,11 @@ def updateData():
             'symbol'] != 'SUN/USDT' and tickers[pr]['symbol'] != 'PUNDIX/USDT':
             for ppr in tickers:
                 if tickers[ppr]['symbol'] == tickers[pr]['symbol'].replace('USDT', 'BTC'):
-                    dict_curr[tickers[pr]['symbol']] = float(tickers[pr]['quoteVolume'])
+                    dict_curr[tickers[ppr]['symbol']] = float(tickers[ppr]['quoteVolume'])
                     market = bin_bot.market(tickers[pr]['symbol'])
                     dict_prec[tickers[pr]['symbol']] = int(market['precision']['price'])
                     markets.append(tickers[pr]['symbol'].replace('/', ''))
+                    markets.append(tickers[ppr]['symbol'].replace('/', ''))
                     dict_list[tickers[pr]['symbol']] = list()
             #b = bin_bot.fetch_open_orders(tickers[pr]['symbol'])
             #for i in b:
@@ -199,226 +201,6 @@ def updateData():
     symb_list = list(dict_curr.keys())
     #markets.append('BTCBUSD')
     #dict_list['BTCBUSD'] = list()
-
-def alarm2(context):
-    """Send the alarm message."""
-    mesVol = ''
-    mesOrd = ''
-    mesShort = ''
-    job = context.job
-    global dict_prev, dict_curr, symb_list, c, tk, sl, dict_order, dict_pass, dict_prec, dict_start_price, dict_max_price, dict_min_price, dict_prev_vol, dict_prev_min, trade_on
-
-    for i in range(0, int(len(symb_list))):
-        inf = get_klines(symb_list[i])
-        vol = float(inf[0][10])
-        course = float(inf[0][4])
-
-        prev_min = 0
-
-        if symb_list[i] in dict_prev_min:
-            prev_min = dict_prev_min[symb_list[i]]
-        else:
-            prev_min = float(inf[0][3])
-
-        dict_last_price[symb_list[i]] = course
-
-        if symb_list[i] in dict_start_price:
-            dict_max_price[symb_list[i]] = max(dict_max_price[symb_list[i]], float(inf[0][2]))
-            dict_min_price[symb_list[i]] = min(dict_min_price[symb_list[i]], float(inf[0][3]))
-
-        if symb_list[i] in dict_pass:
-            dict_pass[symb_list[i]] -= 1
-            if dict_pass[symb_list[i]] < 1:
-                del dict_pass[symb_list[i]]
-
-        if symb_list[i] in dict_order:
-            if dict_max_price[symb_list[i]] >= dict_order[symb_list[i]] * 1.01:
-                tk = tk + 1
-                mesOrd = mesOrd + 'Профит ' + symb_list[i] + ' ' + float_to_str(
-                    dict_order[symb_list[i]]) + ' ' + float_to_str(course) + ' '
-                del dict_order[symb_list[i]]
-                dict_pass[symb_list[i]] = 60
-
-            elif dict_min_price[symb_list[i]] <= dict_order[symb_list[i]] * 0.96:
-                sl = sl + 1
-                mesOrd = mesOrd + 'Убыток ' + symb_list[i] + ' ' + float_to_str(
-                    dict_order[symb_list[i]]) + ' ' + float_to_str(course) + ' '
-                del dict_order[symb_list[i]]
-                dict_pass[symb_list[i]] = 60
-
-        if vol >= dict_curr[symb_list[i]] * 0.0215 and float(inf[0][2]) / float(inf[0][1]) < 1.07 and float(
-                inf[0][2]) / float(inf[0][1]) > 1 and float(inf[0][4]) / float(inf[0][1]) > 0.96 and float(
-                inf[0][2]) / float(inf[0][3]) > 1.01 and float(inf[0][2]) / prev_min > 1.01 and float(
-                inf[0][2]) / prev_min < 1.04 and len(dict_order) < 7:
-            passPair = False
-            if symb_list[i] in dict_max_price:
-                if dict_max_price[symb_list[i]] <= course:
-                    passPair = True
-            if not symb_list[i] in dict_order and not symb_list[i] in dict_pass and not passPair:
-
-                amount = int(order_price / course)
-                type = 'market'  # or market
-                side = 'buy'
-                err = False
-
-                if trade_on:
-                    try:
-                        order = bin_bot.create_order(symb_list[i], type, side, amount, None)
-
-                        while order['status'] != 'closed':
-                            order = bin_bot.fetch_order(order['id'], symb_list[i])
-
-                            if order['status'] == 'rejected' or order['status'] == 'canceled':
-                                break
-
-                        if order['status'] != 'closed':
-                            continue
-
-                        price = float(order['price'])
-                    except:
-                        err = True
-                        price = course
-                else:
-                    price = course
-
-                dict_order[symb_list[i]] = price
-                n = dict_prec[symb_list[i]]
-                take_profit = float_to_str(round(price * 1.01, n))
-                stop_loss = float_to_str(round(price * 0.96, n))
-                type = 'limit'
-                side = 'sell'
-
-                if trade_on and not err:
-                    order = bin_bot.create_order(symb_list[i], type, side, amount, take_profit)
-                '''
-                try:
-                    order = bin_bot.private_post_order_oco(
-                        {"symbol": symb_list[i].replace('/', ''), "side": "sell", "quantity": amount,
-                         "price": take_profit, "stopPrice": stop_loss,
-                         "stopLimitPrice": stop_loss, "stopLimitTimeInForce": "GTC"})
-                except:
-                    type = 'market'
-                    order = bin_bot.create_order(symb_list[i], type, side, amount, take_profit)
-                '''
-
-                dict_start_price[symb_list[i]] = price
-                dict_max_price[symb_list[i]] = price
-                dict_min_price[symb_list[i]] = price
-
-                if not trade_on or err:
-                    mesVol += symb_list[i] + ' (F) (+' + str(round(vol, 2)) + ' / ' + str(
-                        round((vol / dict_curr[symb_list[i]]) * 100, 2)) + '%, ' + str(price) + ' ' + str(
-                        course) + ' ' + str(course / float(inf[0][1])) + ' ' + str(
-                        float(inf[0][2]) / float(inf[0][1])) + ' ' + str(
-                        float(inf[0][2]) / float(inf[0][3])) + ' ' + str(float(inf[0][2]) / prev_min) + ')\n'
-                else:
-                    mesVol += symb_list[i] + ' ($) (+' + str(round(vol, 2)) + ' / ' + str(
-                        round((vol / dict_curr[symb_list[i]]) * 100, 2)) + '%, ' + str(price) + ' ' + str(
-                        course) + ' ' + str(course / float(inf[0][1])) + ' ' + str(
-                        float(inf[0][2]) / float(inf[0][1])) + ' ' + str(
-                        float(inf[0][2]) / float(inf[0][3])) + ' ' + str(float(inf[0][2]) / prev_min) + ')\n'
-
-
-
-        elif c > 0 and dict_prev_vol.get(symb_list[i]) != None:
-            if vol + dict_prev_vol[symb_list[i]] >= dict_curr[symb_list[i]] * 0.022 and vol < dict_curr[
-                symb_list[i]] * 0.0215 and float(inf[0][2]) / float(inf[0][1]) < 1.06 and float(inf[0][2]) / float(
-                    inf[0][1]) > 1 and float(inf[0][4]) / float(inf[0][1]) > 0.96 and float(inf[0][2]) / float(
-                    inf[0][3]) > 1.01 and float(inf[0][2]) / prev_min > 1.01 and float(
-                    inf[0][2]) / prev_min < 1.04 and len(dict_order) < 7:
-                passPair = False
-                if symb_list[i] in dict_max_price:
-                    if dict_max_price[symb_list[i]] <= course:
-                        passPair = True
-                if not symb_list[i] in dict_order and not symb_list[i] in dict_pass and not passPair:
-
-                    amount = int(order_price / course)
-                    type = 'market'  # or market
-                    side = 'buy'
-                    err = False
-
-                    if trade_on:
-                        try:
-                            order = bin_bot.create_order(symb_list[i], type, side, amount, None)
-
-                            while order['status'] != 'closed':
-                                order = bin_bot.fetch_order(order['id'], symb_list[i])
-
-                                if order['status'] == 'rejected' or order['status'] == 'canceled':
-                                    break
-
-                            if order['status'] != 'closed':
-                                continue
-
-                            price = float(order['price'])
-                        except:
-                            err = True
-                            price = course
-                    else:
-                        price = course
-
-                    dict_order[symb_list[i]] = price
-                    n = dict_prec[symb_list[i]]
-                    take_profit = float_to_str(round(price * 1.01, n))
-                    stop_loss = float_to_str(round(price * 0.96, n))
-                    type = 'limit'
-                    side = 'sell'
-                    if trade_on and not err:
-                        order = bin_bot.create_order(symb_list[i], type, side, amount, take_profit)
-
-                    dict_start_price[symb_list[i]] = price
-                    dict_max_price[symb_list[i]] = price
-                    dict_min_price[symb_list[i]] = price
-
-                    if not trade_on or err:
-                        mesVol += symb_list[i] + ' (F) TEST (+' + str(
-                            round(vol + dict_prev_vol[symb_list[i]], 2)) + ' / ' + str(
-                            round(((vol + dict_prev_vol[symb_list[i]]) / dict_curr[symb_list[i]]) * 100,
-                                  2)) + '%, ' + str(float(inf[0][4])) + ' ' + str(course) + ' ' + str(
-                            course / float(inf[0][1])) + ' ' + str(float(inf[0][2]) / float(inf[0][1])) + ' ' + str(
-                            float(inf[0][2]) / float(inf[0][3])) + ' ' + str(float(inf[0][2]) / prev_min) + ')\n'
-                    else:
-                        mesVol += symb_list[i] + ' ($) TEST (+' + str(
-                            round(vol + dict_prev_vol[symb_list[i]], 2)) + ' / ' + str(
-                            round(((vol + dict_prev_vol[symb_list[i]]) / dict_curr[symb_list[i]]) * 100,
-                                  2)) + '%, ' + str(float(inf[0][4])) + ' ' + str(course) + ' ' + str(
-                            course / float(inf[0][1])) + ' ' + str(float(inf[0][2]) / float(inf[0][1])) + ' ' + str(
-                            float(inf[0][2]) / float(inf[0][3])) + ' ' + str(float(inf[0][2]) / prev_min) + ')\n'
-            elif vol >= dict_curr[symb_list[i]] * 0.02 and not symb_list[i] in dict_start_price:
-                dict_start_price[symb_list[i]] = course
-                dict_max_price[symb_list[i]] = course
-                dict_min_price[symb_list[i]] = course
-                dict_pass[symb_list[i]] = 60
-                mesShort += symb_list[i] + '(+' + str(round(vol, 2)) + ' / ' + str(
-                    round((vol / dict_curr[symb_list[i]]) * 100, 2)) + '%, ' + str(course) + ' ' + str(
-                    course / float(inf[0][1])) + ' ' + str(float(inf[0][2]) / float(inf[0][1])) + ' ' + str(
-                    float(inf[0][2]) / float(inf[0][3])) + ' ' + str(float(inf[0][2]) / prev_min) + ')\n'
-            elif c > 0:
-                if vol + dict_prev_vol[symb_list[i]] >= dict_curr[symb_list[i]] * 0.0215 and not symb_list[i] in dict_start_price:
-                    dict_start_price[symb_list[i]] = course
-                    dict_max_price[symb_list[i]] = course
-                    dict_min_price[symb_list[i]] = course
-                    dict_pass[symb_list[i]] = 60
-                    mesShort += symb_list[i] + 'TEST (+' + str(
-                        round(vol + dict_prev_vol[symb_list[i]], 2)) + ' / ' + str(
-                        round(((vol + dict_prev_vol[symb_list[i]]) / dict_curr[symb_list[i]]) * 100, 2)) + '%, ' + str(
-                        course) + ' ' + str(course / float(inf[0][1])) + ' ' + str(
-                        float(inf[0][2]) / float(inf[0][1])) + ' ' + str(
-                        float(inf[0][2]) / float(inf[0][3])) + ' ' + str(float(inf[0][2]) / prev_min) + ')\n'
-
-        dict_prev_vol[symb_list[i]] = vol
-        dict_prev_min[symb_list[i]] = float(inf[0][3])
-    c += 1
-
-    if len(mesVol) > 0:
-        mes = 'Объемы выросли : ' + mesVol
-        context.bot.send_message(chat_id='-1001242337520', text=mes)
-    if len(mesOrd) > 0:
-        mes = 'Сделки закрыты : ' + mesOrd
-        context.bot.send_message(chat_id='-1001242337520', text=mes)
-    if len(mesShort) > 0:
-        mes = 'Можно шортануть : ' + mesShort
-        context.bot.send_message(chat_id='-1001242337520', text=mes)
 
 def set_price(update, context):
     """Add a job to the queue."""
@@ -458,8 +240,6 @@ def set_timer(update, context):
             'enableRateLimit': True,
         })
 
-        job = context.job_queue.run_repeating(updateData, due, first=0, context=chat_id)
-        job = context.job_queue.run_repeating(alarm2, 60, first=20, context=chat_id)
         # job = context.job_queue.run_repeating(alarm2, 120, first=70, context=chat_id)
         context.chat_data['job'] = job
 
@@ -541,469 +321,243 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
 
                     symb = data['s'].replace('USDT', '/USDT')
                     price = float(data['p'])
-                    if symb in dict_order and dict_order[symb][0] < t and not data['m']:
-                        dict_max_price[symb] = max(dict_max_price[symb], price)
-                        #trail
+                    if symb[-4:] == 'USDT':
+                        dict_price[symb] = price
+                        if symb in dict_order and dict_order[symb][0] < t and not data['m']:
+                            dict_max_price[symb] = max(dict_max_price[symb], price)
 
-                        if price < dict_trail[symb]:
-                            if trade_on:
-                                try:
-                                    order = bin_bot.create_order(symb, 'market', 'sell', dict_order[symb][3], None)
+                            if price < dict_trail[symb]:
+                                if trade_on:
+                                    try:
+                                        order = bin_bot.create_order(symb, 'market', 'sell', dict_order[symb][3], None)
 
-                                    while order['status'] != 'closed':
-                                        order = bin_bot.fetch_order(order['id'], symb)
+                                        while order['status'] != 'closed':
+                                            order = bin_bot.fetch_order(order['id'], symb)
 
-                                        if order['status'] == 'rejected' or order[
-                                            'status'] == 'canceled':
-                                            break
+                                            if order['status'] == 'rejected' or order[
+                                                'status'] == 'canceled':
+                                                break
 
-                                    if order['status'] != 'closed':
-                                        continue
+                                        if order['status'] != 'closed':
+                                            continue
 
-                                    price = float(order['price'])
-                                except:
-                                    pass
+                                        price = float(order['price'])
+                                    except:
+                                        pass
 
-                            if price > dict_order[symb][1] * 1.0015:
-                                profit += (price / (dict_order[symb][1] * 1.0015) - 1)
-                                tk += 1
-                                dict_pass[symb] = t
-                                updater.bot.send_message(chat_id='-1001242337520',
-                                                         text='Профит ' + symb + ' ' + float_to_str(price / (dict_order[symb][1] * 1.0015) - 1) + ' баланс ' + float_to_str(
-                                                             profit))
-                                del dict_order[symb]
-                                continue
-                            else:
-                                profit += (price / (dict_order[symb][1] * 1.0015) - 1)
-                                sl += 1
-                                tk = 0
-                                dict_pass[symb] = t
-                                updater.bot.send_message(chat_id='-1001242337520',
-                                                         text='Убыток ' + symb + ' ' + float_to_str(price / (dict_order[symb][1] * 1.0015) - 1) + ' баланс ' + float_to_str(
-                                                             profit))
-                                del dict_order[symb]
-                                continue
-                        else:
-                            if (t - dict_order[symb][0]) / 1000 > 300:
-                                if price > dict_order[symb][1] * 1.0015 and dict_trail[symb] < dict_order[symb][1] * 1.0015:
+                                if price > dict_order[symb][1] * 1.0015:
                                     profit += (price / (dict_order[symb][1] * 1.0015) - 1)
                                     tk += 1
                                     dict_pass[symb] = t
-                                    if trade_on:
-                                        '''
-                                        try:
-                                            bin_bot.cancel_order(dict_order[symb][2], symb)
-                                        except:
-                                            pass
-                                        '''
-                                        try:
-                                            order = bin_bot.create_order(symb, 'market', 'sell', dict_order[symb][3], None)
-
-                                            while order['status'] != 'closed':
-                                                order = bin_bot.fetch_order(order['id'], symb)
-
-                                                if order['status'] == 'rejected' or order[
-                                                    'status'] == 'canceled':
-                                                    break
-
-                                            if order['status'] != 'closed':
-                                                continue
-
-                                            price = float(order['price'])
-                                        except:
-                                            pass
-
                                     updater.bot.send_message(chat_id='-1001242337520',
-                                                             text='Профит ' + symb + ' ' + float_to_str(
-                                                                 price / (dict_order[symb][
-                                                                                         1] * 1.0015) - 1) + ' баланс ' + float_to_str(
+                                                             text='Профит ' + symb + ' ' + float_to_str(price / (
+                                                                         dict_order[symb][
+                                                                             1] * 1.0015) - 1) + ' баланс ' + float_to_str(
                                                                  profit))
                                     del dict_order[symb]
                                     continue
-                            if dict_trail_step[symb] == 0:
-                                if price < dict_order[symb][1] * 1.008:
-                                    if dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.992) > dict_trail[symb] and ((dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.992)) / dict_trail[symb]) - 1 > 0.001:
-                                        dict_trail[symb] = dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.992)
-                                        '''
-                                        if trade_on:
-                                            try:
-                                                bin_bot.cancel_order(dict_order[symb][2], symb)
-                                            except:
-                                                pass
-                                            params = {'stopPrice': dict_trail[symb]}
-                                            bb = dict_order[symb]
-                                            order = bin_bot.createOrder(symb, 'STOP_LOSS', 'sell',
-                                                                        dict_order[symb][3], None, params)
-                                            bbb = (bb[0], bb[1], order['info']['orderId'], bb[3])
-                                            dict_order[symb] = bbb
-                                        '''
                                 else:
-                                    if dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.995) > dict_trail[symb] and ((dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.995)) / dict_trail[symb]) - 1 > 0.001:
-                                        dict_trail[symb] = dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.995)
-                                        '''
+                                    profit += (price / (dict_order[symb][1] * 1.0015) - 1)
+                                    sl += 1
+                                    tk = 0
+                                    dict_pass[symb] = t
+                                    updater.bot.send_message(chat_id='-1001242337520',
+                                                             text='Убыток ' + symb + ' ' + float_to_str(price / (
+                                                                         dict_order[symb][
+                                                                             1] * 1.0015) - 1) + ' баланс ' + float_to_str(
+                                                                 profit))
+                                    del dict_order[symb]
+                                    continue
+                            else:
+                                if (t - dict_order[symb][0]) / 1000 > 300:
+                                    if price > dict_order[symb][1] * 1.0015 and dict_trail[symb] < dict_order[symb][
+                                        1] * 1.0015:
+                                        profit += (price / (dict_order[symb][1] * 1.0015) - 1)
+                                        tk += 1
+                                        dict_pass[symb] = t
                                         if trade_on:
                                             try:
-                                                bin_bot.cancel_order(dict_order[symb][2], symb)
+                                                order = bin_bot.create_order(symb, 'market', 'sell',
+                                                                             dict_order[symb][3], None)
+
+                                                while order['status'] != 'closed':
+                                                    order = bin_bot.fetch_order(order['id'], symb)
+
+                                                    if order['status'] == 'rejected' or order[
+                                                        'status'] == 'canceled':
+                                                        break
+
+                                                if order['status'] != 'closed':
+                                                    continue
+
+                                                price = float(order['price'])
                                             except:
                                                 pass
-                                            params = {'stopPrice': dict_trail[symb]}
-                                            bb = dict_order[symb]
-                                            order = bin_bot.createOrder(symb, 'STOP_LOSS', 'sell',
-                                                                        dict_order[symb][3], None, params)
-                                            bbb = (bb[0], bb[1], order['info']['orderId'], bb[3])
-                                            dict_order[symb] = bbb
-                                        '''
 
-                        #elif price > dict_trail[symb] * (1 + trail_step * 2):
-                        #    dict_trail[symb] = dict_trail[symb] * (1 + trail_step)
+                                        updater.bot.send_message(chat_id='-1001242337520',
+                                                                 text='Профит ' + symb + ' ' + float_to_str(
+                                                                     price / (dict_order[symb][
+                                                                                  1] * 1.0015) - 1) + ' баланс ' + float_to_str(
+                                                                     profit))
+                                        del dict_order[symb]
+                                        continue
+                                if dict_trail_step[symb] == 0:
+                                    if price < dict_order[symb][1] * 1.008:
+                                        if dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.992) > dict_trail[
+                                            symb] and ((dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.992)) /
+                                                       dict_trail[symb]) - 1 > 0.001:
+                                            dict_trail[symb] = dict_order[symb][1] * (
+                                                        (price / dict_order[symb][1]) * 0.992)
+                                    else:
+                                        if dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.995) > dict_trail[
+                                            symb] and ((dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.995)) /
+                                                       dict_trail[symb]) - 1 > 0.001:
+                                            dict_trail[symb] = dict_order[symb][1] * (
+                                                        (price / dict_order[symb][1]) * 0.995)
 
-                        if price > dict_order[symb][1] * 1.005 and 1 == 2:
-                            profit += 0.0035
-                            tk += 1
-                            if not trade_on and tk > 2 and order_price > 0:
-                                trade_on = True
-                                sl = 0
-                                tk = 0
-                            del dict_order[symb]
-                            dict_pass[symb] = t
-                            updater.bot.send_message(chat_id='-1001242337520', text='Профит ' + symb + ' ' + str(price) + ' баланс ' + str(profit))
-                        elif price < dict_order[symb][1] * 0.96 and 1 == 2:
-                            profit -= 0.0415
-                            sl += 1
-                            tk = 0
-                            if sl > 100:
-                                trade_on = False
-                                sl = 0
-                            del dict_order[symb]
-                            dict_pass[symb] = t
-                            updater.bot.send_message(chat_id='-1001242337520',
-                                                     text='Убыток ' + symb + ' ' + str(price) + ' баланс ' + str(profit))
+                        if symb in dict_pass:
+                            if (t - dict_pass[symb]) / 1000 > 18000:
+                                del dict_pass[symb]
+                    else:
+                        symb_USDT = symb.replace('BTC', 'USDT')
+                        if symb_USDT not in dict_order and symb_USDT not in dict_pass:
+                            q = float(data['q'])
+                            vol = q * price
+                            prevVol = vol
+                            step = 2
+                            price = dict_price[symb_USDT]
+                            for i, e in reversed(list(enumerate(dict_list[symb]))):
+                                if (t - e[0]) / 1000 <= 30:
+                                    prevVol += e[1]
+                                elif (t - e[0]) / 1000 <= 45:
+                                    if step == 2:
+                                        if prevVol >= dict_curr[symb] * (0.011 * (30/60)):
+                                            inf = get_klines1(symb_USDT, '1m', int((time.time() - 300) * 1000), 5)
+                                            min_price = 999
+                                            max_price = 0
 
-                        elif (t - dict_order[symb][0]) / 1000 > 3600 and 1 == 2:
-                            if trade_on:
-                                try:
-                                    bin_bot.cancel_order(dict_order[symb][2], symb)
+                                            for d in inf:
+                                                max_price = max(max_price, float(d[2]))
+                                                min_price = min(min_price, float(d[3]))
 
-                                    amount = 0
-                                    for i in bin_bot.fetch_balance()['info']['balances']:
-                                        if i['asset'] == symb.replace('/USDT', ''):
-                                            amount = float(i['free'])
-
-                                            type = 'market'  # or market
-                                            side = 'sell'
-
-                                            order = bin_bot.create_order(symb, type, side, amount, None)
-
-                                            break
-                                except Exception as e:
-                                    updater.bot.send_message(chat_id='-1001242337520', text=str(e))
-
-                            if price > dict_order[symb][1]:
-                                profit += (price / dict_order[symb][1] - 1)
-                                profit -= 0.0015
-                                updater.bot.send_message(chat_id='-1001242337520', text='Профит! ' + symb + ' ' + str(price) + ' баланс ' + str(profit))
-                            else:
-                                profit -= (1 - price / dict_order[symb][1])
-                                profit -= 0.0015
-                                updater.bot.send_message(chat_id='-1001242337520',
-                                                         text='Убыток! ' + symb + ' ' + str(price) + ' баланс ' + str(profit))
-
-                            del dict_order[symb]
-                            dict_pass[symb] = t
-
-                    if symb in dict_pass:
-                        if (t - dict_pass[symb]) / 1000 > 18000:
-                            del dict_pass[symb]
-
-                    if symb not in dict_min_price:
-                        dict_min_price[symb] = price
-
-                    if symb not in dict_order and symb not in dict_pass and symb != 'BTCBUSD':
-                        q = float(data['q'])
-                        vol = q * price
-                        prevVol = vol
-                        step = 2
-                        for i, e in reversed(list(enumerate(dict_list[symb]))):
-                            if (t - e[0]) / 1000 <= 30:
-                                prevVol += e[1]
-                            elif (t - e[0]) / 1000 <= 45:
-                                if step == 2:
-                                    if prevVol >= dict_curr[symb] * (0.011 * (30/60)) and price / dict_list[symb][0][2] > 1.005:
-                                        inf = get_klines1(symb, '1m', int((time.time() - 300) * 1000), 5)
-                                        min_price = 999
-                                        max_price = 0
-
-                                        for d in inf:
-                                            max_price = max(max_price, float(d[2]))
-                                            min_price = min(min_price, float(d[3]))
-
-                                        if max(max_price, price) / min_price < 1.04 and max_price / min_price > 1.01 and price / float(
-                                            inf[0][1]) > 1:
-
-                                            inf = get_klines1(symb.replace('USDT', 'BTC'), '1m', None, 5)
-
-                                            hour = get_klines1(symb, '1m', int((time.time() - 3600) * 1000), 1)
-                                            if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01 and float(inf[4][4]) / float(inf[0][1]) > 1.01:
-                                                print(inf)
-                                                amount = int(order_price / price)
-                                                type = 'market'  # or market
-                                                side = 'buy'
-                                                err = False
-
-                                                mes = 'Объемы выросли : ' + symb + ' (F) ' + str(price)
-
-                                                if trade_on and len(dict_order) < 3:
-                                                    try:
-                                                        order = bin_bot.create_order(symb, type, side, amount, None)
-
-                                                        while order['status'] != 'closed':
-                                                            order = bin_bot.fetch_order(order['id'], symb)
-
-                                                            if order['status'] == 'rejected' or order[
-                                                                'status'] == 'canceled':
-                                                                break
-
-                                                        if order['status'] != 'closed':
-                                                            continue
-
-                                                        price = float(order['price'])
-                                                        mes = 'Объемы выросли : ' + symb + ' ($) ' + str(price)
-                                                    except:
-                                                        err = True
-                                                        mes = 'Объемы выросли : ' + symb + ' (F) ' + str(price)
-
-                                                dict_order[symb] = price
-                                                n = dict_prec[symb]
-                                                take_profit = float_to_str(round(price * 1.005, n))
-                                                stop_loss = float_to_str(round(price * 0.96, n))
-                                                type = 'limit'
-                                                side = 'sell'
-
-                                                dict_order[symb] = (t, price, None, amount)
-                                                dict_trail[symb] = price * 0.99
-                                                dict_trail_step[symb] = 0
-                                                dict_max_price[symb] = price
-                                                '''
-                                                if trade_on and not err and len(dict_order) < 3:
-                                                    try:
-                                                        params = {'stopPrice': price * 0.99}
-                                                        order = bin_bot.createOrder(symb, 'STOP_LOSS', 'sell',
-                                                                                     amount, None, params)
-                                                        print(str(order))
-                                                        
-                                                        order = bin_bot.private_post_order_oco(
-                                                            {"symbol": symb.replace('/', ''), "side": "sell",
-                                                             "quantity": amount,
-                                                             "price": take_profit, "stopPrice": stop_loss,
-                                                             "stopLimitPrice": stop_loss, "stopLimitTimeInForce": "GTC"})
-                                                        
-                                                        dict_order[symb] = (t, price, order['info']['orderId'], amount)
-                                                    except:
-                                                        type = 'market'
-                                                        order = bin_bot.create_order(symb, type, side, amount,
-                                                                                     take_profit)
-                                                '''
-                                                updater.bot.send_message(chat_id='-1001242337520', text=mes)
-                                                print(mes + ' ' + datetime.today().strftime(
-                                                '%Y-%m-%d-%H:%M:%S') + ' ' + str(t))
-                                                print(hour)
-                                                print(inf)
-                                                print('30 ' +str(prevVol / (dict_curr[symb] * 0.021)))
-                                                break
-                                            elif price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01:
-                                                dict_pass[symb] = t - 17900 * 1000
-
-                                step = 3
-                                prevVol += e[1]
-                            elif (t - e[0]) / 1000 <= 60:
-                                if step == 3:
-                                    if prevVol >= dict_curr[symb] * (0.011 * (45/60))  and price / dict_list[symb][0][2] > 1.005:
-                                        inf = get_klines1(symb, '1m', int((time.time() - 300) * 1000), 5)
-                                        min_price = 999
-                                        max_price = 0
-
-                                        for d in inf:
-                                            max_price = max(max_price, float(d[2]))
-                                            min_price = min(min_price, float(d[3]))
-
-                                        if max(max_price,
-                                               price) / min_price < 1.04 and max_price / min_price > 1.01 and price / float(
+                                            if max(max_price, price) / min_price < 1.04 and max_price / min_price > 1.01 and price / float(
                                                 inf[0][1]) > 1:
-                                            inf = get_klines1(symb.replace('USDT', 'BTC'), '1m',
-                                                              None, 5)
 
-                                            hour = get_klines1(symb, '1m', int((time.time() - 3600) * 1000), 1)
-                                            if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01 and float(inf[4][4]) / float(inf[0][1]) > 1.01:
-                                                print(inf)
-                                                amount = int(order_price / price)
-                                                type = 'market'  # or market
-                                                side = 'buy'
-                                                err = False
-                                                mes = 'Объемы выросли : ' + symb + ' (F) ' + str(price)
-                                                if trade_on and len(dict_order) < 3:
-                                                    try:
-                                                        order = bin_bot.create_order(symb, type, side, amount, None)
+                                                hour = get_klines1(symb_USDT, '1m', int((time.time() - 3600) * 1000), 1)
+                                                if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01:
+                                                    print(inf)
+                                                    amount = int(order_price / price)
+                                                    type = 'market'  # or market
+                                                    side = 'buy'
+                                                    err = False
 
-                                                        while order['status'] != 'closed':
-                                                            order = bin_bot.fetch_order(order['id'], symb)
+                                                    mes = 'Объемы выросли : ' + symb_USDT + ' (F) ' + str(price)
 
-                                                            if order['status'] == 'rejected' or order[
-                                                                'status'] == 'canceled':
-                                                                break
+                                                    if trade_on and len(dict_order) < 3:
+                                                        try:
+                                                            order = bin_bot.create_order(symb_USDT, type, side, amount, None)
 
-                                                        if order['status'] != 'closed':
-                                                            continue
+                                                            while order['status'] != 'closed':
+                                                                order = bin_bot.fetch_order(order['id'], symb_USDT)
 
-                                                        price = float(order['price'])
-                                                        mes = 'Объемы выросли : ' + symb + ' ($) ' + str(price)
-                                                    except:
-                                                        err = True
-                                                        mes = 'Объемы выросли : ' + symb + ' (F) ' + str(price)
+                                                                if order['status'] == 'rejected' or order[
+                                                                    'status'] == 'canceled':
+                                                                    break
 
-                                                dict_order[symb] = price
-                                                n = dict_prec[symb]
-                                                take_profit = float_to_str(round(price * 1.005, n))
-                                                stop_loss = float_to_str(round(price * 0.96, n))
-                                                type = 'limit'
-                                                side = 'sell'
+                                                            if order['status'] != 'closed':
+                                                                continue
 
-                                                dict_order[symb] = (t, price, None, amount)
-                                                dict_trail[symb] = price * 0.99
-                                                dict_trail_step[symb] = 0
-                                                dict_max_price[symb] = price
-                                                '''
-                                                if trade_on and not err and len(dict_order) < 3:
-                                                    try:
-                                                        
-                                                        params = {'stopPrice': price * 0.99}
-                                                        order = bin_bot.createOrder(symb, 'STOP_LOSS', 'sell',
-                                                                                    amount, None, params)
-                                                        print(str(order))
-                                                        
-                                                        order = bin_bot.private_post_order_oco(
-                                                            {"symbol": symb.replace('/', ''), "side": "sell",
-                                                             "quantity": amount,
-                                                             "price": take_profit, "stopPrice": stop_loss,
-                                                             "stopLimitPrice": stop_loss, "stopLimitTimeInForce": "GTC"})
-                                                        
-                                                        #dict_order[symb] = (t, price, order['info']['orderId'], amount)
-                                                        dict_order[symb] = (t, price, None, amount)
-                                                    except:
-                                                        type = 'market'
-                                                        order = bin_bot.create_order(symb, type, side, amount,
-                                                                                     take_profit)'''
+                                                            price = float(order['price'])
+                                                            mes = 'Объемы выросли : ' + symb_USDT + ' ($) ' + str(price)
+                                                        except:
+                                                            err = True
+                                                            mes = 'Объемы выросли : ' + symb_USDT + ' (F) ' + str(price)
 
-                                                updater.bot.send_message(chat_id='-1001242337520', text=mes)
-                                                print(mes + ' ' + datetime.today().strftime(
-                                                '%Y-%m-%d-%H:%M:%S') + ' ' + str(t))
-                                                print(hour)
-                                                print(inf)
-                                                print('45 ' + str(prevVol / (dict_curr[symb] * 0.027)))
-                                                break
-                                            elif price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01:
-                                                dict_pass[symb] = t - 17900 * 1000
-                                step = 4
-                                prevVol += e[1]
+                                                    dict_order[symb_USDT] = price
+                                                    n = dict_prec[symb_USDT]
 
-                                if 1 == 2 and prevVol >= dict_curr[symb] * 0.011 and price / dict_list[symb][0][2] > 1.005:
-                                    inf = get_klines1(symb, '1m', int((time.time() - 300) * 1000), 5)
-                                    min_price = 999
-                                    max_price = 0
+                                                    dict_order[symb_USDT] = (t, price, None, amount)
+                                                    dict_trail[symb_USDT] = price * 0.99
+                                                    dict_trail_step[symb_USDT] = 0
+                                                    dict_max_price[symb_USDT] = price
 
-                                    for d in inf:
-                                        max_price = max(max_price, float(d[2]))
-                                        min_price = min(min_price, float(d[3]))
+                                                    updater.bot.send_message(chat_id='-1001242337520', text=mes)
+                                                    print(mes + ' ' + datetime.today().strftime(
+                                                    '%Y-%m-%d-%H:%M:%S') + ' ' + str(t))
+                                                    print(hour)
+                                                    print('30 ' +str(prevVol / (dict_curr[symb] * 0.021)))
+                                                    break
 
-                                    if max(max_price,
-                                           price) / min_price < 1.04 and max_price / min_price > 1.01 and price / float(
-                                            inf[0][1]) > 1:
-                                        inf = get_klines1(symb.replace('USDT', 'BTC'), '1m',
-                                                          None, 5)
-                                        hour = get_klines1(symb, '1m', int((time.time() - 3600) * 1000), 1)
+                                    step = 3
+                                    prevVol += e[1]
+                                elif (t - e[0]) / 1000 <= 60:
+                                    if step == 3:
+                                        if prevVol >= dict_curr[symb_USDT] * (0.011 * (45/60)):
+                                            inf = get_klines1(symb_USDT, '1m', int((time.time() - 300) * 1000), 5)
+                                            min_price = 999
+                                            max_price = 0
 
-                                        if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01 and float(inf[4][4]) / float(inf[0][1]) > 1.01:
-                                            print(inf)
-                                            amount = int(order_price / price)
-                                            type = 'market'  # or market
-                                            side = 'buy'
-                                            err = False
-                                            mes = 'Объемы выросли : ' + symb + ' (F) ' + str(price)
-                                            if trade_on and len(dict_order) < 3:
-                                                try:
-                                                    order = bin_bot.create_order(symb, type, side, amount, None)
+                                            for d in inf:
+                                                max_price = max(max_price, float(d[2]))
+                                                min_price = min(min_price, float(d[3]))
 
-                                                    while order['status'] != 'closed':
-                                                        order = bin_bot.fetch_order(order['id'], symb)
+                                            if max(max_price,
+                                                   price) / min_price < 1.04 and max_price / min_price > 1.01 and price / float(
+                                                    inf[0][1]) > 1:
 
-                                                        if order['status'] == 'rejected' or order[
-                                                            'status'] == 'canceled':
-                                                            break
+                                                hour = get_klines1(symb_USDT, '1m', int((time.time() - 3600) * 1000), 1)
+                                                if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01:
+                                                    print(inf)
+                                                    amount = int(order_price / price)
+                                                    type = 'market'  # or market
+                                                    side = 'buy'
+                                                    err = False
+                                                    mes = 'Объемы выросли : ' + symb_USDT + ' (F) ' + str(price)
+                                                    if trade_on and len(dict_order) < 3:
+                                                        try:
+                                                            order = bin_bot.create_order(symb_USDT, type, side, amount, None)
 
-                                                    if order['status'] != 'closed':
-                                                        continue
+                                                            while order['status'] != 'closed':
+                                                                order = bin_bot.fetch_order(order['id'], symb_USDT)
 
-                                                    price = float(order['price'])
-                                                    mes = 'Объемы выросли : ' + symb + ' ($) ' + str(price)
-                                                except:
-                                                    err = True
-                                                    mes = 'Объемы выросли : ' + symb + ' (F) ' + str(price)
+                                                                if order['status'] == 'rejected' or order[
+                                                                    'status'] == 'canceled':
+                                                                    break
 
-                                            dict_order[symb] = price
-                                            n = dict_prec[symb]
-                                            take_profit = float_to_str(round(price * 1.005, n))
-                                            stop_loss = float_to_str(round(price * 0.96, n))
-                                            type = 'limit'
-                                            side = 'sell'
+                                                            if order['status'] != 'closed':
+                                                                continue
 
-                                            dict_order[symb] = (t, price, None, amount)
-                                            dict_trail[symb] = price * 0.99
-                                            dict_trail_step[symb] = 0
-                                            dict_max_price[symb] = price
+                                                            price = float(order['price'])
+                                                            mes = 'Объемы выросли : ' + symb_USDT + ' ($) ' + str(price)
+                                                        except:
+                                                            err = True
+                                                            mes = 'Объемы выросли : ' + symb_USDT + ' (F) ' + str(price)
 
-                                            '''
-                                            if trade_on and not err and len(dict_order) < 3:
-                                                try:
-                                                    params = {'stopPrice': price * 0.99}
-                                                    order = bin_bot.createOrder(symb, 'STOP_LOSS', 'sell',
-                                                                                amount, None, params)
-                                                    print(str(order))
-                                                    
-                                                    order = bin_bot.private_post_order_oco(
-                                                        {"symbol": symb.replace('/', ''), "side": "sell",
-                                                         "quantity": amount,
-                                                         "price": take_profit, "stopPrice": stop_loss,
-                                                         "stopLimitPrice": stop_loss, "stopLimitTimeInForce": "GTC"})
-                                                    
-                                                    dict_order[symb] = (t, price, order['info']['orderId'], amount)
-                                                except:
-                                                    type = 'market'
-                                                    order = bin_bot.create_order(symb, type, side, amount,
-                                                                                 take_profit)
-                                            '''
+                                                    dict_order[symb] = price
+                                                    n = dict_prec[symb]
 
-                                            updater.bot.send_message(chat_id='-1001242337520', text=mes)
-                                            print(mes + ' ' + datetime.today().strftime(
-                                                        '%Y-%m-%d-%H:%M:%S') + ' ' + str(t))
-                                            print(hour)
-                                            print(inf)
-                                            print(str(prevVol / (dict_curr[symb] * 0.027)))
-                                            break
-                                        elif price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01:
-                                            dict_pass[symb] = t - 17900 * 1000
-                            elif (t - e[0]) / 1000 > 300:
-                                del dict_list[symb][0:i]
-                                dict_min_price[symb] = price
-                                break
+                                                    dict_order[symb_USDT] = (t, price, None, amount)
+                                                    dict_trail[symb_USDT] = price * 0.99
+                                                    dict_trail_step[symb_USDT] = 0
+                                                    dict_max_price[symb_USDT] = price
 
-                        dict_list[symb].append((t, vol, price))
-                    elif symb == 'BTCBUSD':
-                        q = float(data['q'])
-                        vol = q * price
-                        dict_list[symb].append((t, vol, price))
+                                                    updater.bot.send_message(chat_id='-1001242337520', text=mes)
+                                                    print(mes + ' ' + datetime.today().strftime(
+                                                    '%Y-%m-%d-%H:%M:%S') + ' ' + str(t))
+                                                    print(hour)
+                                                    print('45 ' + str(prevVol / (dict_curr[symb] * 0.027)))
+                                                    break
+                                                elif price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01:
+                                                    dict_pass[symb] = t - 17900 * 1000
+                                    step = 4
+                                    prevVol += e[1]
 
-                        if (t - dict_list[symb][0][0]) / 1000 > 60:
-                            del dict_list[symb][0]
-                    dict_min_price[symb] = min(dict_min_price[symb], price)
+                                elif (t - e[0]) / 1000 > 300:
+                                    del dict_list[symb][0:i]
+                                    break
+
+                            dict_list[symb].append((t, vol, price))
+
         else:
             time.sleep(0.01)
 
@@ -1014,12 +568,6 @@ TOKEN = os.environ['TEL_TOKEN']
 updater = Updater(TOKEN, use_context=True)
 
 updater.dispatcher.add_handler(CommandHandler('hello', hello, pass_chat_data=True))
-'''
-updater.dispatcher.add_handler(CommandHandler('start', start, pass_chat_data=True))
-
-updater.dispatcher.add_handler(CommandHandler('set', set_timer, pass_args=True,
-                              pass_job_queue=True,
-                              pass_chat_data=True))'''
 updater.dispatcher.add_handler(CommandHandler('get', get_vol, pass_args=True, pass_chat_data=True))
 updater.dispatcher.add_handler(CommandHandler('set_price', set_price, pass_args=True, pass_chat_data=True))
 updater.dispatcher.add_handler(CommandHandler('gettop', get_top, pass_chat_data=True))
