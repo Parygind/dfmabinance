@@ -287,6 +287,8 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                 else:
                     data = eval(data.replace('false', 'False').replace('true', 'True'))
 
+                    if 'data' not in data:
+                        continue
                     data = data['data']
                     t = data['E']
 
