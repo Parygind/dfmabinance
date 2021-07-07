@@ -82,6 +82,7 @@ trail_step = 0.005
 
 channels = {'trade'}
 stream_id = None
+binance_websocket_api_manager = None
 
 def get_klines(symb):
     params = {}
@@ -169,6 +170,12 @@ def get_min(update, context):
         mes = mes + k + ' : ' + float_to_str(dict_start_price[k]) + ' ' + float_to_str(
             dict_min_price[k]) + ' ' + float_to_str(round(dict_min_price[k] / dict_start_price[k] - 1, 4)) + '\n'
     update.message.reply_text(mes)
+
+def subscribe(markets):
+    binance_websocket_api_manager.subscribe_to_stream(stream_id, markets=markets)
+
+def unsubscribe(markets):
+    binance_websocket_api_manager.unsubscribe_from_stream(stream_id, markets=markets)
 
 
 def updateData():
@@ -350,7 +357,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 markets_sub = []
                                 markets_sub.append(symb)
 
-                                binance_websocket_api_manager.unsubscribe_from_stream(stream_id, markets=markets_sub)
+                                from_dummy_thread(lambda: unsubscribe(markets_sub))
                             else:
                                 if (t - dict_order[symb][0]) / 1000 > 300:
                                     if price > dict_order[symb][1] * 1.0015 and dict_trail[symb] < dict_order[symb][
@@ -386,8 +393,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                         markets_sub = []
                                         markets_sub.append(symb)
 
-                                        binance_websocket_api_manager.unsubscribe_from_stream(stream_id,
-                                                                                          markets=markets_sub)
+                                        from_dummy_thread(lambda: unsubscribe(markets_sub))
                                         continue
                                 if dict_trail_step[symb] == 0:
                                     if price < dict_order[symb][1] * 1.008:
@@ -474,7 +480,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                     markets_sub = []
                                                     markets_sub.append(symb_USDT)
 
-                                                    binance_websocket_api_manager.subscribe_to_stream(stream_id, markets=markets_sub)
+                                                    from_dummy_thread(lambda: subscribe(markets_sub))
 
                                                     updater.bot.send_message(chat_id='-1001242337520', text=mes)
                                                     print(mes + ' ' + datetime.today().strftime(
@@ -540,7 +546,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                     markets_sub = []
                                                     markets_sub.append(symb_USDT)
 
-                                                    binance_websocket_api_manager.subscribe_to_stream(stream_id, markets=markets_sub)
+                                                    from_dummy_thread(lambda: subscribe(markets_sub))
 
                                                     updater.bot.send_message(chat_id='-1001242337520', text=mes)
                                                     print(mes + ' ' + datetime.today().strftime(
