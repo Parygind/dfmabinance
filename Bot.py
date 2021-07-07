@@ -420,7 +420,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 del dict_pass[symb]
                     else:
                         symb_USDT = symb.replace('BTC', 'USDT')
-                        if symb_USDT not in dict_order and symb_USDT not in dict_pass:
+                        if symb_USDT not in dict_order and symb_USDT not in dict_pass and symb_USDT in dict_price:
                             q = float(data['q'])
                             vol = q * price
                             prevVol = vol
