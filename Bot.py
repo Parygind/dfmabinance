@@ -602,7 +602,7 @@ max_subscriptions = math.ceil(len(markets) / divisor)
 print(max_subscriptions)
 for channel in channels:
     if len(markets) <= max_subscriptions:
-        binance_websocket_api_manager.create_stream(channel, markets, stream_label=channel)
+        stream_id = binance_websocket_api_manager.create_stream(channel, markets, stream_label=channel)
     else:
         loops = 1
         i = 1
