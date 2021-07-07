@@ -319,9 +319,9 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                     if data['m']:
                         continue
 
-                    symb = data['s'].replace('USDT', '/USDT')
                     price = float(data['p'])
-                    if symb[-4:] == 'USDT':
+                    if data['s'][-4:] == 'USDT':
+                        symb = data['s'].replace('USDT', '/USDT')
                         dict_price[symb] = price
                         if symb in dict_order and dict_order[symb][0] < t and not data['m']:
                             dict_max_price[symb] = max(dict_max_price[symb], price)
@@ -419,6 +419,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                             if (t - dict_pass[symb]) / 1000 > 18000:
                                 del dict_pass[symb]
                     else:
+                        symb = data['s'].replace('BTC', '/BTC')
                         symb_USDT = symb.replace('BTC', 'USDT')
                         if symb_USDT not in dict_order and symb_USDT not in dict_pass and symb_USDT in dict_price:
                             q = float(data['q'])
