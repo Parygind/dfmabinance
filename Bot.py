@@ -443,7 +443,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
 
                                                     mes = 'Объемы выросли : ' + symb_USDT + ' (F) ' + str(price)
 
-                                                    if trade_on and len(dict_order) < 3:
+                                                    if trade_on:
                                                         try:
                                                             order = bin_bot.create_order(symb_USDT, type, side, amount, None)
 
@@ -508,7 +508,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                     side = 'buy'
                                                     err = False
                                                     mes = 'Объемы выросли : ' + symb_USDT + ' (F) ' + str(price)
-                                                    if trade_on and len(dict_order) < 3:
+                                                    if trade_on:
                                                         try:
                                                             order = bin_bot.create_order(symb_USDT, type, side, amount, None)
 
