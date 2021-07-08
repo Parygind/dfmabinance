@@ -382,6 +382,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                                                   1] * 1.0015) - 1) + ' баланс ' + float_to_str(
                                                                      profit) + ' ' + float_to_str(price) + ' ' + float_to_str(dict_trail[symb]))
                                         del dict_order[symb]
+                                        dict_pass[symb] = t
                                         markets_sub = []
                                         markets_sub.append(symb.replace('/', ''))
 
@@ -403,7 +404,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                         (price / dict_order[symb][1]) * 0.995)
 
                         if symb in dict_pass:
-                            if (t - dict_pass[symb]) / 1000 > 7200:
+                            if (t - dict_pass[symb]) / 1000 > 1800:
                                 del dict_pass[symb]
                     else:
                         symb = data['s'].replace('BTC', '/BTC')
@@ -424,7 +425,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                     prevVol += e[1]
                                 elif (t - e[0]) / 1000 <= 45:
                                     if step == 2:
-                                        if prevVol >= dict_curr[symb] * (0.018 * (30/60)):
+                                        if prevVol >= dict_curr[symb] * (0.021 * (30/60)):
                                             inf = get_klines1(symb_USDT, '1m', None, 5)
                                             price = float(inf[4][4])
                                             min_price = 999
@@ -490,7 +491,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                     prevVol += e[1]
                                 elif (t - e[0]) / 1000 <= 60:
                                     if step == 3:
-                                        if prevVol >= dict_curr[symb] * (0.018 * (45/60)):
+                                        if prevVol >= dict_curr[symb] * (0.021 * (45/60)):
                                             inf = get_klines1(symb_USDT, '1m', None, 5)
                                             min_price = 999
                                             max_price = 0
