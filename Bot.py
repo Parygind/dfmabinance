@@ -332,7 +332,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                              text='Профит ' + symb + ' ' + float_to_str(price / (
                                                                          dict_order[symb][
                                                                              1] * 1.0015) - 1) + ' баланс ' + float_to_str(
-                                                                 profit))
+                                                                 profit) + ' ' + float_to_str(price) + ' ' + float_to_str(dict_trail[symb]))
                                     del dict_order[symb]
 
                                 else:
@@ -344,7 +344,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                              text='Убыток ' + symb + ' ' + float_to_str(price / (
                                                                          dict_order[symb][
                                                                              1] * 1.0015) - 1) + ' баланс ' + float_to_str(
-                                                                 profit))
+                                                                 profit) + ' ' + float_to_str(price) + ' ' + float_to_str(dict_trail[symb]))
                                     del dict_order[symb]
 
                                 markets_sub = []
@@ -381,7 +381,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                                  text='Профит ' + symb + ' ' + float_to_str(
                                                                      price / (dict_order[symb][
                                                                                   1] * 1.0015) - 1) + ' баланс ' + float_to_str(
-                                                                     profit))
+                                                                     profit) + ' ' + float_to_str(price) + ' ' + float_to_str(dict_trail[symb]))
                                         del dict_order[symb]
                                         markets_sub = []
                                         markets_sub.append(symb.replace('/', ''))
