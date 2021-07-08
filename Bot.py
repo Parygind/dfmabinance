@@ -295,11 +295,10 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                     if (t / 1000) + 60 < time.time():
                         continue
 
-                    if data['m']:
-                        continue
-
                     price = float(data['p'])
                     if data['s'][-4:] == 'USDT':
+                        if data['m']:
+                            continue
                         symb = data['s'].replace('USDT', '/USDT')
                         dict_price[symb] = price
                         if symb in dict_order and dict_order[symb][0] < t and not data['m']:
@@ -411,7 +410,12 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                         symb_USDT = symb.replace('BTC', 'USDT')
                         if symb_USDT not in dict_order and symb_USDT not in dict_pass:
                             q = float(data['q'])
+
                             vol = q * price
+
+                            if data['m']:
+                                vol = -vol
+
                             prevVol = vol
                             step = 2
 
