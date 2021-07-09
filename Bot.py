@@ -407,8 +407,9 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                             if (t - dict_pass[symb]) / 1000 > 1800:
                                 del dict_pass[symb]
                     else:
-                        symb = data['s'].replace('BTC', '/BTC')
-                        symb_USDT = symb.replace('BTC', 'USDT')
+                        symb = data['s'][:-3]
+                        symb = symb + "/BTC"
+                        symb_USDT = symb.replace('/BTC', '/USDT')
                         if symb_USDT not in dict_order and symb_USDT not in dict_pass:
                             q = float(data['q'])
 
