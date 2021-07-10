@@ -728,7 +728,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 prevVol += e[1]
                             elif (t - e[0]) / 1000 <= 45:
                                 if step == 2:
-                                    if prevVol >= dict_curr[symb] * (0.015 * (30/60)):
+                                    if prevVol >= dict_curr[symb] * (0.015 * (30/60)) and price / e[2] < 1.01:
                                         inf = get_klines1(symb, '1m', None, 5)
                                         min_price = 999
                                         max_price = 0
@@ -814,7 +814,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 prevVol += e[1]
                             elif (t - e[0]) / 1000 <= 60:
                                 if step == 3:
-                                    if prevVol >= dict_curr[symb] * (0.015 * (45/60)):
+                                    if prevVol >= dict_curr[symb] * (0.015 * (45/60)) and price / e[2] < 1.01:
                                         inf = get_klines1(symb, '1m', None, 5)
                                         min_price = 999
                                         max_price = 0
