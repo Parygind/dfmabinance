@@ -739,7 +739,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                             max_price = max(max_price, pp)
                                             min_price = min(min_price, pp)
                                             old_price = pp
-                                            if (t - ee[0]) / 1000 <= 300:
+                                            if (t - ee[0]) / 1000 >= 300:
                                                 break
                                         '''
                                         for d in inf:
@@ -834,7 +834,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                             max_price = max(max_price, pp)
                                             min_price = min(min_price, pp)
                                             old_price = pp
-                                            if (t - ee[0]) / 1000 <= 300:
+                                            if (t - ee[0]) / 1000 >= 300:
                                                 break
                                         '''
                                         for d in inf:
