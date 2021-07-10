@@ -733,10 +733,12 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                         min_price = 999
                                         max_price = 0
 
+                                        old_price = price
                                         for ii, ee in reversed(list(enumerate(dict_list[symb]))):
-                                            max_price = max(max_price, float(e[2]))
-                                            min_price = min(min_price, float(e[2]))
-                                            
+                                            pp = float(ee[2])
+                                            max_price = max(max_price, pp)
+                                            min_price = min(min_price, pp)
+                                            old_price = pp
                                             if (t - ee[0]) / 1000 <= 300:
                                                 break
                                         '''
@@ -745,7 +747,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                             min_price = min(min_price, float(d[3]))
                                         '''
 
-                                        if max(max_price, price) / min_price < 1.03:
+                                        if max(max_price, price) / min_price < 1.03 and price / old_price >= 1:
 
                                             #inf = get_klines1(symb.replace('USDT', 'BTC'), '1m', None, 5)
 
@@ -826,10 +828,12 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                         min_price = 999
                                         max_price = 0
                                         
+                                        old_price = price
                                         for ii, ee in reversed(list(enumerate(dict_list[symb]))):
-                                            max_price = max(max_price, float(e[2]))
-                                            min_price = min(min_price, float(e[2]))
-                                            
+                                            pp = float(ee[2])
+                                            max_price = max(max_price, pp)
+                                            min_price = min(min_price, pp)
+                                            old_price = pp
                                             if (t - ee[0]) / 1000 <= 300:
                                                 break
                                         '''
@@ -838,7 +842,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                             min_price = min(min_price, float(d[3]))
                                         '''
 
-                                        if max(max_price, price) / min_price < 1.03:
+                                        if max(max_price, price) / min_price < 1.03 and price / old_price >= 1:
                                             #inf = get_klines1(symb.replace('USDT', 'BTC'), '1m', None, 5)
 
                                             #hour = get_klines1(symb, '1m', int((time.time() - 3600) * 1000), 1)
