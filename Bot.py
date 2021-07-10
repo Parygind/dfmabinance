@@ -729,13 +729,21 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                             elif (t - e[0]) / 1000 <= 45:
                                 if step == 2:
                                     if prevVol >= dict_curr[symb] * (0.015 * (30/60)) and price / e[2] < 1.01 and price / e[2] > 1.0015:
-                                        inf = get_klines1(symb, '1m', None, 5)
+                                        #inf = get_klines1(symb, '1m', None, 5)
                                         min_price = 999
                                         max_price = 0
 
+                                        for ii, ee in reversed(list(enumerate(dict_list[symb]))):
+                                            max_price = max(max_price, float(e[2]))
+                                            min_price = min(min_price, float(e[2]))
+                                            
+                                            if (t - ee[0]) / 1000 <= 300:
+                                                break
+                                        '''
                                         for d in inf:
                                             max_price = max(max_price, float(d[2]))
                                             min_price = min(min_price, float(d[3]))
+                                        '''
 
                                         if max(max_price, price) / min_price < 1.03:
 
@@ -743,7 +751,6 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
 
                                             #hour = get_klines1(symb, '1m', int((time.time() - 3600) * 1000), 1)
                                             if True:
-                                                print(inf)
                                                 amount = int(order_price / price)
                                                 type = 'market'  # or market
                                                 side = 'buy'
@@ -815,21 +822,27 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                             elif (t - e[0]) / 1000 <= 60:
                                 if step == 3:
                                     if prevVol >= dict_curr[symb] * (0.015 * (45/60)) and price / e[2] < 1.01 and price / e[2] > 1.0015:
-                                        inf = get_klines1(symb, '1m', None, 5)
+                                        #inf = get_klines1(symb, '1m', None, 5)
                                         min_price = 999
                                         max_price = 0
-
+                                        
+                                        for ii, ee in reversed(list(enumerate(dict_list[symb]))):
+                                            max_price = max(max_price, float(e[2]))
+                                            min_price = min(min_price, float(e[2]))
+                                            
+                                            if (t - ee[0]) / 1000 <= 300:
+                                                break
+                                        '''
                                         for d in inf:
                                             max_price = max(max_price, float(d[2]))
                                             min_price = min(min_price, float(d[3]))
+                                        '''
 
-                                        if max(max_price,
-                                               price) / min_price < 1.03:
+                                        if max(max_price, price) / min_price < 1.03:
                                             #inf = get_klines1(symb.replace('USDT', 'BTC'), '1m', None, 5)
 
                                             #hour = get_klines1(symb, '1m', int((time.time() - 3600) * 1000), 1)
                                             if True:
-                                                print(inf)
                                                 amount = int(order_price / price)
                                                 type = 'market'  # or market
                                                 side = 'buy'
@@ -983,7 +996,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                             break
                                         elif price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01:
                                             dict_pass[symb] = t - 17900 * 1000
-                            elif (t - e[0]) / 1000 > 300:
+                            elif (t - e[0]) / 1000 > 400:
                                 del dict_list[symb][0:i]
                                 dict_min_price[symb] = price
                                 break
