@@ -818,6 +818,8 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 updater.bot.send_message(chat_id='-1001242337520', text=mes)
                                                 print(mes + ' ' + datetime.today().strftime(
                                                 '%Y-%m-%d-%H:%M:%S') + ' ' + str(t))
+                                                print(str(old_vol))
+                                                print(str(old_vol_2))
                                                 print('30 ' +str(prevVol / (dict_curr[symb] * 0.021)))
                                                 break
 
@@ -915,6 +917,8 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 updater.bot.send_message(chat_id='-1001242337520', text=mes)
                                                 print(mes + ' ' + datetime.today().strftime(
                                                 '%Y-%m-%d-%H:%M:%S') + ' ' + str(t))
+                                                print(str(old_vol))
+                                                print(str(old_vol_2))
                                                 print('45 ' + str(prevVol / (dict_curr[symb] * 0.027)))
                                                 break
                                 step = 4
@@ -1011,9 +1015,16 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 updater.bot.send_message(chat_id='-1001242337520', text=mes)
                                                 print(mes + ' ' + datetime.today().strftime(
                                                 '%Y-%m-%d-%H:%M:%S') + ' ' + str(t))
+                                                print(str(old_vol))
+                                                print(str(old_vol_2))
                                                 print('60 ' + str(prevVol / (dict_curr[symb] * 0.027)))
                                                 break
 
+                            elif (t - e[0]) / 1000 > 400:
+                                for ii, ee in list(enumerate(dict_list[symb])):
+                                    if t - ee[0] <= 400:
+                                        del dict_list[symb][0:ii]
+                                        break             
                         dict_list[symb].append((t, vol, price))
                     elif symb == 'BTCBUSD':
                         q = float(data['q'])
