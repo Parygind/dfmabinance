@@ -582,7 +582,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 continue
                         else:
                             if (t - dict_order[symb][0]) / 1000 > 300:
-                                if price > dict_order[symb][1] * 1.0015 and dict_trail[symb] < dict_order[symb][1] * 1.0015:
+                                if price >= dict_order[symb][1]:
                                     profit += (price / (dict_order[symb][1] * 1.0015) - 1)
                                     tk += 1
                                     dict_pass[symb] = t
