@@ -753,7 +753,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 if vol4 < 0:
                                     break
                                 vol5 += e[1]                            
-                            eliif (t - e[0]) / 1000 >= 300:
+                            elif (t - e[0]) / 1000 >= 300:
                                 if vol5 < 0:
                                     break
                                 else:
