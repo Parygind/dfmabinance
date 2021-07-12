@@ -728,6 +728,11 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                         vol3 = 0
                         vol4 = 0
                         vol5 = 0
+                        price1 = 0
+                        price2 = 0
+                        price3 = 0
+                        price4 = 0
+                        price5 = 0
                         for i, e in reversed(list(enumerate(dict_list[symb]))):
                             
                             if start_time > t / 1000 - 300:
@@ -736,27 +741,40 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                             prevVol += e[1]
                             if (t - e[0]) / 1000 < 60:
                                 vol1 += e[1]
+                                price1 = e[2]
                             elif (t - e[0]) / 1000 < 120:
                                 if vol1 < 0:
                                     break
                                 vol2 += e[1]
+                                price2 = e[2]
                             elif (t - e[0]) / 1000 < 180:
                                 if vol2 < 0:
                                     break
+                                if price2 < price1:
+                                    break
                                 vol3 += e[1]
+                                price3 = e[2]
                             elif (t - e[0]) / 1000 < 240:
                                 if vol3 < 0:
                                     break
+                                if price3 < price2:
+                                    break
                                 vol4 += e[1]
+                                price4 = e[2]
                             elif (t - e[0]) / 1000 < 300:
                                 if vol4 < 0:
                                     break
-                                vol5 += e[1]                            
+                                if price4 < price3:
+                                    break
+                                vol5 += e[1]
+                                price5 = e[2]
                             elif (t - e[0]) / 1000 >= 300:
                                 if vol5 < 0:
                                     break
+                                elif price5 < price4:
+                                    break
                                 else:
-                                    if prevVol > dict_curr[symb] * 0.012 and prevVol < dict_curr[symb] * 0.025:
+                                    if prevVol > dict_curr[symb] * 0.012 and prevVol < dict_curr[symb] * 0.025 and price5 / price1 < 1.02:
                                         amount = int(order_price / price)
                                         dict_order[symb] = (t, price, None, amount)
                                         dict_trail[symb] = price * 0.99
