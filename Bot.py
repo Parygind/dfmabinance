@@ -777,17 +777,18 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 if price3 < price4:
                                     break
                                 else:
-                                    if prevVol > dict_curr[symb] * 0.006 and prevVol < dict_curr[symb] * 0.04 and price / price4 < 1.02:
+                                    if prevVol > dict_curr[symb] * 0.006 and prevVol < dict_curr[symb] * 0.04 and price / price4 < 1.02
+                                    and price4 < price3 and price3 < price2 and price2 < price1 and and price1 < price:
                                         amount = int(order_price / price)
                                         dict_order[symb] = (t, price, None, amount)
                                         dict_trail[symb] = price * 0.99
                                         dict_trail_step[symb] = 0
                                         print(symb)
-                                        print(str(vol1))
-                                        print(str(vol2))
-                                        print(str(vol3))
-                                        print(str(vol4))
-                                        print(str(vol5))
+                                        print(str(price1))
+                                        print(str(price2))
+                                        print(str(price3))
+                                        print(str(price4))
+                                        print(str(price5))
                                         mes = 'Объемы выросли : ' + symb + ' (F) ' + str(price)
                                         updater.bot.send_message(chat_id='-1001242337520', text=mes)
                                     break
