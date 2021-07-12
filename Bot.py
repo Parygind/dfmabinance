@@ -777,7 +777,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 if price3 < price4:
                                     break
                                 else:
-                                    if prevVol > dict_curr[symb] * 0.006 and prevVol < dict_curr[symb] * 0.04 and price / price4 < 1.02 and price4 < price3 and price3 < price2 and price2 < price1 and and price1 < price:
+                                    if prevVol > dict_curr[symb] * 0.006 and prevVol < dict_curr[symb] * 0.04 and price / price4 < 1.02 and price4 < price3 and price3 < price2 and price2 < price1 and price1 < price:
                                         amount = int(order_price / price)
                                         dict_order[symb] = (t, price, None, amount)
                                         dict_trail[symb] = price * 0.99
