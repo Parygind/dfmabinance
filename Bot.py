@@ -728,11 +728,11 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                         vol3 = 0
                         vol4 = 0
                         vol5 = 0
-                        price1 = 999
-                        price2 = 999
-                        price3 = 999
-                        price4 = 999
-                        price5 = 999
+                        price1 = 0
+                        price2 = 0
+                        price3 = 0
+                        price4 = 0
+                        price5 = 0
                         for i, e in reversed(list(enumerate(dict_list[symb]))):
                             
                             if start_time > t / 1000 - 300:
@@ -741,38 +741,38 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                             prevVol += e[1]
                             if (t - e[0]) / 1000 < 60:
                                 vol1 += e[1]
-                                price1 = min(e[2], price1)
+                                price1 = max(e[2], price1)
                             elif (t - e[0]) / 1000 < 120:
                                 #if vol1 < 0:
                                 #    break
-                                if price1 == 999:
+                                if price1 == 0:
                                     price1 = price
                                 if price < price1:
                                     break
                                 vol2 += e[1]
-                                price2 = min(e[2], price2)
+                                price2 = max(e[2], price2)
                             elif (t - e[0]) / 1000 < 180:
                                 #if vol2 < 0:
                                 #    break
-                                if price2 == 999:
+                                if price2 == 0:
                                     price2 = price1
                                 if price1 < price2:
                                     break
                                 vol3 += e[1]
-                                price3 = min(e[2], price3)
+                                price3 = max(e[2], price3)
                             elif (t - e[0]) / 1000 < 240:
                                 #if vol3 < 0:
                                 #    break
-                                if price3 == 999:
+                                if price3 == 0:
                                     price3 = price2
                                 if price2 < price3:
                                     break
                                 vol4 += e[1]
-                                price4 = min(e[2], price4)
+                                price4 = max(e[2], price4)
                             elif (t - e[0]) / 1000 < 300:
                                 #if vol4 < 0:
                                 #    break
-                                if price4 == 999:
+                                if price4 == 0:
                                     price4 = price3
                                 if price3 < price4:
                                     break
