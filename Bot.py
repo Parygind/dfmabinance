@@ -538,7 +538,6 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                     symb = data['s'].replace('USDT', '/USDT')
                     price = float(data['p'])
                     if symb in dict_order and dict_order[symb][0] < t and not data['m']:
-                        dict_max_price[symb] = max(dict_max_price[symb], price)
                         #trail
                         
                         if (t / 1000) + 30 < time.time():
@@ -762,6 +761,12 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                         dict_order[symb] = (t, price, None, amount)
                                         dict_trail[symb] = price * 0.99
                                         dict_trail_step[symb] = 0
+                                        print(symb)
+                                        print(str(vol1))
+                                        print(str(vol2))
+                                        print(str(vol3))
+                                        print(str(vol4))
+                                        print(str(vol5))
                                         mes = 'Объемы выросли : ' + symb + ' (F) ' + str(price)
                                         updater.bot.send_message(chat_id='-1001242337520', text=mes)
                                     break
