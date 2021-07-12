@@ -745,6 +745,8 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                             elif (t - e[0]) / 1000 < 120:
                                 if vol1 < 0:
                                     break
+                                if price1 == 0:
+                                    price1 = price
                                 if price < price1:
                                     break
                                 vol2 += e[1]
@@ -752,6 +754,8 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                             elif (t - e[0]) / 1000 < 180:
                                 if vol2 < 0:
                                     break
+                                if price2 == 0:
+                                    price2 = price1
                                 if price1 < price2:
                                     break
                                 vol3 += e[1]
@@ -759,6 +763,8 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                             elif (t - e[0]) / 1000 < 240:
                                 if vol3 < 0:
                                     break
+                                if price3 == 0:
+                                    price3 = price2
                                 if price2 < price3:
                                     break
                                 vol4 += e[1]
@@ -766,6 +772,8 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                             elif (t - e[0]) / 1000 < 300:
                                 if vol4 < 0:
                                     break
+                                if price4 == 0:
+                                    price4 = price3
                                 if price3 < price4:
                                     break
                                 vol5 += e[1]
@@ -773,6 +781,8 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                             elif (t - e[0]) / 1000 >= 300:
                                 if vol5 < 0:
                                     break
+                                if price5 == 0:
+                                    price5 = price4
                                 elif price4 < price5:
                                     break
                                 else:
