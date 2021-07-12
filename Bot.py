@@ -778,6 +778,14 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                     break
                                 price5 = max(e[2], price5)
                             else:
+                                if price1 == 0:
+                                    price1 = price
+                                if price2 == 0:
+                                    price2 = price1
+                                if price3 == 0:
+                                    price3 = price2
+                                if price4 == 0:
+                                    price4 = price3
                                 if price5 == 0:
                                     price5 = price4
                                 if price4 < price5:
