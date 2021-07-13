@@ -314,7 +314,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                     break
                                 if price == 0:
                                     price = e['c']
-                                vol += e['Q']
+                                vol += float(e['Q'])
                                 c += 1
                                 if c == 5:
                                     if vol > dict_curr[symb] * 0.003 and vol < dict_curr[symb] * 0.03 and price / e['o'] < 1.02:
