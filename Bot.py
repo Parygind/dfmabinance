@@ -69,7 +69,7 @@ dict_prec = dict()
 dict_prev_min = dict()
 dict_price = dict()
 dict_time = dict()
-dict_kline = defaultdict(list)
+dict_kline = dict()
 markets = []
 profit = 0
 
@@ -202,6 +202,7 @@ def updateData():
                     #markets.append(tickers[pr]['symbol'].replace('/', ''))
                     markets.append(tickers[pr]['symbol'].replace('/', ''))
                     dict_list[tickers[pr]['symbol']] = list()
+                    dict_kline[tickers[pr]['symbol']] = list()
             #b = bin_bot.fetch_open_orders(tickers[pr]['symbol'])
             #for i in b:
             #    dict_order[tickers[pr]['symbol']] = (i['info']['orderId'])
