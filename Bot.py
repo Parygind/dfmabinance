@@ -175,7 +175,7 @@ def updateData():
     bin_bot.load_markets()
     # for pr in bin_bot.ticker24hr():
     for pr in tickers:
-        if tickers[pr]['symbol'][-4:] == 'USDT' and float(tickers[pr]['quoteVolume']) >= 2000000 and float(
+        if tickers[pr]['symbol'][-4:] == 'USDT' and float(tickers[pr]['quoteVolume']) >= 3000000 and float(
                 tickers[pr]['quoteVolume']) <= 25000000 and float(tickers[pr]['bidVolume']) > 0 and float(
                 tickers[pr]['high']) < 20 \
                 and tickers[pr]['symbol'] != 'SUSD/USDT' and tickers[pr]['symbol'] != 'LINK/BTC' and tickers[pr][
@@ -728,16 +728,11 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                         vol3 = 0
                         vol4 = 0
                         vol5 = 0
-                        price1 = 0
-                        price2 = 0
-                        price3 = 0
-                        price4 = 0
-                        price5 = 0
-                        price_min1 = 999
-                        price_min2 = 999
-                        price_min3 = 999
-                        price_min4 = 999
-                        price_min5 = 999
+                        price_open_1 = 0
+                        price_open_2 = 0
+                        price_open_3 = 0
+                        price_open_4 = 0
+                        price_open_5 = 0
                         chance = True
                         for i, e in reversed(list(enumerate(dict_list[symb]))):
                             
@@ -747,95 +742,66 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                             prevVol += e[1]
                             if (t - e[0]) / 1000 < 60:
                                 vol1 += e[1]
-                                price1 = max(e[2], price1)
-                                price_min1 = min(e[2], price_min1)
+                                price_open_1 = e[2]
                             elif (t - e[0]) / 1000 < 120:
                                 #if vol1 < 0:
                                 #    break
-                                if price1 == 0:
-                                    price1 = price
-                                if price_min1 == 999:
-                                    price_min1 = price
-                                if price < price1:
-                                    if chance:
-                                        chance = False
-                                        if price < price_min1:
-                                            break
-                                    else:
-                                        break
+                                if price_open_1 == 0:
+                                    price_open_1 = price
+                                if price < price_open_1:
+                                    break
                                 vol2 += e[1]
-                                price2 = max(e[2], price2)
-                                price_min2 = min(e[2], price_min2)
+                                price_open_2 = e[2]
                             elif (t - e[0]) / 1000 < 180:
                                 #if vol2 < 0:
                                 #    break
-                                if price2 == 0:
-                                    price2 = price1
-                                if price_min2 == 999:
-                                    price_min2 = price1
-                                if price1 < price2:
+                                if price_open_2 == 0:
+                                    price_open_2 = price_open_1
+                                if price_open_1 < price_open_2:
                                     if chance:
                                         chance = False
-                                        if price_min1 < price_min2:
-                                            break
                                     else:
                                         break
                                 vol3 += e[1]
-                                price3 = max(e[2], price3)
-                                price_min3 = min(e[2], price_min3)
+                                price_open_3 = e[2]
                             elif (t - e[0]) / 1000 < 240:
                                 #if vol3 < 0:
                                 #    break
-                                if price3 == 0:
-                                    price3 = price2
-                                if price_min3 == 999:
-                                    price_min3 = price2
-                                if price2 < price3:
+                                if price_open_3 == 0:
+                                    price_open_3 = price_open_2
+                                if price_open_2 < price_open_3:
                                     if chance:
                                         chance = False
-                                        if price_min2 < price_min3:
-                                            break
                                     else:
                                         break
                                 vol4 += e[1]
-                                price4 = max(e[2], price4)
-                                price_min4 = min(e[2], price_min4)
+                                price_open_4 = e[2]
                             elif (t - e[0]) / 1000 < 300:
                                 #if vol4 < 0:
                                 #    break
-                                if price4 == 0:
-                                    price4 = price3
-                                if price_min4 == 999:
-                                    price_min4 = price3
-                                if price3 < price4:
+                                if price_open_4 == 0:
+                                    price_open_4 = price_open_3
+                                if price_open_3 < price_open_4:
                                     if chance:
                                         chance = False
-                                        if price_min3 < price_min4:
-                                            break
                                     else:
                                         break
-                                price5 = max(e[2], price5)
-                                price_min5 = min(e[2], price_min5)
+                                price_open_5 = e[2]
                             else:
-                                if price1 == 0:
-                                    price1 = price
-                                if price2 == 0:
-                                    price2 = price1
-                                if price3 == 0:
-                                    price3 = price2
-                                if price4 == 0:
-                                    price4 = price3
-                                if price5 == 0:
-                                    price5 = price4
-                                if price4 < price5:
-                                    if chance:
-                                        chance = False
-                                        if price_min4 < price_min5:
-                                            break
-                                    else:
-                                        break
+                                if price_open_1 == 0:
+                                    price_open_1 = price
+                                if price_open_2 == 0:
+                                    price_open_2 = price_open_1
+                                if price_open_3 == 0:
+                                    price_open_3 = price_open_2
+                                if price_open_4 == 0:
+                                    price_open_4 = price_open_3
+                                if price_open_5 == 0:
+                                    price_open_5 = price_open_4
+                                if price_open_4 < price_open_5:
+                                    break
                                 else:
-                                    if prevVol > dict_curr[symb] * 0.003 and prevVol < dict_curr[symb] * 0.02 and price / price_min5 < 1.01: #and price5 < price4 and price4 < price3 and price3 < price2 and price2 < price1 and price1 < price:
+                                    if prevVol > dict_curr[symb] * 0.001 and prevVol < dict_curr[symb] * 0.02 and price / price_open_5 < 1.01: #and price5 < price4 and price4 < price3 and price3 < price2 and price2 < price1 and price1 < price:
                                         amount = int(order_price / price)
                                         dict_order[symb] = (t, price, None, amount)
                                         dict_trail[symb] = price * 0.99
