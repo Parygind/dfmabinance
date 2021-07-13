@@ -201,6 +201,7 @@ def updateData():
                     dict_prec[tickers[pr]['symbol']] = int(market['precision']['price'])
                     #markets.append(tickers[pr]['symbol'].replace('/', ''))
                     markets.append(tickers[pr]['symbol'].replace('/', ''))
+                    dict_time[tickers[pr]['symbol']] = -1
                     dict_list[tickers[pr]['symbol']] = list()
                     dict_kline[tickers[pr]['symbol']] = list()
             #b = bin_bot.fetch_open_orders(tickers[pr]['symbol'])
@@ -276,7 +277,7 @@ def get_top(update, context):
 
 
 def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
-    global profit, sl, tk, trade_on, order_price, channels, stream_id, dict_time
+    global profit, sl, tk, trade_on, order_price, channels, stream_id, dict_time, dict_kline
     while True:
         if binance_websocket_api_manager.is_manager_stopping():
             exit(0)
