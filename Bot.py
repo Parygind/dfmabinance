@@ -728,6 +728,11 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                         vol3 = 0
                         vol4 = 0
                         vol5 = 0
+                        t1 = 0
+                        t2 = 0
+                        t3 = 0
+                        t4 = 0
+                        t5 = 0
                         price_open_1 = 0
                         price_open_2 = 0
                         price_open_3 = 0
@@ -742,7 +747,9 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                             prevVol += e[1]
                             if (t - e[0]) / 1000 < 60:
                                 vol1 += e[1]
-                                price_open_1 = e[2]
+                                if t1 == 0 or e[0] < t1:
+                                    price_open_1 = e[2]
+                                    t1 = e[0]
                             elif (t - e[0]) / 1000 < 120:
                                 #if vol1 < 0:
                                 #    break
@@ -751,7 +758,9 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 if price < price_open_1:
                                     break
                                 vol2 += e[1]
-                                price_open_2 = e[2]
+                                if t2 == 0 or e[0] < t2:
+                                    price_open_2 = e[2]
+                                    t2 = e[0]
                             elif (t - e[0]) / 1000 < 180:
                                 #if vol2 < 0:
                                 #    break
@@ -763,7 +772,9 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                     else:
                                         break
                                 vol3 += e[1]
-                                price_open_3 = e[2]
+                                if t3 == 0 or e[0] < t3:
+                                    price_open_3 = e[2]
+                                    t3 = e[0]
                             elif (t - e[0]) / 1000 < 240:
                                 #if vol3 < 0:
                                 #    break
@@ -775,7 +786,9 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                     else:
                                         break
                                 vol4 += e[1]
-                                price_open_4 = e[2]
+                                if t4 == 0 or e[0] < t4:
+                                    price_open_4 = e[2]
+                                    t4 = e[0]
                             elif (t - e[0]) / 1000 < 300:
                                 #if vol4 < 0:
                                 #    break
@@ -786,7 +799,9 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                         chance = False
                                     else:
                                         break
-                                price_open_5 = e[2]
+                                if t5 == 0 or e[0] < t5:
+                                    price_open_5 = e[2]
+                                    t5 = e[0]
                             else:
                                 if price_open_1 == 0:
                                     price_open_1 = price
@@ -807,11 +822,11 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                         dict_trail[symb] = price * 0.99
                                         dict_trail_step[symb] = 0
                                         print(symb)
-                                        print(str(price1))
-                                        print(str(price2))
-                                        print(str(price3))
-                                        print(str(price4))
-                                        print(str(price5))
+                                        print(str(price_open_1))
+                                        print(str(price_open_2))
+                                        print(str(price_open_3))
+                                        print(str(price_open_4))
+                                        print(str(price_open_5))
                                         mes = 'Объемы выросли : ' + symb + ' (F) ' + str(price)
                                         updater.bot.send_message(chat_id='-1001242337520', text=mes)
                                     break
