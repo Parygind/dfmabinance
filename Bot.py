@@ -294,10 +294,11 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                         continue
                     data = data['data']
                     symb = data['s'].replace('USDT', '/USDT')
-                    kline = ata['k']
+                    kline = data['k']
                     t = kline['t']
                     
                     if dict_time[symb] != t:
+                        print(str(kline))
                         dict_time[symb] = t
                         dict_kline[symb].append(kline)
                         price = 0
