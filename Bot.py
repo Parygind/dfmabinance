@@ -332,7 +332,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                         continue
 
                     price = float(data['p'])
-                    if symb not in dict_order;
+                    if symb not in dict_order:
                         dict_order[symb] = price
                         dict_trail[symb] = price * 0.99
                         mes = 'Объемы выросли : ' + symb_USDT + ' (F) ' + str(price)
