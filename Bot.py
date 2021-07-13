@@ -310,14 +310,16 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                             c = 0
                             vol = 0
                             for i, e in reversed(list(enumerate(dict_kline[symb]))):
-                                if e['c'] < e['o']:
+                                close_price = float(e['c'])
+                                open_price = float(e['o'])
+                                if close_price < open_price:
                                     break
                                 if price == 0:
-                                    price = e['c']
+                                    price = close_price
                                 vol += float(e['Q'])
                                 c += 1
                                 if c == 5:
-                                    if vol > dict_curr[symb] * 0.003 and vol < dict_curr[symb] * 0.03 and price / e['o'] < 1.02:
+                                    if vol > dict_curr[symb] * 0.003 and vol < dict_curr[symb] * 0.03 and price / open_price < 1.02:
                                         markets_sub = []
                                         markets_sub.append(symb.replace('/', ''))
                                         inance_websocket_api_manager.subscribe_to_stream(stream_id, markets=markets_sub)
