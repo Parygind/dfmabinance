@@ -767,10 +767,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 if price_open_2 == 0:
                                     price_open_2 = price_open_1
                                 if price_open_1 < price_open_2:
-                                    if chance:
-                                        chance = False
-                                    else:
-                                        break
+                                    break
                                 vol3 += e[1]
                                 if t3 == 0 or e[0] < t3:
                                     price_open_3 = e[2]
@@ -781,10 +778,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 if price_open_3 == 0:
                                     price_open_3 = price_open_2
                                 if price_open_2 < price_open_3:
-                                    if chance:
-                                        chance = False
-                                    else:
-                                        break
+                                    break
                                 vol4 += e[1]
                                 if t4 == 0 or e[0] < t4:
                                     price_open_4 = e[2]
@@ -795,10 +789,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 if price_open_4 == 0:
                                     price_open_4 = price_open_3
                                 if price_open_3 < price_open_4:
-                                    if chance:
-                                        chance = False
-                                    else:
-                                        break
+                                    break
                                 if t5 == 0 or e[0] < t5:
                                     price_open_5 = e[2]
                                     t5 = e[0]
