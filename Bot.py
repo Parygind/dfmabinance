@@ -304,8 +304,8 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                         dict_kline[symb].append(kline)
                         price = 0
                         
-                        if len(dict_kline[symb]) > 5 and symb not in dict_order:
-                            if len(dict_kline[symb]) > 7:
+                        if len(dict_kline[symb]) > 6 and symb not in dict_order:
+                            if len(dict_kline[symb]) > 8:
                                 del dict_kline[symb][0]
                             c = 0
                             vol = 0
@@ -318,12 +318,14 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                     price = close_price
                                 vol += float(e['Q'])
                                 c += 1
-                                if c == 5:
+                                if c == 6:
                                     if vol > dict_curr[symb] * 0.003 and vol < dict_curr[symb] * 0.03 and price / open_price < 1.02:
                                         markets_sub = []
                                         markets_sub.append(symb.replace('/', ''))
                                         binance_websocket_api_manager.subscribe_to_stream(stream_id, markets=markets_sub)
                                     break
+                    else:
+                        dict_kline[symb][-1] = kline
                 else:
                     data = eval(data.replace('false', 'False').replace('true', 'True'))
 
