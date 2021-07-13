@@ -309,7 +309,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                             for i, e in reversed(list(enumerate(dict_kline[symb]))):
                                 if e['o'] < e['c']:
                                     break
-                                if price = 0:
+                                if price == 0:
                                     price = e['c']
                                 vol += e['Q']
                                 c += 1
