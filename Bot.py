@@ -322,7 +322,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                     if vol > dict_curr[symb] * 0.003 and vol < dict_curr[symb] * 0.03 and price / open_price < 1.02:
                                         markets_sub = []
                                         markets_sub.append(symb.replace('/', ''))
-                                        inance_websocket_api_manager.subscribe_to_stream(stream_id, markets=markets_sub)
+                                        binance_websocket_api_manager.subscribe_to_stream(stream_id, markets=markets_sub)
                                     break
                 else:
                     data = eval(data.replace('false', 'False').replace('true', 'True'))
