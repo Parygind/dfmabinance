@@ -733,6 +733,12 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                         price3 = 0
                         price4 = 0
                         price5 = 0
+                        price_min1 = 999
+                        price_min2 = 999
+                        price_min3 = 999
+                        price_min4 = 999
+                        price_min5 = 999
+                        chance = True
                         for i, e in reversed(list(enumerate(dict_list[symb]))):
                             
                             if start_time > t / 1000 - 300:
@@ -742,41 +748,74 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                             if (t - e[0]) / 1000 < 60:
                                 vol1 += e[1]
                                 price1 = max(e[2], price1)
+                                price_min1 = min(e[2], price_min1)
                             elif (t - e[0]) / 1000 < 120:
                                 #if vol1 < 0:
                                 #    break
                                 if price1 == 0:
                                     price1 = price
+                                if price_min1 == 999:
+                                    price_min1 = price
                                 if price < price1:
-                                    break
+                                    if chance:
+                                        chance = False
+                                        if price < price_min1:
+                                            break
+                                    else:
+                                        break
                                 vol2 += e[1]
                                 price2 = max(e[2], price2)
+                                price_min2 = min(e[2], price_min2)
                             elif (t - e[0]) / 1000 < 180:
                                 #if vol2 < 0:
                                 #    break
                                 if price2 == 0:
                                     price2 = price1
+                                if price_min2 == 999:
+                                    price_min2 = price1
                                 if price1 < price2:
-                                    break
+                                    if chance:
+                                        chance = False
+                                        if price_min1 < price_min2:
+                                            break
+                                    else:
+                                        break
                                 vol3 += e[1]
                                 price3 = max(e[2], price3)
+                                price_min3 = min(e[2], price_min3)
                             elif (t - e[0]) / 1000 < 240:
                                 #if vol3 < 0:
                                 #    break
                                 if price3 == 0:
                                     price3 = price2
+                                if price_min3 == 999:
+                                    price_min3 = price2
                                 if price2 < price3:
-                                    break
+                                    if chance:
+                                        chance = False
+                                        if price_min2 < price_min3:
+                                            break
+                                    else:
+                                        break
                                 vol4 += e[1]
                                 price4 = max(e[2], price4)
+                                price_min4 = min(e[2], price_min4)
                             elif (t - e[0]) / 1000 < 300:
                                 #if vol4 < 0:
                                 #    break
                                 if price4 == 0:
                                     price4 = price3
+                                if price_min4 == 999:
+                                    price_min4 = price3
                                 if price3 < price4:
-                                    break
+                                    if chance:
+                                        chance = False
+                                        if price_min3 < price_min4:
+                                            break
+                                    else:
+                                        break
                                 price5 = max(e[2], price5)
+                                price_min5 = min(e[2], price_min5)
                             else:
                                 if price1 == 0:
                                     price1 = price
@@ -789,9 +828,14 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 if price5 == 0:
                                     price5 = price4
                                 if price4 < price5:
-                                    break
+                                    if chance:
+                                        chance = False
+                                        if price_min4 < price_min5:
+                                            break
+                                    else:
+                                        break
                                 else:
-                                    if prevVol > dict_curr[symb] * 0.006 and prevVol < dict_curr[symb] * 0.04 and price / price5 < 1.02 and price5 < price4 and price4 < price3 and price3 < price2 and price2 < price1 and price1 < price:
+                                    if prevVol > dict_curr[symb] * 0.006 and prevVol < dict_curr[symb] * 0.04 and price / price5 < 1.02: #and price5 < price4 and price4 < price3 and price3 < price2 and price2 < price1 and price1 < price:
                                         amount = int(order_price / price)
                                         dict_order[symb] = (t, price, None, amount)
                                         dict_trail[symb] = price * 0.99
