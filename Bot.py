@@ -332,9 +332,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                         print(str(dict_kline[symb][-5]))
                                         markets_sub = []
                                         markets_sub.append(symb.replace('/', ''))
-                                        chan = []
-                                        chan.append('trade')
-                                        binance_websocket_api_manager.subscribe_to_stream(stream_id, channels=chan,  markets=markets_sub)
+                                        binance_websocket_api_manager.subscribe_to_stream(stream_id,  markets=markets_sub)
                                     break
                     else:
                         dict_kline[symb][-1] = kline
@@ -408,9 +406,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
 
                                 markets_sub = []
                                 markets_sub.append(symb.replace('/', ''))
-                                chan = []
-                                chan.append('trade')
-                                binance_websocket_api_manager.unsubscribe_from_stream(stream_id, channels=chan, markets=markets_sub)
+                                binance_websocket_api_manager.unsubscribe_from_stream(stream_id, markets=markets_sub)
                             else:
                                 if (t - dict_order[symb][0]) / 1000 > 300:
                                     if price > dict_order[symb][1] * 1.0015 and dict_trail[symb] < dict_order[symb][
@@ -448,8 +444,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                         markets_sub.append(symb.replace('/', ''))
                                         chan = []
                                         chan.append('trade')
-                                        binance_websocket_api_manager.unsubscribe_from_stream(stream_id, channels=chan,
-                                                                                          markets=markets_sub)
+                                        binance_websocket_api_manager.unsubscribe_from_stream(stream_id, markets=markets_sub)
                                         continue
                                 if 1 == 1:
                                     if price < dict_order[symb][1] * 1.008:
@@ -664,7 +659,10 @@ max_subscriptions = math.ceil(len(markets) / divisor)
 print(max_subscriptions)
 for channel in channels:
     if len(markets) <= max_subscriptions:
-        stream_id = binance_websocket_api_manager.create_stream(channel, markets, stream_label=channel)
+        binance_websocket_api_manager.create_stream(channel, markets, stream_label=channel)
+        chan = []
+        chan.append('trade')
+        stream_id = binance_websocket_api_manager.create_stream(chan, [], stream_label=chan)
     else:
         loops = 1
         i = 1
