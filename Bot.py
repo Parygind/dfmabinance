@@ -321,6 +321,11 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 if c == 6:      
                                     if ((vol > dict_curr[symb] * 0.003 and vol < dict_curr[symb] * 0.03) or 'PSG' in symb) and price / open_price < 1.02:
                                         print(symb)
+                                        print(str(dict_kline[symb][-1]))
+                                        print(str(dict_kline[symb][-2]))
+                                        print(str(dict_kline[symb][-3]))
+                                        print(str(dict_kline[symb][-4]))
+                                        print(str(dict_kline[symb][-5]))
                                         markets_sub = []
                                         markets_sub.append(symb.replace('/', ''))
                                         chan = []
@@ -355,8 +360,6 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                         symb = data['s'].replace('USDT', '/USDT')
                         dict_price[symb] = price
                         if symb in dict_order and dict_order[symb][0] < t and not data['m']:
-                            dict_max_price[symb] = max(dict_max_price[symb], price)
-
                             if price < dict_trail[symb]:
                                 if trade_on:
                                     try:
