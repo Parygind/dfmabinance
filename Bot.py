@@ -327,7 +327,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 vol += float(e['Q'])
                                 c += 1                          
                                 if c == 6:      
-                                    if ((vol > dict_curr[symb] * 0.003 and vol < dict_curr[symb] * 0.03) or 'PSG' in symb) and max_price / min_price < 1.02:
+                                    if ((vol > dict_curr[symb] * 0.005 and vol < dict_curr[symb] * 0.03) or 'PSG' in symb) and max_price / min_price < 1.02:
                                         print(symb)
                                         print(str(dict_kline[symb][-1]))
                                         print(str(dict_kline[symb][-2]))
