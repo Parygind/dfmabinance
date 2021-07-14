@@ -372,10 +372,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                         continue
 
                     if (t / 1000) + 60 < time.time():
-                        continue
-                        
-                    if not data['m']:
-                        continue
+                        continue         
 
                     price = float(data['p'])
 
