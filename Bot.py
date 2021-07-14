@@ -299,12 +299,16 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                     t = kline['t']
                     
                     if dict_time[symb] != t:
+                        
+                        if symb in dict_pass:
+                            if (t - dict_pass[symb]) / 1000 > 1800:
+                                del dict_pass[symb]
             
                         dict_time[symb] = t
                         dict_kline[symb].append(kline)
                         price = 0
                         
-                        if len(dict_kline[symb]) > 6 and symb not in dict_order:
+                        if len(dict_kline[symb]) > 6 and symb not in dict_pass:
                             if len(dict_kline[symb]) > 8:
                                 del dict_kline[symb][0]
                             c = 0
@@ -348,6 +352,9 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                     
                     symb = data['s'].replace('USDT', '/USDT')
                     t = data['E']
+                    
+                    if symb in dict_pass:
+                        continue
 
                     if (t / 1000) + 60 < time.time():
                         continue
@@ -446,8 +453,6 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                         dict_pass[symb] = t
                                         markets_sub = []
                                         markets_sub.append(symb.replace('/', ''))
-                                        chan = []
-                                        chan.append('trade')
                                         binance_websocket_api_manager.unsubscribe_from_stream(stream_id, markets=markets_sub)
                                         continue
                                 if 1 == 1:
@@ -462,11 +467,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                             symb] and ((dict_order[symb][1] * ((price / dict_order[symb][1]) * 0.995)) /
                                                        dict_trail[symb]) - 1 > 0.001:
                                             dict_trail[symb] = dict_order[symb][1] * (
-                                                        (price / dict_order[symb][1]) * 0.995)
-
-                        if symb in dict_pass:
-                            if (t - dict_pass[symb]) / 1000 > 1800:
-                                del dict_pass[symb]
+                                                        (price / dict_order[symb][1]) * 0.995)            
                     elif 1 == 2:
                         symb = data['s'][:-3]
                         symb = symb + "/BTC"
