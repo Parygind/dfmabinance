@@ -309,17 +309,21 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 del dict_kline[symb][0]
                             c = 0
                             vol = 0
+                            max_price = 0
+                            min_price = 999
                             for i, e in reversed(list(enumerate(dict_kline[symb]))):
                                 close_price = float(e['c'])
                                 open_price = float(e['o'])
+                                max_price = max(max_price, float(e['h']))
+                                min_price = min(min_price, float(e['l']))
                                 if close_price < open_price:
                                     break
                                 if price == 0:
                                     price = close_price
                                 vol += float(e['Q'])
-                                c += 1
+                                c += 1                          
                                 if c == 6:      
-                                    if ((vol > dict_curr[symb] * 0.003 and vol < dict_curr[symb] * 0.03) or 'PSG' in symb) and price / open_price < 1.02:
+                                    if ((vol > dict_curr[symb] * 0.003 and vol < dict_curr[symb] * 0.03) or 'PSG' in symb) and max_price / min_price < 1.02:
                                         print(symb)
                                         print(str(dict_kline[symb][-1]))
                                         print(str(dict_kline[symb][-2]))
