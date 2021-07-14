@@ -342,6 +342,10 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                     if 'data' not in data:
                         continue
                     data = data['data']
+                    
+                    if data['s'] == 'BTCUSDT':
+                        continue
+                    
                     symb = data['s'].replace('USDT', '/USDT')
                     t = data['E']
 
@@ -662,7 +666,9 @@ for channel in channels:
         binance_websocket_api_manager.create_stream(channel, markets, stream_label=channel)
         chan = []
         chan.append('trade')
-        stream_id = binance_websocket_api_manager.create_stream(chan, [], stream_label=chan)
+        mark = []
+        mark.append('BTCUSDT')
+        stream_id = binance_websocket_api_manager.create_stream(chan, mark, stream_label=chan)
     else:
         loops = 1
         i = 1
