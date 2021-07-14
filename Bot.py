@@ -340,16 +340,17 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
 
                     if (t / 1000) + 60 < time.time():
                         continue
+                        
+                    if data['m']:
+                        continue
 
                     price = float(data['p'])
                     if symb not in dict_order:
                         dict_order[symb] = price
                         dict_trail[symb] = price * 0.99
-                        mes = 'Объемы выросли : ' + symb_USDT + ' (F) ' + str(price)
+                        mes = 'Объемы выросли : ' + symb + ' (F) ' + str(price)
                         updater.bot.send_message(chat_id='-1001242337520', text=mes)
-                    if data['s'][-4:] == 'USDT':
-                        if data['m']:
-                            continue
+                    if data['s'][-4:] == 'USDT':                       
                         symb = data['s'].replace('USDT', '/USDT')
                         dict_price[symb] = price
                         if symb in dict_order and dict_order[symb][0] < t and not data['m']:
