@@ -70,6 +70,7 @@ dict_prev_min = dict()
 dict_price = dict()
 dict_time = dict()
 dict_kline = dict()
+doct_lock = dict()
 markets = []
 profit = 0
 
@@ -204,6 +205,7 @@ def updateData():
                     dict_time[tickers[pr]['symbol']] = -1
                     dict_list[tickers[pr]['symbol']] = list()
                     dict_kline[tickers[pr]['symbol']] = list()
+                    doct_lock[tickers[pr]['symbol']] = False
             #b = bin_bot.fetch_open_orders(tickers[pr]['symbol'])
             #for i in b:
             #    dict_order[tickers[pr]['symbol']] = (i['info']['orderId'])
@@ -277,7 +279,7 @@ def get_top(update, context):
 
 
 def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
-    global profit, sl, tk, trade_on, order_price, channels, stream_id, dict_time, dict_kline
+    global profit, sl, tk, trade_on, order_price, channels, stream_id, dict_time, dict_kline, doct_lock
     while True:
         if binance_websocket_api_manager.is_manager_stopping():
             exit(0)
@@ -295,6 +297,11 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                         continue
                     data = data['data']
                     symb = data['s'].replace('USDT', '/USDT')
+                    
+                    if doct_lock[symb]:
+                        continue
+                    
+                    doct_lock[symb] = True
                     kline = data['k']
                     t = kline['t']
                     
@@ -308,9 +315,10 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                         dict_kline[symb].append(kline)
                         price = 0
                         
-                        if len(dict_kline[symb]) > 67 and symb not in dict_pass:
-                            if len(dict_kline[symb]) > 80:
-                                del dict_kline[symb][0]
+                        if len(dict_kline[symb]) > 80:
+                            del dict_kline[symb][0]
+                        
+                        if len(dict_kline[symb]) > 67 and symb not in dict_pass:    
                             c = 0
                             vol = 0
                             vol_other = 0
@@ -339,6 +347,8 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 c += 1
                     else:
                         dict_kline[symb][-1] = kline
+                        
+                    doct_lock[symb] = False
                 else:
                     data = eval(data.replace('false', 'False').replace('true', 'True'))
 
