@@ -181,7 +181,7 @@ def updateData():
     bin_bot.load_markets()
     # for pr in bin_bot.ticker24hr():
     for pr in tickers:
-        if tickers[pr]['symbol'][-4:] == 'USDT' and float(tickers[pr]['quoteVolume']) >= 500000 and float(
+        if tickers[pr]['symbol'][-4:] == 'USDT' and float(tickers[pr]['quoteVolume']) >= 2500000 and float(
                 tickers[pr]['quoteVolume']) <= 15000000 and float(tickers[pr]['bidVolume']) > 0 and float(
                 tickers[pr]['high']) < 20 \
                 and tickers[pr]['symbol'] != 'SUSD/USDT' and tickers[pr]['symbol'] != 'LINK/BTC' and tickers[pr][
@@ -320,9 +320,9 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 c += 1
                                 if c == 6:
                                     print(symb)
-                                    print(str(vol / dict_curr[symb]))
-                                    print(str(price / open_price))
-                                    if vol > dict_curr[symb] * 0.003 and vol < dict_curr[symb] * 0.03 and price / open_price < 1.02:
+                                    print(float_to_str(vol / dict_curr[symb]))
+                                    print(float_to_str(price / open_price))
+                                    if ((vol > dict_curr[symb] * 0.003 and vol < dict_curr[symb] * 0.03) or 'PSG' in symb) and price / open_price < 1.02:
                                         markets_sub = []
                                         markets_sub.append(symb.replace('/', ''))
                                         binance_websocket_api_manager.subscribe_to_stream(stream_id, markets=markets_sub)
