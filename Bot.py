@@ -338,11 +338,17 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 elif c >= 5 and c <= 65:
                                     vol_other += float(e['Q'])
                                 elif c > 65:      
-                                    if vol > dict_curr[symb] * 0.005 and vol_other < dict_curr[symb] * 0.05:
+                                    if vol > dict_curr[symb] * 0.005 and vol_other < dict_curr[symb] * 0.05 and vol < dict_curr[symb] * 0.07:
                                         print(symb)
                                         markets_sub = []
                                         markets_sub.append(symb.replace('/', ''))
                                         binance_websocket_api_manager.subscribe_to_stream(stream_id,  markets=markets_sub)
+                                        
+                                        amount = int(order_price / price)
+                                        dict_order[symb] = (t, price, None, amount)
+                                        dict_trail[symb] = price * 0.99
+                                        mes = 'Объемы выросли : ' + symb + ' (F) ' + str(price)
+                                        updater.bot.send_message(chat_id='-1001242337520', text=mes)
                                     break
                                 c += 1
                     else:
@@ -368,16 +374,11 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                     if (t / 1000) + 60 < time.time():
                         continue
                         
-                    if data['m']:
+                    if not data['m']:
                         continue
 
                     price = float(data['p'])
-                    if symb not in dict_order:
-                        amount = int(order_price / price)
-                        dict_order[symb] = (t, price, None, amount)
-                        dict_trail[symb] = price * 0.99
-                        mes = 'Объемы выросли : ' + symb + ' (F) ' + str(price)
-                        updater.bot.send_message(chat_id='-1001242337520', text=mes)
+
                     if data['s'][-4:] == 'USDT':                       
                         symb = data['s'].replace('USDT', '/USDT')
                         dict_price[symb] = price
