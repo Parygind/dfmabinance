@@ -308,36 +308,35 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                         dict_kline[symb].append(kline)
                         price = 0
                         
-                        if len(dict_kline[symb]) > 6 and symb not in dict_pass:
-                            if len(dict_kline[symb]) > 8:
+                        if len(dict_kline[symb]) > 67 and symb not in dict_pass:
+                            if len(dict_kline[symb]) > 80:
                                 del dict_kline[symb][0]
                             c = 0
                             vol = 0
+                            vol_other = 0
                             max_price = 0
                             min_price = 999
                             for i, e in reversed(list(enumerate(dict_kline[symb]))):
-                                close_price = float(e['c'])
-                                open_price = float(e['o'])
-                                max_price = max(max_price, float(e['h']))
-                                min_price = min(min_price, float(e['l']))
-                                if close_price < open_price:
-                                    break
-                                if price == 0:
-                                    price = close_price
-                                vol += float(e['Q'])
-                                c += 1                          
-                                if c == 5:      
-                                    if vol > dict_curr[symb] * 0.005 and vol < dict_curr[symb] * 0.03:
+                                if c < 5:
+                                    close_price = float(e['c'])
+                                    open_price = float(e['o'])
+                                    max_price = max(max_price, float(e['h']))
+                                    min_price = min(min_price, float(e['l']))
+                                    if close_price < open_price:
+                                        break
+                                    if price == 0:
+                                        price = close_price
+                                    vol += float(e['Q'])
+                                elif c >= 5 and c <= 65:
+                                    vol_other += float(e['Q'])
+                                elif c > 65:      
+                                    if vol > dict_curr[symb] * 0.005 and vol_other < dict_curr[symb] * 0.05:
                                         print(symb)
-                                        print(str(dict_kline[symb][-1]))
-                                        print(str(dict_kline[symb][-2]))
-                                        print(str(dict_kline[symb][-3]))
-                                        print(str(dict_kline[symb][-4]))
-                                        print(str(dict_kline[symb][-5]))
                                         markets_sub = []
                                         markets_sub.append(symb.replace('/', ''))
                                         binance_websocket_api_manager.subscribe_to_stream(stream_id,  markets=markets_sub)
                                     break
+                                c += 1
                     else:
                         dict_kline[symb][-1] = kline
                 else:
