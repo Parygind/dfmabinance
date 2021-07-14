@@ -299,7 +299,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                     t = kline['t']
                     
                     if dict_time[symb] != t:
-                        print(str(kline))
+            
                         dict_time[symb] = t
                         dict_kline[symb].append(kline)
                         price = 0
@@ -319,6 +319,8 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 vol += float(e['Q'])
                                 c += 1
                                 if c == 6:
+                                    print(str(vol))
+                                    print(str(dict_curr[symb] * 0.003))
                                     if vol > dict_curr[symb] * 0.003 and vol < dict_curr[symb] * 0.03 and price / open_price < 1.02:
                                         markets_sub = []
                                         markets_sub.append(symb.replace('/', ''))
