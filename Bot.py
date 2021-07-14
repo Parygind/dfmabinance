@@ -196,7 +196,7 @@ def updateData():
             'symbol'] != 'SUN/USDT' and tickers[pr]['symbol'] != 'PUNDIX/USDT':
             for ppr in tickers:
                 if tickers[ppr]['symbol'] == tickers[pr]['symbol'].replace('USDT', 'BTC'):
-                    dict_curr[tickers[pr]['symbol']] = float(tickers[ppr]['quoteVolume'])
+                    dict_curr[tickers[pr]['symbol']] = float(tickers[pr]['quoteVolume'])
                     market = bin_bot.market(tickers[pr]['symbol'])
                     dict_prec[tickers[pr]['symbol']] = int(market['precision']['price'])
                     #markets.append(tickers[pr]['symbol'].replace('/', ''))
