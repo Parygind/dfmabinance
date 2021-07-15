@@ -318,7 +318,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                         if len(dict_kline[symb]) > 80:
                             del dict_kline[symb][0]
                         
-                        if len(dict_kline[symb]) > 67 and symb not in dict_pass and symb not in dict_order:    
+                        if len(dict_kline[symb]) > 67 and symb not in dict_pass and symb not in dict_order and len(dict_order) < 2:    
                             c = 0
                             vol = 0
                             vol_other = 0
