@@ -338,7 +338,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 elif c >= 6 and c <= 65:
                                     vol_other += float(e['Q'])
                                 elif c > 65:      
-                                    if vol > dict_curr[symb] * 0.005 and vol_other < dict_curr[symb] * 0.05 and vol < dict_curr[symb] * 0.07:
+                                    if vol_other < dict_curr[symb] * 0.05 and vol < dict_curr[symb] * 0.07:
                                         print(symb)
                                         markets_sub = []
                                         markets_sub.append(symb.replace('/', ''))
