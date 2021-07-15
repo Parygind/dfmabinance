@@ -325,7 +325,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                             max_price = 0
                             min_price = 999
                             for i, e in reversed(list(enumerate(dict_kline[symb]))):
-                                if c < 5:
+                                if c < 6:
                                     close_price = float(e['c'])
                                     open_price = float(e['o'])
                                     max_price = max(max_price, float(e['h']))
@@ -335,7 +335,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                     if price == 0:
                                         price = close_price
                                     vol += float(e['Q'])
-                                elif c >= 5 and c <= 65:
+                                elif c >= 6 and c <= 65:
                                     vol_other += float(e['Q'])
                                 elif c > 65:      
                                     if vol > dict_curr[symb] * 0.005 and vol_other < dict_curr[symb] * 0.05 and vol < dict_curr[symb] * 0.07:
