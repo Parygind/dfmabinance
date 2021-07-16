@@ -724,6 +724,8 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                         prevVol = vol
                         step = 2
                         for i, e in reversed(list(enumerate(dict_list[symb]))):
+                            if len(dict_order) > 1:
+                                break
                             if (t - e[0]) / 1000 <= 30:
                                 prevVol += e[1]
                             elif (t - e[0]) / 1000 <= 45:
