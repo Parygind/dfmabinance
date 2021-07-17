@@ -541,12 +541,9 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                     if (t / 1000) + 60 < time.time():
                         continue
 
-                    if data['m']:
-                        continue
-
                     symb = data['s'].replace('USDT', '/USDT')
                     price = float(data['p'])
-                    if symb in dict_order and dict_order[symb][0] < t and not data['m']:
+                    if symb in dict_order and dict_order[symb][0] < t and data['m']:
                         dict_max_price[symb] = max(dict_max_price[symb], price)
                         #trail
 
@@ -726,6 +723,8 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                     if symb not in dict_order and symb not in dict_pass and symb != 'BTCBUSD':
                         q = float(data['q'])
                         vol = q * price
+                        if data['m']:
+                            vol = -vol
                         prevVol = vol
                         step = 2
                         for i, e in reversed(list(enumerate(dict_list[symb]))):
