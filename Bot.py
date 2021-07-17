@@ -190,7 +190,7 @@ def updateData():
                 if tickers[ppr]['symbol'] == tickers[pr]['symbol'].replace('USDT', 'BTC'):
                     #dict_curr[tickers[pr]['symbol']] = float(tickers[pr]['quoteVolume'])
                     vol = 0
-                    inf = get_klines1(tickers[ppr]['symbol'], '1m', None, 60)
+                    inf = get_klines1(tickers[pr]['symbol'], '1m', None, 60)
                     for i in inf:
                         vol += float(i[10])
                     dict_curr[tickers[pr]['symbol']] = vol
