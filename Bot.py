@@ -1082,4 +1082,4 @@ while True:
             inf = get_klines1(s, '1m', None, 60)
             for i in inf:
                 vol += float(i[10])
-            dict_curr[tickers[pr]['symbol']] = vol
+            dict_curr[s] = vol
