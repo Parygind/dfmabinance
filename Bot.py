@@ -714,7 +714,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                             dict_pass[symb] = t
 
                     if symb in dict_pass:
-                        if (t - dict_pass[symb]) / 1000 > 18000:
+                        if (t - dict_pass[symb]) / 1000 > 3600:
                             del dict_pass[symb]
 
                     if symb not in dict_min_price:
@@ -827,9 +827,10 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 print(str(dict_curr[symb]))
                                                 print(str(prevVol))
                                                 break
-                                            elif price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01:
-                                                dict_pass[symb] = t - 17900 * 1000
-
+                                            else:
+                                                dict_pass[symb] = t - 3000 * 1000
+                                        else:
+                                            dict_pass[symb] = t - 3000 * 1000
                                 step = 3
                                 prevVol += e[1]
                             elif (t - e[0]) / 1000 <= 60:
@@ -927,8 +928,10 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 print(str(dict_curr[symb]))
                                                 print(str(prevVol))
                                                 break
-                                            elif price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01:
-                                                dict_pass[symb] = t - 17900 * 1000
+                                            else:
+                                                dict_pass[symb] = t - 3000 * 1000
+                                        else:
+                                            dict_pass[symb] = t - 3000 * 1000
                                 step = 4
                                 prevVol += e[1]
 
@@ -1025,8 +1028,10 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                             print(str(dict_curr[symb]))
                                             print(str(prevVol))
                                             break
-                                        elif price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01:
-                                            dict_pass[symb] = t - 17900 * 1000
+                                        else:
+                                            dict_pass[symb] = t - 3000 * 1000
+                                    else:
+                                        dict_pass[symb] = t - 3000 * 1000
                             elif (t - e[0]) / 1000 > 300:
                                 del dict_list[symb][0:i]
                                 dict_min_price[symb] = price
