@@ -813,7 +813,9 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 print(mes + ' ' + datetime.today().strftime(
                                                 '%Y-%m-%d-%H:%M:%S') + ' ' + str(t))
                                                 print(hour)
-                                                print('30 ' +str(prevVol / (dict_curr[symb] * 0.021)))
+                                                print('30')
+                                                print(str(dict_curr[symb]))
+                                                print(str(prevVol))
                                                 break
                                             elif price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01:
                                                 dict_pass[symb] = t - 17900 * 1000
@@ -901,7 +903,9 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 print(mes + ' ' + datetime.today().strftime(
                                                 '%Y-%m-%d-%H:%M:%S') + ' ' + str(t))
                                                 print(hour)
-                                                print('45 ' + str(prevVol / (dict_curr[symb] * 0.027)))
+                                                print('30')
+                                                print(str(dict_curr[symb]))
+                                                print(str(prevVol))
                                                 break
                                             elif price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01:
                                                 dict_pass[symb] = t - 17900 * 1000
@@ -987,7 +991,9 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                             print(mes + ' ' + datetime.today().strftime(
                                                         '%Y-%m-%d-%H:%M:%S') + ' ' + str(t))
                                             print(hour)
-                                            print(str(prevVol / (dict_curr[symb] * 0.027)))
+                                            print('30')
+                                            print(str(dict_curr[symb]))
+                                            print(str(prevVol))
                                             break
                                         elif price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01:
                                             dict_pass[symb] = t - 17900 * 1000
