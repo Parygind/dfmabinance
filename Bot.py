@@ -829,8 +829,10 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 break
                                             else:
                                                 dict_pass[symb] = t - 3000 * 1000
+                                                updater.bot.send_message(chat_id='-1001242337520', text='Не прошла проверку 2 ' + symb + str(price))
                                         else:
                                             dict_pass[symb] = t - 3000 * 1000
+                                            updater.bot.send_message(chat_id='-1001242337520', text='Не прошла проверку 1 ' + symb + str(price))
                                 step = 3
                                 prevVol += e[1]
                             elif (t - e[0]) / 1000 <= 60:
@@ -930,8 +932,10 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 break
                                             else:
                                                 dict_pass[symb] = t - 3000 * 1000
+                                                updater.bot.send_message(chat_id='-1001242337520', text='Не прошла проверку 2 ' + symb + str(price))
                                         else:
                                             dict_pass[symb] = t - 3000 * 1000
+                                            updater.bot.send_message(chat_id='-1001242337520', text='Не прошла проверку 1 ' + symb + str(price))
                                 step = 4
                                 prevVol += e[1]
 
@@ -1030,8 +1034,10 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                             break
                                         else:
                                             dict_pass[symb] = t - 3000 * 1000
+                                            updater.bot.send_message(chat_id='-1001242337520', text='Не прошла проверку 2 ' + symb + str(price))
                                     else:
                                         dict_pass[symb] = t - 3000 * 1000
+                                        updater.bot.send_message(chat_id='-1001242337520', text='Не прошла проверку 1 ' + symb + str(price))
                             elif (t - e[0]) / 1000 > 300:
                                 del dict_list[symb][0:i]
                                 dict_min_price[symb] = price
