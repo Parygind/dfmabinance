@@ -543,7 +543,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
 
                     symb = data['s'].replace('USDT', '/USDT')
                     price = float(data['p'])
-                    if symb in dict_order and dict_order[symb][0] < t and data['m']:
+                    if symb in dict_order and dict_order[symb][0] < t and not data['m']:
                         dict_max_price[symb] = max(dict_max_price[symb], price)
                         #trail
 
@@ -734,7 +734,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 prevVol += e[1]
                             elif (t - e[0]) / 1000 <= 45:
                                 if step == 2:
-                                    if prevVol >= dict_curr[symb] * (0.05 * (30/60)):
+                                    if prevVol >= dict_curr[symb] * (0.045 * (30/60)):
                                         try:
                                             inf = get_klines1(symb, '1m', None, 5)
                                         except:
@@ -835,7 +835,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 prevVol += e[1]
                             elif (t - e[0]) / 1000 <= 60:
                                 if step == 3:
-                                    if prevVol >= dict_curr[symb] * (0.05 * (45/60)):
+                                    if prevVol >= dict_curr[symb] * (0.045 * (45/60)):
                                         try:
                                             inf = get_klines1(symb, '1m', None, 5)
                                         except:
@@ -935,7 +935,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 step = 4
                                 prevVol += e[1]
 
-                                if prevVol >= dict_curr[symb] * 0.05:
+                                if prevVol >= dict_curr[symb] * 0.045:
                                     try:
                                         inf = get_klines1(symb, '1m', None, 5)
                                     except:
