@@ -736,7 +736,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 prevVol += e[1]
                             elif (t - e[0]) / 1000 <= 45:
                                 if step == 2:
-                                    if prevVol >= dict_curr[symb] * (0.15 * (30/60)):
+                                    if prevVol >= dict_curr[symb] * (0.25 * (30/60)):
                                         try:
                                             inf = get_klines1(symb, '1m', None, 5)
                                         except:
@@ -763,7 +763,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 hour = None
                                                 updater.bot.send_message(chat_id='-1001242337520', text='Пытался упасть на ' + symb)
                                                 break
-                                            if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01:
+                                            if price / float(hour[0][1]) < 1.10:
                                                 print(inf)
                                                 amount = int(order_price / price)
                                                 type = 'market'  # or market
@@ -833,7 +833,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 break
                                             else:
                                                 dict_pass[symb] = t
-                                                updater.bot.send_message(chat_id='-1001242337520', text='Не прошла проверку 2 ' + symb + ' ' + str(price) + ' ' + str(dict_curr[symb]))
+                                                #updater.bot.send_message(chat_id='-1001242337520', text='Не прошла проверку 2 ' + symb + ' ' + str(price) + ' ' + str(dict_curr[symb]))
                                                 break
                                         else:
                                             dict_pass[symb] = t - 3540 * 1000
@@ -843,7 +843,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 prevVol += e[1]
                             elif (t - e[0]) / 1000 <= 60:
                                 if step == 3:
-                                    if prevVol >= dict_curr[symb] * (0.15 * (45/60)):
+                                    if prevVol >= dict_curr[symb] * (0.25 * (45/60)):
                                         try:
                                             inf = get_klines1(symb, '1m', None, 5)
                                         except:
@@ -869,7 +869,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 hour = None
                                                 updater.bot.send_message(chat_id='-1001242337520', text='Пытался упасть на ' + symb)
                                                 break
-                                            if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01:
+                                            if price / float(hour[0][1]) < 1.10:
                                                 print(inf)
                                                 amount = int(order_price / price)
                                                 type = 'market'  # or market
@@ -939,7 +939,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 break
                                             else:
                                                 dict_pass[symb] = t
-                                                updater.bot.send_message(chat_id='-1001242337520', text='Не прошла проверку 2 ' + symb + ' ' + str(price) + ' ' + str(dict_curr[symb]))
+                                                #updater.bot.send_message(chat_id='-1001242337520', text='Не прошла проверку 2 ' + symb + ' ' + str(price) + ' ' + str(dict_curr[symb]))
                                                 break
                                         else:
                                             dict_pass[symb] = t - 3540 * 1000
@@ -948,7 +948,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 step = 4
                                 prevVol += e[1]
 
-                                if prevVol >= dict_curr[symb] * 0.15:
+                                if prevVol >= dict_curr[symb] * 0.25:
                                     try:
                                         inf = get_klines1(symb, '1m', None, 5)
                                     except:
@@ -975,7 +975,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                             updater.bot.send_message(chat_id='-1001242337520', text='Пытался упасть на ' + symb)
                                             break
 
-                                        if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1.01:
+                                        if price / float(hour[0][1]) < 1.10:
                                             print(inf)
                                             amount = int(order_price / price)
                                             type = 'market'  # or market
@@ -1045,7 +1045,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                             break
                                         else:
                                             dict_pass[symb] = t
-                                            updater.bot.send_message(chat_id='-1001242337520', text='Не прошла проверку 2 ' + symb + ' ' + str(price) + ' ' + str(dict_curr[symb])) 
+                                            #updater.bot.send_message(chat_id='-1001242337520', text='Не прошла проверку 2 ' + symb + ' ' + str(price) + ' ' + str(dict_curr[symb])) 
                                             break
                                     else:
                                         dict_pass[symb] = t - 3540 * 1000
