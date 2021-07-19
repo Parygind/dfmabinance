@@ -772,6 +772,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                     pos_kl += 1
                                                     
                                             if neg_kl > pos_kl:
+                                                dict_pass[symb] = t - 3540 * 1000
                                                 break
                                                                                
                                             #inf = get_klines1(symb.replace('USDT', 'BTC'), '1m', None, 5)
@@ -898,6 +899,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                     pos_kl += 1
                                                     
                                             if neg_kl > pos_kl:
+                                                dict_pass[symb] = t - 3540 * 1000
                                                 break
 
                                             try:
@@ -1021,6 +1023,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 pos_kl += 1
                                                     
                                         if neg_kl > pos_kl:
+                                            dict_pass[symb] = t - 3540 * 1000
                                             break
                                         
                                         #inf = get_klines1(symb.replace('USDT', 'BTC'), '1m', None, 5)
