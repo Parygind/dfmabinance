@@ -754,7 +754,26 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 neg_kl += 1
 
                                         if max(max_price, price) / min_price < 1.04 and neg_kl < 4:
-
+                                            
+                                            
+                                            try:
+                                                inf = get_klines1('BTC/BUSD', '1m', None, 6)
+                                            except:
+                                                inf = None
+                                                updater.bot.send_message(chat_id='-1001242337520', text='Пытался упасть на ' + symb)
+                                                break
+                                            
+                                            neg_kl = 0
+                                            pos_kl = 0
+                                            for d in inf:
+                                                if float(d[4]) < float(d[1]):
+                                                    neg_kl += 1
+                                                else:
+                                                    pos_kl += 1
+                                                    
+                                            if neg_kl > pos_kl:
+                                                break
+                                                                               
                                             #inf = get_klines1(symb.replace('USDT', 'BTC'), '1m', None, 5)
 
                                             try:
@@ -862,6 +881,24 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
 
                                         if max(max_price, price) / min_price < 1.04 and neg_kl < 4:
                                             #inf = get_klines1(symb.replace('USDT', 'BTC'), '1m', None, 5)
+                                            
+                                            try:
+                                                inf = get_klines1('BTC/BUSD', '1m', None, 6)
+                                            except:
+                                                inf = None
+                                                updater.bot.send_message(chat_id='-1001242337520', text='Пытался упасть на ' + symb)
+                                                break
+                                            
+                                            neg_kl = 0
+                                            pos_kl = 0
+                                            for d in inf:
+                                                if float(d[4]) < float(d[1]):
+                                                    neg_kl += 1
+                                                else:
+                                                    pos_kl += 1
+                                                    
+                                            if neg_kl > pos_kl:
+                                                break
 
                                             try:
                                                 hour = get_klines1(symb, '1m', int((time.time() - 3600) * 1000), 1)
@@ -967,6 +1004,25 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                             neg_kl += 1
 
                                     if max(max_price, price) / min_price < 1.04 and neg_kl < 4:
+                                        
+                                        try:
+                                            inf = get_klines1('BTC/BUSD', '1m', None, 6)
+                                        except:
+                                            inf = None
+                                            updater.bot.send_message(chat_id='-1001242337520', text='Пытался упасть на ' + symb)
+                                            break
+                                            
+                                        neg_kl = 0
+                                        pos_kl = 0
+                                        for d in inf:
+                                            if float(d[4]) < float(d[1]):
+                                                neg_kl += 1
+                                            else:
+                                                pos_kl += 1
+                                                    
+                                        if neg_kl > pos_kl:
+                                            break
+                                        
                                         #inf = get_klines1(symb.replace('USDT', 'BTC'), '1m', None, 5)
                                         try:
                                             hour = get_klines1(symb, '1m', int((time.time() - 3600) * 1000), 1)
