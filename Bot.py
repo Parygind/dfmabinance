@@ -170,7 +170,7 @@ def updateData():
     bin_bot.load_markets()
     # for pr in bin_bot.ticker24hr():
     for pr in tickers:
-        if tickers[pr]['symbol'][-4:] == 'USDT' and float(tickers[pr]['quoteVolume']) >= 5000000 and float(
+        if tickers[pr]['symbol'][-4:] == 'USDT' and float(tickers[pr]['quoteVolume']) >= 500000 and float(
                 tickers[pr]['quoteVolume']) <= 15000000 and float(tickers[pr]['bidVolume']) > 0 and float(
                 tickers[pr]['high']) < 20 \
                 and tickers[pr]['symbol'] != 'SUSD/USDT' and tickers[pr]['symbol'] != 'LINK/BTC' and tickers[pr][
@@ -788,7 +788,10 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 prevVol += e[1]
 
                                 if prevVol >= dict_curr[symb] * 0.021:
-                                    inf = get_klines1(symb, '1m', None, 5)
+                                    try:
+                                        inf = get_klines1(symb, '1m', None, 5)
+                                    except:
+                                        break
                                     min_price = 999
                                     max_price = 0
 
