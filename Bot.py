@@ -638,7 +638,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 hour = get_klines1(symb, '1m', int((time.time() - 3600) * 1000), 1)
                                             except:
                                                 break
-                                            if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1 and float(inf[4][4]) / float(inf[0][1]) > 1.02 and float(inf[4][4]) - float(inf[0][1]) > math.pow(10, -dict_prec_btc[symb]) * 2:
+                                            if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1 and float(inf[4][4]) / float(inf[0][1]) > 1.01 and float(inf[4][4]) - float(inf[0][1]) > math.pow(10, -dict_prec_btc[symb]) * 2:
                                                 print(inf)
                                                 amount = int(order_price / price)
                                                 type = 'market'  # or market
@@ -727,7 +727,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 hour = get_klines1(symb, '1m', int((time.time() - 3600) * 1000), 1)
                                             except:
                                                 break
-                                            if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1 and float(inf[4][4]) / float(inf[0][1]) > 1.02 and float(inf[4][4]) - float(inf[0][1]) > math.pow(10, -dict_prec_btc[symb]) * 2:
+                                            if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1 and float(inf[4][4]) / float(inf[0][1]) > 1.01 and float(inf[4][4]) - float(inf[0][1]) > math.pow(10, -dict_prec_btc[symb]) * 2:
                                                 print(inf)
                                                 amount = int(order_price / price)
                                                 type = 'market'  # or market
@@ -813,7 +813,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                         except:
                                             break
 
-                                        if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1 and float(inf[4][4]) / float(inf[0][1]) > 1.02 and float(inf[4][4]) - float(inf[0][1]) > math.pow(10, -dict_prec_btc[symb]) * 2:
+                                        if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1 and float(inf[4][4]) / float(inf[0][1]) > 1.01 and float(inf[4][4]) - float(inf[0][1]) > math.pow(10, -dict_prec_btc[symb]) * 2:
                                             print(inf)
                                             amount = int(order_price / price)
                                             type = 'market'  # or market
