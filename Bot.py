@@ -550,8 +550,8 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                             del dict_order[symb]
                             dict_pass[symb] = t
                             updater.bot.send_message(chat_id='-1001242337520', text='Профит ' + symb + ' ' + str(price) + ' баланс ' + str(profit))
-                        elif price < dict_order[symb][1] * 0.97:
-                            profit -= 0.0315
+                        elif price < dict_order[symb][1] * 0.985:
+                            profit -= 0.0165
                             sl += 1
                             tk = 0
                             if sl > 100:
@@ -670,7 +670,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 dict_order[symb] = price
                                                 n = dict_prec[symb]
                                                 take_profit = float_to_str(round(price * 1.008, n))
-                                                stop_loss = float_to_str(round(price * 0.97, n))
+                                                stop_loss = float_to_str(round(price * 0.985, n))
                                                 type = 'limit'
                                                 side = 'sell'
 
@@ -757,7 +757,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 dict_order[symb] = price
                                                 n = dict_prec[symb]
                                                 take_profit = float_to_str(round(price * 1.008, n))
-                                                stop_loss = float_to_str(round(price * 0.97, n))
+                                                stop_loss = float_to_str(round(price * 0.985, n))
                                                 type = 'limit'
                                                 side = 'sell'
 
@@ -843,7 +843,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                             dict_order[symb] = price
                                             n = dict_prec[symb]
                                             take_profit = float_to_str(round(price * 1.008, n))
-                                            stop_loss = float_to_str(round(price * 0.97, n))
+                                            stop_loss = float_to_str(round(price * 0.985, n))
                                             type = 'limit'
                                             side = 'sell'
 
