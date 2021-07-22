@@ -635,7 +635,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 break
                                             
                                             try:
-                                                hour = get_klines1(symb, '1m', int((time.time() - 3600) * 1000), 1)
+                                                hour = get_klines1(symb, '1m', int((time.time() - 1800) * 1000), 1)
                                             except:
                                                 break
                                             if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1 and float(inf[4][4]) / float(inf[0][1]) > 1.01 and float(inf[4][4]) - float(inf[0][1]) > math.pow(10, -dict_prec_btc[symb]) * 2:
@@ -724,7 +724,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 break
                                             
                                             try:
-                                                hour = get_klines1(symb, '1m', int((time.time() - 3600) * 1000), 1)
+                                                hour = get_klines1(symb, '1m', int((time.time() - 1800) * 1000), 1)
                                             except:
                                                 break
                                             if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1 and float(inf[4][4]) / float(inf[0][1]) > 1.01 and float(inf[4][4]) - float(inf[0][1]) > math.pow(10, -dict_prec_btc[symb]) * 2:
@@ -809,7 +809,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                             break
                                         
                                         try:
-                                            hour = get_klines1(symb, '1m', int((time.time() - 3600) * 1000), 1)
+                                            hour = get_klines1(symb, '1m', int((time.time() - 1800) * 1000), 1)
                                         except:
                                             break
 
