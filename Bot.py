@@ -607,8 +607,6 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                         prevVol = vol
                         step = 2
                         for i, e in reversed(list(enumerate(dict_list[symb]))):
-                            if len(dict_order) > 1:
-                                break
                             if (t - e[0]) / 1000 <= 30:
                                 prevVol += e[1]
                             elif (t - e[0]) / 1000 <= 45:
@@ -899,14 +897,14 @@ updater.dispatcher.add_handler(CommandHandler('set', set_timer, pass_args=True,
                               pass_job_queue=True,
                               pass_chat_data=True))'''
 updater.dispatcher.add_handler(CommandHandler('get', get_vol, pass_args=True, pass_chat_data=True))
-updater.dispatcher.add_handler(CommandHandler('set_price', set_price, pass_args=True, pass_chat_data=True))
+#updater.dispatcher.add_handler(CommandHandler('set_price', set_price, pass_args=True, pass_chat_data=True))
 updater.dispatcher.add_handler(CommandHandler('gettop', get_top, pass_chat_data=True))
 updater.dispatcher.add_handler(CommandHandler('unset', unset, pass_chat_data=True))
 updater.dispatcher.add_handler(CommandHandler('count', count, pass_chat_data=True))
 updater.dispatcher.add_handler(CommandHandler('orders', get_orders, pass_chat_data=True))
 updater.dispatcher.add_handler(CommandHandler('max', get_max, pass_chat_data=True))
 updater.dispatcher.add_handler(CommandHandler('min', get_min, pass_chat_data=True))
-updater.dispatcher.add_handler(CommandHandler('trade_on', set_trade_on, pass_chat_data=True))
+#updater.dispatcher.add_handler(CommandHandler('trade_on', set_trade_on, pass_chat_data=True))
 updater.dispatcher.add_handler(CommandHandler('trade_off', set_trade_off, pass_chat_data=True))
 updater.dispatcher.add_handler(CommandHandler('balance', get_balance, pass_chat_data=True))
 
