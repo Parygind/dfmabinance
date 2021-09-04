@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from telegram.ext import Updater, CommandHandler
+import telegram.parsemode
 # from binance_api import Binance
 import ccxt
 import os
@@ -66,6 +67,7 @@ dict_wall_b = dict()
 dict_prec = dict()
 dict_prec_btc = dict()
 dict_prev_min = dict()
+dict_time = dict()
 markets = []
 profit = 0
 
@@ -171,7 +173,7 @@ def updateData():
     bin_bot.load_markets()
     # for pr in bin_bot.ticker24hr():
     for pr in tickers:
-        if tickers[pr]['symbol'][-4:] == 'USDT' and float(tickers[pr]['quoteVolume']) >= 500000 and float(
+        if tickers[pr]['symbol'][-4:] == 'USDT' and float(tickers[pr]['quoteVolume']) >= 2000000 and float(
                 tickers[pr]['quoteVolume']) <= 5500000000000 and float(tickers[pr]['bidVolume']) > 0 and float(
                 tickers[pr]['high']) < 20 \
                 and tickers[pr]['symbol'] != 'SUSD/USDT' and tickers[pr]['symbol'] != 'LINK/BTC' and tickers[pr][
@@ -549,6 +551,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 tk = 0
                             del dict_order[symb]
                             dict_pass[symb] = t
+                            dict_time[symb] = t
                             updater.bot.send_message(chat_id='-1001242337520', text='Профит ' + symb + ' ' + str(price) + ' баланс ' + str(profit))
                         elif price < dict_order[symb][1] * 0.985:
                             profit -= 0.0165
@@ -559,6 +562,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 sl = 0
                             del dict_order[symb]
                             dict_pass[symb] = t
+                            dict_time[symb] = t
                             updater.bot.send_message(chat_id='-1001242337520',
                                                      text='Убыток ' + symb + ' ' + str(price) + ' баланс ' + str(profit))
 
@@ -675,6 +679,12 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 dict_order[symb] = (t, price)
                                                 dict_max_price[symb] = price
 
+                                                if symb in dict_time:
+                                                    if (t - dict_time[symb]) / 1000 < 40 * 60:
+                                                        mes = '<ins>' + mes + '</ins>'
+
+                                                dict_time[symb] = t
+
                                                 if trade_on and not err:
                                                     try:
                                                         order = bin_bot.private_post_order_oco(
@@ -688,7 +698,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                         order = bin_bot.create_order(symb, type, side, amount,
                                                                                      take_profit)
 
-                                                updater.bot.send_message(chat_id='-1001242337520', text=mes)
+                                                updater.bot.send_message(chat_id='-1001242337520', text=mes, parse_mode=telegram.ParseMode.HTML)
                                                 print(mes + ' ' + datetime.today().strftime(
                                                 '%Y-%m-%d-%H:%M:%S') + ' ' + str(t))
                                                 print(hour)
@@ -762,6 +772,12 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 dict_order[symb] = (t, price)
                                                 dict_max_price[symb] = price
 
+                                                if symb in dict_time:
+                                                    if (t - dict_time[symb]) / 1000 < 40 * 60:
+                                                        mes = '<ins>' + mes + '</ins>'
+
+                                                dict_time[symb] = t
+
                                                 if trade_on and not err:
                                                     try:
                                                         order = bin_bot.private_post_order_oco(
@@ -775,7 +791,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                         order = bin_bot.create_order(symb, type, side, amount,
                                                                                      take_profit)
 
-                                                updater.bot.send_message(chat_id='-1001242337520', text=mes)
+                                                updater.bot.send_message(chat_id='-1001242337520', text=mes, parse_mode=telegram.ParseMode.HTML)
                                                 print(mes + ' ' + datetime.today().strftime(
                                                 '%Y-%m-%d-%H:%M:%S') + ' ' + str(t))
                                                 print(hour)
@@ -848,6 +864,12 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                             dict_order[symb] = (t, price)
                                             dict_max_price[symb] = price
 
+                                            if symb in dict_time:
+                                                if (t - dict_time[symb]) / 1000 < 40 * 60:
+                                                    mes = '<ins>' + mes + '</ins>'
+
+                                            dict_time[symb] = t
+
                                             if trade_on and not err:
                                                 try:
                                                     order = bin_bot.private_post_order_oco(
@@ -861,7 +883,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                     order = bin_bot.create_order(symb, type, side, amount,
                                                                                  take_profit)
 
-                                            updater.bot.send_message(chat_id='-1001242337520', text=mes)
+                                            updater.bot.send_message(chat_id='-1001242337520', text=mes, parse_mode=telegram.ParseMode.HTML)
                                             print(mes + ' ' + datetime.today().strftime(
                                                 '%Y-%m-%d-%H:%M:%S') + ' ' + str(t))
                                             print(hour)
