@@ -865,7 +865,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                             dict_max_price[symb] = price
 
                                             if symb in dict_time:
-                                                if (t - dict_time[symb]) / 1000 < 40 * 60:
+                                                if (t - dict_time[symb]) / 1000 <  40 * 60:
                                                     mes = '<b>' + mes + '</b>'
 
                                             dict_time[symb] = t
