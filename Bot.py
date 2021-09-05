@@ -681,7 +681,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
 
                                                 if symb in dict_time:
                                                     if (t - dict_time[symb]) / 1000 < 40 * 60:
-                                                        mes = '<b>' + mes + '</b>'
+                                                        mes = '<u><strong>' + mes + '</strong></u>'
 
                                                 dict_time[symb] = t
 
@@ -774,7 +774,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
 
                                                 if symb in dict_time:
                                                     if (t - dict_time[symb]) / 1000 < 40 * 60:
-                                                        mes = '<b>' + mes + '</b>'
+                                                        mes = '<u><strong>' + mes + '</strong></u>'
 
                                                 dict_time[symb] = t
 
@@ -866,7 +866,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
 
                                             if symb in dict_time:
                                                 if (t - dict_time[symb]) / 1000 <  40 * 60:
-                                                    mes = '<b>' + mes + '</b>'
+                                                    mes = '<u><strong>' + mes + '</strong></u>'
 
                                             dict_time[symb] = t
 
