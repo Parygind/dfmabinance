@@ -414,13 +414,13 @@ def alarm2(context):
 
     if len(mesVol) > 0:
         mes = 'Объемы выросли : ' + mesVol
-        context.bot.send_message(chat_id='-1001242337520', text=mes)
+        context.bot.send_message(chat_id='-1001242337520', text=mes, disable_notification=True)
     if len(mesOrd) > 0:
         mes = 'Сделки закрыты : ' + mesOrd
-        context.bot.send_message(chat_id='-1001242337520', text=mes)
+        context.bot.send_message(chat_id='-1001242337520', text=mes, disable_notification=True)
     if len(mesShort) > 0:
         mes = 'Можно шортануть : ' + mesShort
-        context.bot.send_message(chat_id='-1001242337520', text=mes)
+        context.bot.send_message(chat_id='-1001242337520', text=mes, disable_notification=True)
 
 def set_price(update, context):
     """Add a job to the queue."""
@@ -552,7 +552,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                             del dict_order[symb]
                             dict_pass[symb] = t
                             dict_time[symb] = t
-                            updater.bot.send_message(chat_id='-1001242337520', text='Профит ' + symb + ' ' + str(price) + ' баланс ' + str(profit))
+                            updater.bot.send_message(chat_id='-1001242337520', text='Профит ' + symb + ' ' + str(price) + ' баланс ' + str(profit), disable_notification=True)
                         elif price < dict_order[symb][1] * 0.985:
                             profit -= 0.0165
                             sl += 1
@@ -564,7 +564,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                             dict_pass[symb] = t
                             dict_time[symb] = t
                             updater.bot.send_message(chat_id='-1001242337520',
-                                                     text='Убыток ' + symb + ' ' + str(price) + ' баланс ' + str(profit))
+                                                     text='Убыток ' + symb + ' ' + str(price) + ' баланс ' + str(profit), disable_notification=True)
 
                         elif (t - dict_order[symb][0]) / 1000 > 3600 and 1 == 2:
                             if trade_on:
@@ -588,12 +588,12 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                             if price > dict_order[symb][1]:
                                 profit += (price / dict_order[symb][1] - 1)
                                 profit -= 0.0015
-                                updater.bot.send_message(chat_id='-1001242337520', text='Профит! ' + symb + ' ' + str(price) + ' баланс ' + str(profit))
+                                updater.bot.send_message(chat_id='-1001242337520', text='Профит! ' + symb + ' ' + str(price) + ' баланс ' + str(profit), disable_notification=True)
                             else:
                                 profit -= (1 - price / dict_order[symb][1])
                                 profit -= 0.0015
                                 updater.bot.send_message(chat_id='-1001242337520',
-                                                         text='Убыток! ' + symb + ' ' + str(price) + ' баланс ' + str(profit))
+                                                         text='Убыток! ' + symb + ' ' + str(price) + ' баланс ' + str(profit), disable_notification=True)
 
                             del dict_order[symb]
                             dict_pass[symb] = t
@@ -679,9 +679,11 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 dict_order[symb] = (t, price)
                                                 dict_max_price[symb] = price
 
+                                                disable_notif = True
                                                 if symb in dict_time:
                                                     if (t - dict_time[symb]) / 1000 < 40 * 60:
                                                         mes = '<u><strong>' + mes + '</strong></u>'
+                                                        disable_notif=False
 
                                                 dict_time[symb] = t
 
@@ -698,7 +700,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                         order = bin_bot.create_order(symb, type, side, amount,
                                                                                      take_profit)
 
-                                                updater.bot.send_message(chat_id='-1001242337520', text=mes, parse_mode=telegram.ParseMode.HTML)
+                                                updater.bot.send_message(chat_id='-1001242337520', text=mes, parse_mode=telegram.ParseMode.HTML, disable_notification=disable_notif)
                                                 print(mes + ' ' + datetime.today().strftime(
                                                 '%Y-%m-%d-%H:%M:%S') + ' ' + str(t))
                                                 print(hour)
@@ -772,9 +774,11 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 dict_order[symb] = (t, price)
                                                 dict_max_price[symb] = price
 
+                                                disable_notif = True
                                                 if symb in dict_time:
                                                     if (t - dict_time[symb]) / 1000 < 40 * 60:
                                                         mes = '<u><strong>' + mes + '</strong></u>'
+                                                        disable_notif = False
 
                                                 dict_time[symb] = t
 
@@ -791,7 +795,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                         order = bin_bot.create_order(symb, type, side, amount,
                                                                                      take_profit)
 
-                                                updater.bot.send_message(chat_id='-1001242337520', text=mes, parse_mode=telegram.ParseMode.HTML)
+                                                updater.bot.send_message(chat_id='-1001242337520', text=mes, parse_mode=telegram.ParseMode.HTML, disable_notification=disable_notif)
                                                 print(mes + ' ' + datetime.today().strftime(
                                                 '%Y-%m-%d-%H:%M:%S') + ' ' + str(t))
                                                 print(hour)
@@ -864,9 +868,11 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                             dict_order[symb] = (t, price)
                                             dict_max_price[symb] = price
 
+                                            disable_notification = True
                                             if symb in dict_time:
                                                 if (t - dict_time[symb]) / 1000 <  40 * 60:
                                                     mes = '<u><strong>' + mes + '</strong></u>'
+                                                    disable_notification = False
 
                                             dict_time[symb] = t
 
@@ -883,7 +889,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                     order = bin_bot.create_order(symb, type, side, amount,
                                                                                  take_profit)
 
-                                            updater.bot.send_message(chat_id='-1001242337520', text=mes, parse_mode=telegram.ParseMode.HTML)
+                                            updater.bot.send_message(chat_id='-1001242337520', text=mes, parse_mode=telegram.ParseMode.HTML, disable_notification=disable_notif)
                                             print(mes + ' ' + datetime.today().strftime(
                                                 '%Y-%m-%d-%H:%M:%S') + ' ' + str(t))
                                             print(hour)
@@ -966,6 +972,6 @@ for channel in channels:
                 i = 1
                 loops += 1
             i += 1
-updater.bot.send_message(chat_id='-1001242337520', text='Запуск!')
+updater.bot.send_message(chat_id='-1001242337520', text='Запуск!', disable_notification=True)
 
 updater.idle()
