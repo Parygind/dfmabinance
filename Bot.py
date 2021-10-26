@@ -635,12 +635,8 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 inf = get_klines1(symb.replace('USDT', 'BTC'), '1m', None, 5)
                                             except:
                                                 break
-                                            
-                                            try:
-                                                hour = get_klines1(symb, '1m', int((time.time() - 1800) * 1000), 1)
-                                            except:
-                                                break
-                                            if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1 and float(inf[4][4]) / float(inf[0][1]) > 1.01 and float(inf[4][4]) - float(inf[0][1]) > math.pow(10, -dict_prec_btc[symb]) * 2:
+
+                                            if float(inf[4][4]) / float(inf[0][1]) > 1.01 and float(inf[4][4]) - float(inf[0][1]) > math.pow(10, -dict_prec_btc[symb]) * 2:
                                                 print(inf)
                                                 amount = int(order_price / price)
                                                 type = 'market'  # or market
@@ -705,7 +701,6 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 updater.bot.send_message(chat_id='-1001242337520', text=mes, parse_mode=telegram.ParseMode.HTML, disable_notification=disable_notif)
                                                 print(mes + ' ' + datetime.today().strftime(
                                                 '%Y-%m-%d-%H:%M:%S') + ' ' + str(t))
-                                                print(hour)
                                                 print('30 ' +str(prevVol / (dict_curr[symb] * 0.021)))
                                                 break
 
@@ -734,12 +729,8 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                                   None, 5)
                                             except:
                                                 break
-                                            
-                                            try:
-                                                hour = get_klines1(symb, '1m', int((time.time() - 1800) * 1000), 1)
-                                            except:
-                                                break
-                                            if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1 and float(inf[4][4]) / float(inf[0][1]) > 1.01 and float(inf[4][4]) - float(inf[0][1]) > math.pow(10, -dict_prec_btc[symb]) * 2:
+
+                                            if float(inf[4][4]) / float(inf[0][1]) > 1.01 and float(inf[4][4]) - float(inf[0][1]) > math.pow(10, -dict_prec_btc[symb]) * 2:
                                                 print(inf)
                                                 amount = int(order_price / price)
                                                 type = 'market'  # or market
@@ -802,7 +793,6 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 updater.bot.send_message(chat_id='-1001242337520', text=mes, parse_mode=telegram.ParseMode.HTML, disable_notification=disable_notif)
                                                 print(mes + ' ' + datetime.today().strftime(
                                                 '%Y-%m-%d-%H:%M:%S') + ' ' + str(t))
-                                                print(hour)
                                                 print('45 ' + str(prevVol / (dict_curr[symb] * 0.027)))
                                                 break
                                 step = 4
@@ -829,13 +819,8 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                               None, 5)
                                         except:
                                             break
-                                        
-                                        try:
-                                            hour = get_klines1(symb, '1m', int((time.time() - 1800) * 1000), 1)
-                                        except:
-                                            break
 
-                                        if price / float(hour[0][1]) < 1.10 and price / float(hour[0][1]) > 1 and float(inf[4][4]) / float(inf[0][1]) > 1.01 and float(inf[4][4]) - float(inf[0][1]) > math.pow(10, -dict_prec_btc[symb]) * 2:
+                                        if float(inf[4][4]) / float(inf[0][1]) > 1.01 and float(inf[4][4]) - float(inf[0][1]) > math.pow(10, -dict_prec_btc[symb]) * 2:
                                             print(inf)
                                             amount = int(order_price / price)
                                             type = 'market'  # or market
@@ -898,7 +883,6 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                             updater.bot.send_message(chat_id='-1001242337520', text=mes, parse_mode=telegram.ParseMode.HTML, disable_notification=disable_notif)
                                             print(mes + ' ' + datetime.today().strftime(
                                                 '%Y-%m-%d-%H:%M:%S') + ' ' + str(t))
-                                            print(hour)
                                             print(str(prevVol / (dict_curr[symb] * 0.027)))
                                             break
                             elif (t - e[0]) / 1000 > 300:
