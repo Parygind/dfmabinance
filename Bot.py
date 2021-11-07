@@ -174,8 +174,7 @@ def updateData():
     # for pr in bin_bot.ticker24hr():
     for pr in tickers:
         if tickers[pr]['symbol'][-4:] == 'USDT' and float(tickers[pr]['quoteVolume']) >= 2000000 and float(
-                tickers[pr]['quoteVolume']) <= 5500000000000 and float(tickers[pr]['bidVolume']) > 0 and float(
-                tickers[pr]['high']) < 20 \
+                tickers[pr]['quoteVolume']) <= 5500000000000 and float(tickers[pr]['bidVolume']) > 0 \
                 and tickers[pr]['symbol'] != 'SUSD/USDT' and tickers[pr]['symbol'] != 'LINK/BTC' and tickers[pr][
             'symbol'] != 'DCR/BTC' \
                 and tickers[pr]['symbol'] != 'ENG/BTC' and tickers[pr]['symbol'] != 'LEND/BTC' and tickers[pr][
