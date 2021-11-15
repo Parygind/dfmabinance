@@ -647,7 +647,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
 
                                             if float(inf[4][4]) / float(inf[0][1]) > 1.01 and float(inf[4][4]) - float(inf[0][1]) > math.pow(10, -dict_prec_btc[symb]) * 2:
                                             '''
-                                            if true:
+                                            if True:
                                                 #print(inf)
                                                 amount = int(order_price / price)
                                                 type = 'market'  # or market
@@ -750,7 +750,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
 
                                             if float(inf[4][4]) / float(inf[0][1]) > 1.01 and float(inf[4][4]) - float(inf[0][1]) > math.pow(10, -dict_prec_btc[symb]) * 2:
                                             '''
-                                            if true:
+                                            if True:
                                                 #print(inf)
                                                 amount = int(order_price / price)
                                                 type = 'market'  # or market
@@ -849,7 +849,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
 
                                         if float(inf[4][4]) / float(inf[0][1]) > 1.01 and float(inf[4][4]) - float(inf[0][1]) > math.pow(10, -dict_prec_btc[symb]) * 2:
                                         '''
-                                        if true:
+                                        if True:
                                             #print(inf)
                                             amount = int(order_price / price)
                                             type = 'market'  # or market
