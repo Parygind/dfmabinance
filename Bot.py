@@ -636,7 +636,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                             max_price = max(max_price, float(d[2]))
                                             min_price = min(min_price, float(d[3]))
 
-                                        if max(max_price, price) / min_price < 1.04 and max_price / min_price > 1.01 and price / float(
+                                        if max_price / min_price > 1.01 and price / float(
                                             inf[0][1]) > 1:
 
                                             '''
@@ -738,8 +738,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                             max_price = max(max_price, float(d[2]))
                                             min_price = min(min_price, float(d[3]))
 
-                                        if max(max_price,
-                                               price) / min_price < 1.04 and max_price / min_price > 1.01 and price / float(
+                                        if max_price / min_price > 1.01 and price / float(
                                                 inf[0][1]) > 1:
                                             '''
                                             try:
@@ -837,8 +836,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                         max_price = max(max_price, float(d[2]))
                                         min_price = min(min_price, float(d[3]))
 
-                                    if max(max_price,
-                                           price) / min_price < 1.04 and max_price / min_price > 1.01 and price / float(
+                                    if max_price / min_price > 1.01 and price / float(
                                             inf[0][1]) > 1:
                                         '''
                                         try:
