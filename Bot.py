@@ -177,7 +177,7 @@ def updateData():
         if tickers[pr]['symbol'][-4:] == 'USDT' and float(tickers[pr]['quoteVolume']) >= 2000000 and float(
                 tickers[pr]['quoteVolume']) <= 5500000000000 and float(tickers[pr]['bidVolume']) > 0 \
                 and tickers[pr]['symbol'] != 'SUSD/USDT' and tickers[pr]['symbol'] != 'LINK/BTC' and tickers[pr][
-            'symbol'] != 'DCR/BTC' \
+            'symbol'] != 'DCR/BTC' and tickers[pr]['symbol'] != 'BTC/USDT' \
                 and tickers[pr]['symbol'] != 'ENG/BTC' and tickers[pr]['symbol'] != 'LEND/BTC' and tickers[pr][
             'symbol'] != 'LUN/BTC' and tickers[pr]['symbol'] != 'PAX/USDT' \
                 and tickers[pr]['symbol'].find('DOWN') == -1 and tickers[pr]['symbol'].find('UP') == -1 and tickers[pr][
