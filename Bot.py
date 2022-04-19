@@ -624,7 +624,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 prevVol += e[1]
                             elif (t - e[0]) / 1000 <= 45:
                                 if step == 2:
-                                    if prevVol >= dict_curr[symb] * (0.19 * (30/60)):
+                                    if prevVol >= dict_curr[symb] * (0.21 * (30/60)):
                                         try:
                                             inf = get_klines1(symb, '1m', None, 5)
                                         except:
@@ -725,7 +725,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 prevVol += e[1]
                             elif (t - e[0]) / 1000 <= 60:
                                 if step == 3:
-                                    if prevVol >= dict_curr[symb] * (0.019 * (45/60)):
+                                    if prevVol >= dict_curr[symb] * (0.021 * (45/60)):
                                         try:
                                             inf = get_klines1(symb, '1m', None, 5)
                                         except:
@@ -822,7 +822,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 step = 4
                                 prevVol += e[1]
 
-                                if prevVol >= dict_curr[symb] * 0.019:
+                                if prevVol >= dict_curr[symb] * 0.021:
                                     try:
                                         inf = get_klines1(symb, '1m', None, 5)
                                     except:
