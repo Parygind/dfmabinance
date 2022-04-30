@@ -882,11 +882,11 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                             dict_order[symb] = (t, price)
                                             dict_max_price[symb] = price
 
-                                            disable_notification = True
+                                            disable_notif = True
                                             if symb in dict_time:
                                                 if (t - dict_time[symb]) / 1000 <  40 * 60:
                                                     mes = '<u><strong>' + mes + '</strong></u>'
-                                                    disable_notification = False
+                                                    disable_notif = False
                                                     updater.bot.send_message(chat_id='-1001522720781', text=mes,
                                                                              parse_mode=telegram.ParseMode.HTML)
                                                 elif symb in dict_last:
