@@ -57,6 +57,7 @@ limit = dict()
 tk = 0
 sl = 0
 c = 0
+border = 0.02
 dict_order = dict()
 dict_pass = dict()
 dict_last_price = dict()
@@ -255,7 +256,7 @@ def alarm2(context):
                 del dict_order[symb_list[i]]
                 dict_pass[symb_list[i]] = 60
 
-        if vol >= dict_curr[symb_list[i]] * 0.0215 and float(inf[0][2]) / float(inf[0][1]) < 1.07 and float(
+        if vol >= dict_curr[symb_list[i]] * border and float(inf[0][2]) / float(inf[0][1]) < 1.07 and float(
                 inf[0][2]) / float(inf[0][1]) > 1 and float(inf[0][4]) / float(inf[0][1]) > 0.96 and float(
                 inf[0][2]) / float(inf[0][3]) > 1.01 and float(inf[0][2]) / prev_min > 1.01 and float(
                 inf[0][2]) / prev_min < 1.04 and len(dict_order) < 7:
@@ -331,7 +332,7 @@ def alarm2(context):
 
         elif c > 0 and dict_prev_vol.get(symb_list[i]) != None:
             if vol + dict_prev_vol[symb_list[i]] >= dict_curr[symb_list[i]] * 0.022 and vol < dict_curr[
-                symb_list[i]] * 0.0215 and float(inf[0][2]) / float(inf[0][1]) < 1.06 and float(inf[0][2]) / float(
+                symb_list[i]] * border and float(inf[0][2]) / float(inf[0][1]) < 1.06 and float(inf[0][2]) / float(
                     inf[0][1]) > 1 and float(inf[0][4]) / float(inf[0][1]) > 0.96 and float(inf[0][2]) / float(
                     inf[0][3]) > 1.01 and float(inf[0][2]) / prev_min > 1.01 and float(
                     inf[0][2]) / prev_min < 1.04 and len(dict_order) < 7:
@@ -403,7 +404,7 @@ def alarm2(context):
                     course / float(inf[0][1])) + ' ' + str(float(inf[0][2]) / float(inf[0][1])) + ' ' + str(
                     float(inf[0][2]) / float(inf[0][3])) + ' ' + str(float(inf[0][2]) / prev_min) + ')\n'
             elif c > 0:
-                if vol + dict_prev_vol[symb_list[i]] >= dict_curr[symb_list[i]] * 0.0215 and not symb_list[i] in dict_start_price:
+                if vol + dict_prev_vol[symb_list[i]] >= dict_curr[symb_list[i]] * border and not symb_list[i] in dict_start_price:
                     dict_start_price[symb_list[i]] = course
                     dict_max_price[symb_list[i]] = course
                     dict_min_price[symb_list[i]] = course
@@ -624,7 +625,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 prevVol += e[1]
                             elif (t - e[0]) / 1000 <= 45:
                                 if step == 2:
-                                    if prevVol >= dict_curr[symb] * (0.21 * (30/60)):
+                                    if prevVol >= dict_curr[symb] * (border * (30/60)):
                                         try:
                                             inf = get_klines1(symb, '1m', None, 5)
                                         except:
@@ -718,14 +719,14 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                                 updater.bot.send_message(chat_id='-1001242337520', text=mes, parse_mode=telegram.ParseMode.HTML, disable_notification=disable_notif)
                                                 print(mes + ' ' + datetime.today().strftime(
                                                 '%Y-%m-%d-%H:%M:%S') + ' ' + str(t))
-                                                print('30 ' +str(prevVol / (dict_curr[symb] * 0.021)))
+                                                print('30 ' +str(prevVol / (dict_curr[symb] * border)))
                                                 break
 
                                 step = 3
                                 prevVol += e[1]
                             elif (t - e[0]) / 1000 <= 60:
                                 if step == 3:
-                                    if prevVol >= dict_curr[symb] * (0.021 * (45/60)):
+                                    if prevVol >= dict_curr[symb] * (border * (45/60)):
                                         try:
                                             inf = get_klines1(symb, '1m', None, 5)
                                         except:
@@ -822,7 +823,7 @@ def print_stream_data_from_stream_buffer(binance_websocket_api_manager):
                                 step = 4
                                 prevVol += e[1]
 
-                                if prevVol >= dict_curr[symb] * 0.021:
+                                if prevVol >= dict_curr[symb] * border:
                                     try:
                                         inf = get_klines1(symb, '1m', None, 5)
                                     except:
